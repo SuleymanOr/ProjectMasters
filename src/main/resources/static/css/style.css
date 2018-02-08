@@ -1,0 +1,47 @@
+.jumbotron {
+    padding: 1rem 2rem;
+    margin-bottom: 1rem;
+    background-color: #333333;
+}
+
+.jumbotron p, .jumbotron h1{
+    color: #ffffff;
+}
+
+#shapes-accordion .card-header{
+    background-color: #333333;
+}
+
+#shapes-accordion .card-header button{
+    color: white;
+    text-decoration: none;
+}
+
+.shape-item {
+    display: inline-block;
+    width: 15%;
+    border: solid 1px #333333;
+    padding: 5px 2px;
+    cursor: pointer;
+}
+
+.shape-item:hover{
+    box-shadow: 0px 0px 4px #333333;
+}
+
+.shape-item-name {
+    color: #333333;
+}
+
+.shape-item-edit, .shape-item-delete {
+    float: right;
+    background-color: #218838;
+    color: white;
+    text-align: center;
+    font-size: 15px;
+    width: 18px;
+    height: 18px;
+    line-height: 10px;
+    padding: 2px 2px;
+    margin-left: 2px;
+}

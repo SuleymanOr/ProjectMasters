@@ -17,6 +17,8 @@ __MACOSX
 *.iws
 *.iml
 *.ipr
+pom.xml
+
 
 ### NetBeans ###
 nbproject/private/
