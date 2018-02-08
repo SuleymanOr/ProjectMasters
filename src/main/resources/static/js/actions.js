@@ -48,9 +48,7 @@ $(document).ready(function () {
     function fire_ajax_submit() {
 
         var formData = {
-            shape: "dummy",
-            size: 20,
-            volume: 10
+            radius: 70
         }
 
 
@@ -68,7 +66,11 @@ $(document).ready(function () {
                     + JSON.stringify(data, null, 4) + "</pre>";
                 $('#feedback').html(json);
 
-                console.log("SUCCESS : ", data);
+                alert("ok");
+
+                $("#result").src= "data:image/png;base64," + data;
+                $("#myModal").modal();
+                $("#myModal").show();
 
 
             },
@@ -78,8 +80,11 @@ $(document).ready(function () {
                     + e.responseText + "</pre>";
                 $('#feedback').html(json);
 
-                console.log("ERROR : ", e);
+                alert("err" + e);
 
+                $("#result").setAttribute("src", "data:image/png;base64," + e)
+                $("#myModal").modal();
+                $("#myModal").show();
 
             }
         });
