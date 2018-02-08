@@ -35,6 +35,56 @@ $(document).ready(function () {
     };
 
     render();
+
+    $("#render-button").click(function (event) {
+        alert("sent");
+        //stop submit the form, we will post it manually.
+        event.preventDefault();
+
+        fire_ajax_submit();
+
+    });
+
+    function fire_ajax_submit() {
+
+        var formData = {
+            shape: "dummy",
+            size: 20,
+            volume: 10
+        }
+
+
+        $.ajax({
+            type: "POST",
+            contentType: "application/json",
+            url: "/api/rayTracerJson",
+            data: JSON.stringify(formData),
+            dataType: 'json',
+            cache: false,
+            timeout: 600000,
+            success: function (data) {
+
+                var json = "<h4>The following Json was send successfully</h4><pre>"
+                    + JSON.stringify(data, null, 4) + "</pre>";
+                $('#feedback').html(json);
+
+                console.log("SUCCESS : ", data);
+
+
+            },
+            error: function (e) {
+
+                var json = "<h4>Ajax Response</h4><pre>"
+                    + e.responseText + "</pre>";
+                $('#feedback').html(json);
+
+                console.log("ERROR : ", e);
+
+
+            }
+        });
+    }
+
 });
 /**
  * Created by nima on 02/02/2018.
