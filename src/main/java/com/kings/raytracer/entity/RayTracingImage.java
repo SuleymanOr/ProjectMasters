@@ -1,39 +1,21 @@
 package com.kings.raytracer.entity;
 
 public class RayTracingImage {
-    private String shape;
-    private String size;
-    private String volume;
+    private double radius;
 
-    public RayTracingImage(){}
-
-    public RayTracingImage(String shape, String size, String volume) {
-        this.shape = shape;
-        this.size = size;
-        this.volume = volume;
+    public RayTracingImage() {
     }
 
-    public String getShape() {
-        return shape;
+    public RayTracingImage(double radius) {
+        this.radius = radius;
     }
 
-    public void setShape(String shape) {
-        this.shape = shape;
+    public double getRadius() {
+        return radius;
     }
 
-    public String getSize() {
-        return size;
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getVolume() {
-        return volume;
-    }
-
-    public void setVolume(String volume) {
-        this.volume = volume;
-    }
 }
