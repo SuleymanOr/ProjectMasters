@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     var geometry = new THREE.BoxGeometry( 20, 20, 20, 5, 5 ,5);
 
-    var material = new THREE.MeshLambertMaterial( { color: 0x21a5ce , wireframe: true} );
+    var material = new THREE.MeshLambertMaterial( { color: 0x22a5ce , wireframe: true} );
     var cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 
