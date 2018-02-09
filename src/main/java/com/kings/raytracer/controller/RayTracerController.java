@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Base64;
 
 
 @RestController
@@ -85,7 +86,7 @@ public class RayTracerController {
 //        }
         result.setResult(data);
 
-        return ResponseEntity.ok(image.toByteArray());
+        return ResponseEntity.ok(Base64.getEncoder().encodeToString(image.toByteArray()));
 
     }
 
