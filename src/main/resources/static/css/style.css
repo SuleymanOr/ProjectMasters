@@ -45,3 +45,24 @@
     padding: 2px 2px;
     margin-left: 2px;
 }
+
+#resultModal .modal-header{
+    justify-content: left;
+}
+
+#resultModal .modal-dialog{
+    max-width: 90%;
+}
+
+#render-button {
+    width: 100%;
+}
+
+#resultModal .modal-header .close{
+    position: absolute;
+    right: 15px;
+}
+
+#resultModal .modal-body{
+    text-align: center;
+}
