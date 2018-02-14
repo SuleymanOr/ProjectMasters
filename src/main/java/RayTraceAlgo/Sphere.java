@@ -1,16 +1,15 @@
 package RayTraceAlgo;
 
-import java.awt.Color;
 
 public class Sphere extends Figure{
 
     private Point3D center;
     private double radius;
 
-    public Sphere(Point3D center, double radius, Color color) {
+    public Sphere(Point3D center, double radius, Colour colour) {
         this.center = center;
         this.radius = radius;
-        this.color = color;
+        this.colour = colour;
     }
 
     @Override

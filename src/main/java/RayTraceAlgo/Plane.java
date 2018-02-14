@@ -1,16 +1,15 @@
 package RayTraceAlgo;
 
-import java.awt.Color;
 
 public class Plane extends Figure {
 
     private Point3D point3D;
     private Normal normal;
 
-    public Plane(Point3D point3D, Normal normal, Color color) {
+    public Plane(Point3D point3D, Normal normal, Colour colour) {
         this.point3D = point3D;
         this.normal = normal;
-        this.color = color;
+        this.colour = colour;
     }
 
     @Override
