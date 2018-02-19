@@ -23,6 +23,7 @@
     border: solid 1px #333333;
     padding: 5px 2px;
     cursor: pointer;
+    margin: 0 10px 0 0;
 }
 
 .shape-item:hover{

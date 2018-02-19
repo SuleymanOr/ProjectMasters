@@ -1,3 +1,56 @@
+var id_increment  = 1;
+
+function refreshList(list){
+    $("#shape-list").html("");
+    list.forEach(function(e){
+        var element = "<div class='shape-item' key="+ e.id.toString() +"><span class='shape-item-name'>"+ e.name +"</span><span class='shape-item-edit'>/</span><span class='shape-item-delete'>x</span></div>"
+        $("#shape-list").append(element);
+    });
+};
+
+function Shape(id,name,type,color,x,y,z){
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.color = color;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+    this.toString = function () {
+        return "id :" + this.id + " name: " + this.name;
+    };
+}
+
+function Sphere (id,name,type,color,x,y,z,radius){
+    Shape.call(this,id,name,type,color,x,y,z);
+    this.radius = radius;
+}
+
+function Cube (id,name,type,color,x,y,z,w,l,h){
+    Shape.call(this,id,name,type,color,x,y,z);
+    this.w = w;
+    this.l = l;
+    this.h = h;
+}
+
+function Setup(){
+    this.elements = [];
+    this.addSphere = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-sphere-name").val();
+        var type = "sphere";
+        var color = $("#new-sphere-color").val();
+        var x = parseInt($("#new-sphere-x").val(),10);
+        var y = parseInt($("#new-sphere-y").val(),10);
+        var z = parseInt($("#new-sphere-z").val(),10);
+        this.elements[id] = new Sphere(id,name,type,color,x,y,z);
+    }
+    this.removeShape = function (id) {
+        delete this.elements[id];
+    };
+};
+
 $(document).ready(function () {
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera( 75, 2, 0.1, 1000 );
@@ -7,8 +60,8 @@ $(document).ready(function () {
     document.getElementById('canvas-container').appendChild( renderer.domElement );
 
     var geometry = new THREE.BoxGeometry( 20, 20, 20, 5, 5 ,5);
-
-    var material = new THREE.MeshLambertMaterial( { color: 0x22a5ce , wireframe: true} );
+    var geometry = new THREE.SphereBufferGeometry( 20, 20, 20 );
+    var material = new THREE.MeshLambertMaterial( { color: 0xdd5555 , wireframe: true} );
     var cube = new THREE.Mesh( geometry, material );
     scene.add( cube );
 
@@ -35,6 +88,31 @@ $(document).ready(function () {
     };
 
     render();
+
+    var setup = new Setup();
+
+    $(".shape-add-button").click(function (event) {
+        var id =  $(this).attr("id");
+        switch(id){
+            case "add-sphere":
+                setup.addSphere();
+                break;
+            case "add-cube":
+                alert("add cube");
+                break;
+            case "add-cylinder":
+                alert("add cube");
+                break;
+            default:
+                alert("Unknown Object!");
+        }
+        refreshList(setup.elements);
+    });
+
+    $("#shape-list").on("click",".shape-item-delete",(function () {
+        setup.removeShape(parseInt($(this).parent().attr("key"),10));
+        refreshList(setup.elements);
+    }));
 
     $("#render-button").click(function (event) {
         alert("sent");
