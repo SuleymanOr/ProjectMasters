@@ -185,17 +185,11 @@ $(document).ready(function () {
 
 
             },
-            error: function (e) {
+            error: function (x,s,e) {
 
-                var json = "<h4>Ajax Response</h4><pre>"
-                    + e.responseText + "</pre>";
-                $('#feedback').html(json);
-
-                alert("err" + e);
-
-                $("#result").setAttribute("src", "data:image/png;base64," + e)
-                $("#myModal").modal();
-                $("#myModal").show();
+                $("#result").attr("src", "data:image/png;base64," + x.responseText);
+                $("#resultModal").modal();
+                $("#resultModal").show();
 
             }
         });
