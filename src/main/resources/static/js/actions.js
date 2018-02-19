@@ -33,6 +33,12 @@ function Cube (id,name,type,color,x,y,z,w,l,h){
     this.h = h;
 }
 
+function Cylinder (id,name,type,color,x,y,z,radius,height){
+    Shape.call(this,id,name,type,color,x,y,z);
+    this.radius = radius;
+    this.height = height;
+}
+
 function Setup(){
     this.elements = [];
     this.addSphere = function () {
@@ -45,7 +51,34 @@ function Setup(){
         var y = parseInt($("#new-sphere-y").val(),10);
         var z = parseInt($("#new-sphere-z").val(),10);
         this.elements[id] = new Sphere(id,name,type,color,x,y,z);
-    }
+    };
+    this.addCube = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-cube-name").val();
+        var type = "cube";
+        var color = $("#new-cube-color").val();
+        var x = parseInt($("#new-cube-x").val(),10);
+        var y = parseInt($("#new-cube-y").val(),10);
+        var z = parseInt($("#new-cube-z").val(),10);
+        var w = parseInt($("#new-cube-w").val(),10);
+        var l = parseInt($("#new-cube-l").val(),10);
+        var h = parseInt($("#new-cube-h").val(),10);
+        this.elements[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
+    };
+    this.addCylinder = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-cylinder-name").val();
+        var type = "cube";
+        var color = $("#new-cylinder-color").val();
+        var x = parseInt($("#new-cylinder-x").val(),10);
+        var y = parseInt($("#new-cylinder-y").val(),10);
+        var z = parseInt($("#new-cylinder-z").val(),10);
+        var radius = parseInt($("#new-cylinder-radius").val(),10);
+        var height = parseInt($("#new-cylinder-height").val(),10);
+        this.elements[id] = new Cylinder(id,name,type,color,x,y,z,radius,height);
+    };
     this.removeShape = function (id) {
         delete this.elements[id];
     };
@@ -98,10 +131,10 @@ $(document).ready(function () {
                 setup.addSphere();
                 break;
             case "add-cube":
-                alert("add cube");
+                setup.addCube();
                 break;
             case "add-cylinder":
-                alert("add cube");
+                setup.addCylinder();
                 break;
             default:
                 alert("Unknown Object!");
