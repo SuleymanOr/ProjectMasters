@@ -102,10 +102,10 @@ $(document).ready(function () {
     renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
 
-    camera.position.z=50;
+    camera.position.y=50;
 
     var light = new THREE.PointLight( 0xFFFFFF,2,0,2 );
-    light.position.set( 0, 0, 100 );
+    light.position.set( 0, 100, 0 );
     scene.add( light );
 
     var light2 = new THREE.PointLight( 0xFFFFFF,2,0,2 );
@@ -128,7 +128,7 @@ $(document).ready(function () {
         var timer = (new Date().getTime() % 10000)*3.141596/10000;
         var timer = (new Date().getTime() * 0.0005);
         camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
-        camera.position.y = Math.floor(Math.sin( timer ) * 1000)/10.0;
+        camera.position.z = Math.floor(Math.sin( timer ) * 1000)/10.0;
 
         renderer.render(scene, camera);
     };
