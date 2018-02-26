@@ -39,18 +39,27 @@ function Cylinder (id,name,type,color,x,y,z,radius,height){
     this.height = height;
 }
 
-function Setup(){
+function LocalScene(scene){
     this.elements = [];
+    this.live_scene = scene;
     this.addSphere = function () {
+        // Adding rhe shape to local shape list
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-sphere-name").val();
         var type = "sphere";
-        var color = $("#new-sphere-color").val();
+        var radius =  parseInt($("#new-sphere-radius").val(),10);
+        var color = parseInt($("#new-sphere-color").val(),16);
         var x = parseInt($("#new-sphere-x").val(),10);
         var y = parseInt($("#new-sphere-y").val(),10);
         var z = parseInt($("#new-sphere-z").val(),10);
-        this.elements[id] = new Sphere(id,name,type,color,x,y,z);
+        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius);
+        // Adding the shape to three.js scene
+        var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
+        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var sphere = new THREE.Mesh( geometry, material );
+        sphere.position.set(x,y,z);
+        scene.add( sphere );
     };
     this.addCube = function () {
         var id = id_increment;
@@ -65,6 +74,7 @@ function Setup(){
         var l = parseInt($("#new-cube-l").val(),10);
         var h = parseInt($("#new-cube-h").val(),10);
         this.elements[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
+        var geometry = new THREE.BoxGeometry( 20, 20, 20, 5, 5 ,5);
     };
     this.addCylinder = function () {
         var id = id_increment;
@@ -86,64 +96,67 @@ function Setup(){
 
 $(document).ready(function () {
     var scene = new THREE.Scene();
-    var camera = new THREE.PerspectiveCamera( 75, 2, 0.1, 1000 );
+    var camera = new THREE.PerspectiveCamera( 55, 2, 0.1, 1000 );
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
 
-    var geometry = new THREE.BoxGeometry( 20, 20, 20, 5, 5 ,5);
-    var geometry = new THREE.SphereBufferGeometry( 20, 20, 20 );
-    var material = new THREE.MeshLambertMaterial( { color: 0xdd5555 , wireframe: true} );
-    var cube = new THREE.Mesh( geometry, material );
-    scene.add( cube );
+    camera.position.z=50;
 
-    camera.position.z = 100;
-
-    var light = new THREE.PointLight( 0xFFFFFF );
-    light.position.set( 10, 10, 25 );
+    var light = new THREE.PointLight( 0xFFFFFF,2,0,2 );
+    light.position.set( 0, 0, 100 );
     scene.add( light );
 
-    var light2 = new THREE.PointLight( 0xFFFFFF );
+    var light2 = new THREE.PointLight( 0xFFFFFF,2,0,2 );
     light2.position.set( -10, -10, 25 );
-    scene.add( light2 );
+     // scene.add( light2 );
 
 
 
     var render = function () {
         requestAnimationFrame( render );
 
-        cube.rotation.x += 0.005;
-        cube.rotation.y += 0.008;
+        // cube.rotation.x += 0.005;
+        // cube.rotation.y += 0.008;
         camera.updateProjectionMatrix();
+
+        camera.lookAt( scene.position );
+
+        // Move the camera in a circle with the pivot point in the centre of this circle...
+        // ...so that the pivot point, and focus of the camera is on the centre of our scene.
+        var timer = (new Date().getTime() % 10000)*3.141596/10000;
+        var timer = (new Date().getTime() * 0.0005);
+        camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
+        camera.position.y = Math.floor(Math.sin( timer ) * 1000)/10.0;
 
         renderer.render(scene, camera);
     };
 
     render();
 
-    var setup = new Setup();
+    var local_scene = new LocalScene(scene);
 
     $(".shape-add-button").click(function (event) {
         var id =  $(this).attr("id");
         switch(id){
             case "add-sphere":
-                setup.addSphere();
+                local_scene.addSphere();
                 break;
             case "add-cube":
-                setup.addCube();
+                local_scene.addCube();
                 break;
             case "add-cylinder":
-                setup.addCylinder();
+                local_scene.addCylinder();
                 break;
             default:
                 alert("Unknown Object!");
         }
-        refreshList(setup.elements);
+        refreshList(local_scene.elements);
     });
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
-        setup.removeShape(parseInt($(this).parent().attr("key"),10));
+        local_scene.removeShape(parseInt($(this).parent().attr("key"),10));
         refreshList(setup.elements);
     }));
 
@@ -194,6 +207,10 @@ $(document).ready(function () {
             }
         });
     }
+
+    // --------------------------
+
+    // --------------------------
 
 });
 /**
