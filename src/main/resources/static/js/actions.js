@@ -125,8 +125,8 @@ $(document).ready(function () {
 
         // Move the camera in a circle with the pivot point in the centre of this circle...
         // ...so that the pivot point, and focus of the camera is on the centre of our scene.
-        var timer = (new Date().getTime() % 10000)*3.141596/10000;
-        var timer = (new Date().getTime() * 0.0005);
+        var timer = (new Date().getTime() % 30000)*3.14159265/15000;
+        // var timer = (new Date().getTime() * 0.0005);
         camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
         camera.position.z = Math.floor(Math.sin( timer ) * 1000)/10.0;
 
