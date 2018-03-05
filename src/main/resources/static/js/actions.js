@@ -5,6 +5,7 @@ function refreshList(list){
     list.forEach(function(e){
         var element = "<div class='shape-item' key="+ e.id.toString() +"><span class='shape-item-name'>"+ e.name +"</span><span class='shape-item-edit'>/</span><span class='shape-item-delete'>x</span></div>"
         $("#shape-list").append(element);
+        var test =0;
     });
 };
 
