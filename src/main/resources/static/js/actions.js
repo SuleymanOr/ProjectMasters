@@ -71,6 +71,7 @@ function LocalScene(scene){
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var sphere = new THREE.Mesh( geometry, material );
+        sphere.name = id;
         sphere.position.set(x,y,z);
         scene.add( sphere );
     };
@@ -90,6 +91,7 @@ function LocalScene(scene){
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.BoxGeometry( w, l , h, 5, 5 ,5);
         var box = new THREE.Mesh( geometry, material );
+        box.name = id;
         box.position.set(x,y,z);
         scene.add( box );
     };
@@ -98,7 +100,7 @@ function LocalScene(scene){
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-cylinder-name").val();
-        var type = "cube";
+        var type = "cylinder";
         var color = parseInt($("#new-cylinder-color").val(),16);
         var x = parseInt($("#new-cylinder-x").val(),10);
         var y = parseInt($("#new-cylinder-y").val(),10);
@@ -109,6 +111,7 @@ function LocalScene(scene){
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
         var cylinder = new THREE.Mesh( geometry, material );
+        cylinder.name = id;
         cylinder.position.set(x,y,z);
         scene.add( cylinder );
     };
@@ -117,7 +120,7 @@ function LocalScene(scene){
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-torus-name").val();
-        var type = "cube";
+        var type = "torus";
         var color = parseInt($("#new-torus-color").val(),16);
         var x = parseInt($("#new-torus-x").val(),10);
         var y = parseInt($("#new-torus-y").val(),10);
@@ -128,6 +131,7 @@ function LocalScene(scene){
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
         var torus = new THREE.Mesh( geometry, material );
+        torus.name = id;
         torus.position.set(x,y,z);
         scene.add( torus );
     };
@@ -136,7 +140,7 @@ function LocalScene(scene){
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-plane-name").val();
-        var type = "cube";
+        var type = "plane";
         var color = parseInt($("#new-plane-color").val(),16);
         var x = parseInt($("#new-plane-x").val(),10);
         var y = parseInt($("#new-plane-y").val(),10);
@@ -147,11 +151,14 @@ function LocalScene(scene){
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.PlaneBufferGeometry( w,h,10,10 );
         var plane = new THREE.Mesh( geometry, material );
+        plane.name = id;
         plane.position.set(x,y,z);
         scene.add( plane );
     };
 
     this.removeShape = function (id) {
+        var tmp = this.live_scene.getObjectByName(id);
+        this.live_scene.remove(tmp);
         delete this.elements[id];
     };
 };
@@ -170,26 +177,28 @@ $(document).ready(function () {
     light.position.set( 0, 100, 0 );
     scene.add( light );
 
-    var light2 = new THREE.AmbientLight( 0x404040 ); // soft white light
+    var light2 = new THREE.AmbientLight( 0xa0a0a0 ); // soft white light
     scene.add( light2 );
 
-
+    var controls = new THREE.OrbitControls( camera, document.getElementById("canvas-container") );
+    controls.update();
 
     var render = function () {
         requestAnimationFrame( render );
 
         // cube.rotation.x += 0.005;
         // cube.rotation.y += 0.008;
-        camera.updateProjectionMatrix();
+        // camera.updateProjectionMatrix();
+        // camera.lookAt( scene.position );
+        //
+        // // Move the camera in a circle with the pivot point in the centre of this circle...
+        // // ...so that the pivot point, and focus of the camera is on the centre of our scene.
+        // var timer = (new Date().getTime() % 30000)*3.14159265/15000;
+        // // var timer = (new Date().getTime() * 0.0005);
+        // camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
+        // camera.position.z = Math.floor(Math.sin( timer ) * 1000)/10.0;
 
-        camera.lookAt( scene.position );
-
-        // Move the camera in a circle with the pivot point in the centre of this circle...
-        // ...so that the pivot point, and focus of the camera is on the centre of our scene.
-        var timer = (new Date().getTime() % 30000)*3.14159265/15000;
-        // var timer = (new Date().getTime() * 0.0005);
-        camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
-        camera.position.z = Math.floor(Math.sin( timer ) * 1000)/10.0;
+        controls.update();
 
         renderer.render(scene, camera);
     };
@@ -224,15 +233,15 @@ $(document).ready(function () {
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
         local_scene.removeShape(parseInt($(this).parent().attr("key"),10));
-        refreshList(setup.elements);
+        refreshList(local_scene.elements);
     }));
 
     $("#render-button").click(function (event) {
         alert("sent");
         //stop submit the form, we will post it manually.
         event.preventDefault();
-
-        fire_ajax_submit();
+        console.log(scene.toJSON());
+        //fire_ajax_submit();
 
     });
 
