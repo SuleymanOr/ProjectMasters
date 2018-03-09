@@ -49,7 +49,7 @@ $(document).ready(function () {
 
         var formData = {
             radius: 70
-        }
+        };
 
 
         $.ajax({

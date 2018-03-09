@@ -9,8 +9,8 @@
   /**
    * Canvas 2D filter backend.
    */
-  function Canvas2dFilterBackend() {};
-
+  function Canvas2dFilterBackend() {
+  }
   Canvas2dFilterBackend.prototype = /** @lends fabric.Canvas2dFilterBackend.prototype */ {
     evictCachesForKey: noop,
     dispose: noop,
