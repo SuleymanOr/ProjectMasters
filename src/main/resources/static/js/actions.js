@@ -5,7 +5,6 @@ function refreshList(list){
     list.forEach(function(e){
         var element = "<div class='shape-item' key="+ e.id.toString() +"><span class='shape-item-name'>"+ e.name +"</span><span class='shape-item-edit'>/</span><span class='shape-item-delete'>x</span></div>"
         $("#shape-list").append(element);
-        var test =0;
     });
 };
 
@@ -40,6 +39,19 @@ function Cylinder (id,name,type,color,x,y,z,radius,height){
     this.height = height;
 }
 
+
+function Tortus (id,name,type,color,x,y,z,radius,tube_radius){
+    Shape.call(this,id,name,type,color,x,y,z);
+    this.radius = radius;
+    this.tube_radius = tube_radius;
+}
+
+function Plane (id,name,type,color,x,y,z,w,h){
+    Shape.call(this,id,name,type,color,x,y,z);
+    this.width = w;
+    this.height = h;
+}
+
 function LocalScene(scene){
     this.elements = [];
     this.live_scene = scene;
@@ -67,7 +79,7 @@ function LocalScene(scene){
         id_increment +=1;
         var name = $("#new-cube-name").val();
         var type = "cube";
-        var color = $("#new-cube-color").val();
+        var color = parseInt($("#new-cube-color").val(),16);
         var x = parseInt($("#new-cube-x").val(),10);
         var y = parseInt($("#new-cube-y").val(),10);
         var z = parseInt($("#new-cube-z").val(),10);
@@ -75,21 +87,70 @@ function LocalScene(scene){
         var l = parseInt($("#new-cube-l").val(),10);
         var h = parseInt($("#new-cube-h").val(),10);
         this.elements[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
-        var geometry = new THREE.BoxGeometry( 20, 20, 20, 5, 5 ,5);
+        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var geometry = new THREE.BoxGeometry( w, l , h, 5, 5 ,5);
+        var box = new THREE.Mesh( geometry, material );
+        box.position.set(x,y,z);
+        scene.add( box );
     };
+
     this.addCylinder = function () {
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-cylinder-name").val();
         var type = "cube";
-        var color = $("#new-cylinder-color").val();
+        var color = parseInt($("#new-cylinder-color").val(),16);
         var x = parseInt($("#new-cylinder-x").val(),10);
         var y = parseInt($("#new-cylinder-y").val(),10);
         var z = parseInt($("#new-cylinder-z").val(),10);
         var radius = parseInt($("#new-cylinder-radius").val(),10);
         var height = parseInt($("#new-cylinder-height").val(),10);
         this.elements[id] = new Cylinder(id,name,type,color,x,y,z,radius,height);
+        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
+        var cylinder = new THREE.Mesh( geometry, material );
+        cylinder.position.set(x,y,z);
+        scene.add( cylinder );
     };
+
+    this.addTorus = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-torus-name").val();
+        var type = "cube";
+        var color = parseInt($("#new-torus-color").val(),16);
+        var x = parseInt($("#new-torus-x").val(),10);
+        var y = parseInt($("#new-torus-y").val(),10);
+        var z = parseInt($("#new-torus-z").val(),10);
+        var radius = parseInt($("#new-torus-radius").val(),10);
+        var tube_radius = parseInt($("#new-torus-tube-radius").val(),10);
+        this.elements[id] = new Tortus(id,name,type,color,x,y,z,radius,tube_radius);
+        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
+        var torus = new THREE.Mesh( geometry, material );
+        torus.position.set(x,y,z);
+        scene.add( torus );
+    };
+
+    this.addPlane = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-plane-name").val();
+        var type = "cube";
+        var color = parseInt($("#new-plane-color").val(),16);
+        var x = parseInt($("#new-plane-x").val(),10);
+        var y = parseInt($("#new-plane-y").val(),10);
+        var z = parseInt($("#new-plane-z").val(),10);
+        var w = parseInt($("#new-plane-w").val(),10);
+        var h = parseInt($("#new-plane-h").val(),10);
+        this.elements[id] = new Plane(id,name,type,color,x,y,z,w,h);
+        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var geometry = new THREE.PlaneBufferGeometry( w,h,10,10 );
+        var plane = new THREE.Mesh( geometry, material );
+        plane.position.set(x,y,z);
+        scene.add( plane );
+    };
+
     this.removeShape = function (id) {
         delete this.elements[id];
     };
@@ -109,9 +170,8 @@ $(document).ready(function () {
     light.position.set( 0, 100, 0 );
     scene.add( light );
 
-    var light2 = new THREE.PointLight( 0xFFFFFF,2,0,2 );
-    light2.position.set( -10, -10, 25 );
-     // scene.add( light2 );
+    var light2 = new THREE.AmbientLight( 0x404040 ); // soft white light
+    scene.add( light2 );
 
 
 
@@ -149,6 +209,12 @@ $(document).ready(function () {
                 break;
             case "add-cylinder":
                 local_scene.addCylinder();
+                break;
+            case "add-torus":
+                local_scene.addTorus();
+                break;
+            case "add-plane":
+                local_scene.addPlane();
                 break;
             default:
                 alert("Unknown Object!");
