@@ -36,7 +36,7 @@
       require('fs').readFile(src, function(err, imgData) {
         if (err) {
           throw err;
-        };
+        }
         img.src = imgData;
         callback && callback();
       });
