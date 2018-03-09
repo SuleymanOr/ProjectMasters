@@ -451,7 +451,7 @@
       var sep = '_', prefix = '';
       if (!skipGroup && this.group) {
         prefix = this.group.transformMatrixKey(skipGroup) + sep;
-      };
+      }
       return prefix + this.top + sep + this.left + sep + this.scaleX + sep + this.scaleY +
         sep + this.skewX + sep + this.skewY + sep + this.angle +
         sep + this.width + sep + this.height + sep + this.strokeWidth + this.flipX + this.flipY;

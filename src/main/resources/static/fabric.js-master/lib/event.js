@@ -906,8 +906,8 @@ root.getBoundingBox = function(o) {
 		}
 		///
 		tmp = tmp.parentNode;
-	};
-	///
+  }
+  ///
 	bbox.scrollBodyLeft = (window.pageXOffset !== undefined) ? window.pageXOffset : (document.documentElement || document.body.parentNode || document.body).scrollLeft;
 	bbox.scrollBodyTop = (window.pageYOffset !== undefined) ? window.pageYOffset : (document.documentElement || document.body.parentNode || document.body).scrollTop;
 	///
@@ -1629,7 +1629,7 @@ root.swipe = function(conf) {
 			eventjs.remove(conf.doc, "mouseup", conf.onPointerUp);
 			///
 			var velocity1;
-			var velocity2
+			var velocity2;
 			var degree1;
 			var degree2;
 			/// Calculate centroid of gesture.
@@ -1937,7 +1937,7 @@ root.orientation = function(conf) {
 		self.current = window.orientation;
 	    if(self.previous !== null && self.previous != self.current) {
 			conf.listener(e, self);
-			return;
+
 	    }
 
 
