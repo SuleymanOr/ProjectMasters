@@ -32,7 +32,6 @@ public class ImageRender {
 
         List<Figure> figures = new ArrayList<>();
         figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.6F, 0.5F, 1F}, 0.5, "Normal"));
-
         List<Light> lights = new ArrayList<>();
         LightDirected lightDirected = new LightDirected(new double[]{0, 1,-1}, new double[]{1,1,1});
         lights.add(lightDirected);
