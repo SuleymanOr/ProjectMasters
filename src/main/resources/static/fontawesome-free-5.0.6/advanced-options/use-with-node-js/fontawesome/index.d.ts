@@ -29,7 +29,7 @@ declare const api: {
     ) => void
   ): Layer;
   icon(icon: IconName | IconLookup, params?: IconParams): Icon;
-}
+};
 export default api;
 
 export type IconProp = IconName | [IconPrefix, IconName] | IconLookup;

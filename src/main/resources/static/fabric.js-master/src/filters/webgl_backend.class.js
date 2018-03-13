@@ -41,7 +41,7 @@
         if (testPrecision(gl, precisions[i])){
           fabric.webGlPrecision = precisions[i];
           break;
-        };
+        }
       }
     }
     this.isSupported = isSupported;
@@ -59,8 +59,7 @@
     }
     this.setupGLContext(this.tileSize, this.tileSize);
     this.captureGPUInfo();
-  };
-
+  }
   WebglFilterBackend.prototype = /** @lends fabric.WebglFilterBackend.prototype */ {
 
     tileSize: 2048,
