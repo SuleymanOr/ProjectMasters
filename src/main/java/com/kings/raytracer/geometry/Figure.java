@@ -28,6 +28,12 @@ public abstract class Figure {
     private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType = "Normal";
 
+    public Figure(double[] diffuse, double reflectance, String surfaceType) {
+        this.diffuse = diffuse;
+        this.reflectance = reflectance;
+        this.surfaceType = surfaceType;
+    }
+
     /**
      * A generic intersection algorithm which returns the distance between the ray and the
      * implementing primitive.  Returns Double.POSITIVE_INFINITY if there is no intersection.
@@ -35,12 +41,6 @@ public abstract class Figure {
      * @param ray
      * @return
      */
-
-    public Figure(double[] diffuse, double reflectance, String surfaceType) {
-        this.diffuse = diffuse;
-        this.reflectance = reflectance;
-        this.surfaceType = surfaceType;
-    }
 
     abstract public double intersect(Ray ray);
 

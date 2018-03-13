@@ -24,7 +24,6 @@ public class ImageRender {
 
     public byte[] renderImage(){
 
-
         ByteArrayOutputStream image = new ByteArrayOutputStream();
 
         List<Figure> figures = new ArrayList<>();

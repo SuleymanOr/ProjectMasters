@@ -1,5 +1,7 @@
 package com.kings.raytracer.light;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.utility.MathUtils;
 
 public class LightDirected implements Light {
@@ -9,7 +11,8 @@ public class LightDirected implements Light {
     private double[] oppositeDirection;
     private double[] color = {1,1,1};
 
-    public LightDirected(double[] direction, double[] color) {
+    @JsonCreator
+    public LightDirected(@JsonProperty("direction")double[] direction, @JsonProperty("color")double[] color) {
         position = new double[] { Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY };
         this.direction = MathUtils.normalizeReturn(direction);
         this.color = color;
