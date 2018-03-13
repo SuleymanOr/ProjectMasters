@@ -1,10 +1,19 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kings.raytracer.auxiliary.Ray;
 
 /**
  * Abstract class from which all geometric primitives inherit
  */
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Sphere.class),
+})
 public abstract class Figure {
 
     private double[] specular = {1.0F, 1.0F, 1.0F}; // from surface class, used for all shapes

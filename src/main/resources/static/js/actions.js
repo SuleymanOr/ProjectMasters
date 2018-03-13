@@ -252,18 +252,17 @@ $(document).ready(function () {
         };
 
         var dummy_scene = {
-            "figures":[{"figureType" : "sphere", "center" : [0,0,0], "radius" : 0.5, "color" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
-            "lights": [{"direction" : [0,1,-1], "color" : [1,1,1]}],
+            "Figure":[{"type" : "net.davismol.jsonsubclassing.Sphere", "center" : [0,0,0], "radius" : 0.5, "color" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
             "backgroundColor" : [0,0,0],
             "ambientLight" : [1,1,1],
             "superSampleValue" : 1,
             "screenWidth" : 1280,
-            "screenHeight" : 800,
+            "screenHeight" : 800
         };
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "http://http://10.40.167.54:8080/api/rayTracerJson",
+            url: "/api/rayTracerJson",
             data: JSON.stringify(dummy_scene),
             dataType: 'json',
             cache: false,

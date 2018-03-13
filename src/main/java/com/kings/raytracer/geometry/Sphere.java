@@ -18,7 +18,6 @@ public class Sphere extends Figure {
 
     @Override
     public double intersect(Ray ray) {
-
         return intersectGeometric(ray);
     }
 
