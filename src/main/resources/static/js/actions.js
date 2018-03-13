@@ -241,7 +241,7 @@ $(document).ready(function () {
         //stop submit the form, we will post it manually.
         event.preventDefault();
         console.log(scene.toJSON());
-        //fire_ajax_submit();
+        fire_ajax_submit();
 
     });
 
@@ -251,12 +251,20 @@ $(document).ready(function () {
             radius: 70
         };
 
-
+        var dummy_scene = {
+            "figures":[{"figureType" : "sphere", "center" : [0,0,0], "radius" : 0.5, "color" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
+            "lights": [{"direction" : [0,1,-1], "color" : [1,1,1]}],
+            "backgroundColor" : [0,0,0],
+            "ambientLight" : [1,1,1],
+            "superSampleValue" : 1,
+            "screenWidth" : 1280,
+            "screenHeight" : 800,
+        };
         $.ajax({
             type: "POST",
             contentType: "application/json",
-            url: "/api/rayTracerJson",
-            data: JSON.stringify(formData),
+            url: "http://http://10.40.167.54:8080/api/rayTracerJson",
+            data: JSON.stringify(dummy_scene),
             dataType: 'json',
             cache: false,
             timeout: 600000,
