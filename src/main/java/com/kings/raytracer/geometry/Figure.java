@@ -8,13 +8,14 @@ import com.kings.raytracer.auxiliary.Ray;
  * Abstract class from which all geometric primitives inherit
  */
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS,
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
         property = "type")
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = Sphere.class),
+        @JsonSubTypes.Type(value = Sphere.class, name = "Sphere" ),
 })
 public abstract class Figure {
+
 
     private double[] specular = {1.0F, 1.0F, 1.0F}; // from surface class, used for all shapes
     private double[] diffuse = {1F, 1F, 1F}; // default values
@@ -34,6 +35,13 @@ public abstract class Figure {
      * @param ray
      * @return
      */
+
+    public Figure(double[] diffuse, double reflectance, String surfaceType) {
+        this.diffuse = diffuse;
+        this.reflectance = reflectance;
+        this.surfaceType = surfaceType;
+    }
+
     abstract public double intersect(Ray ray);
 
     public String getSurfaceType() {

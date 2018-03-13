@@ -252,13 +252,14 @@ $(document).ready(function () {
         };
 
         var dummy_scene = {
-            "Figure":[{"type" : "net.davismol.jsonsubclassing.Sphere", "center" : [0,0,0], "radius" : 0.5, "color" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
+            "figures":[{"type" : "Sphere", "center" : [0,0,0], "radius" : 0.5, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
             "backgroundColor" : [0,0,0],
             "ambientLight" : [1,1,1],
             "superSampleValue" : 1,
             "screenWidth" : 1280,
             "screenHeight" : 800
         };
+
         $.ajax({
             type: "POST",
             contentType: "application/json",

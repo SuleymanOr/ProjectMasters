@@ -1,5 +1,8 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
@@ -8,12 +11,12 @@ public class Sphere extends Figure {
     private double[] center;
     private double radius;
 
-    public Sphere(double[] center, double radius, double[] color, double reflectance, String surfaceType) {
+//    @JsonIgnoreProperties({ "specular", "ambient", "emission", "shininess", "checkersSize", "checkersDiffuse1", "checkersDiffuse2" })
+    @JsonCreator
+    public Sphere(@JsonProperty("center")double[] center,@JsonProperty("radius") double radius,@JsonProperty("diffuse") double[] diffuse,@JsonProperty("reflectance") double reflectance,@JsonProperty("surfaceType") String surfaceType) {
+        super(diffuse,reflectance,surfaceType);
         this.center = center;
         this.radius = radius;
-        this.setDiffuse(color);
-        this.setReflectance(reflectance);
-        this.setSurfaceType(surfaceType);
     }
 
     @Override
