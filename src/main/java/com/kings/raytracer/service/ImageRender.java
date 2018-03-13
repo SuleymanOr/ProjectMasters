@@ -1,10 +1,7 @@
 package com.kings.raytracer.service;
 
 import com.kings.raytracer.auxiliary.Camera;
-import com.kings.raytracer.auxiliary.Ray;
-import com.kings.raytracer.geometry.Cylinder;
 import com.kings.raytracer.geometry.Figure;
-import com.kings.raytracer.geometry.Rectangle;
 import com.kings.raytracer.geometry.Sphere;
 import com.kings.raytracer.light.Light;
 import com.kings.raytracer.light.LightDirected;
