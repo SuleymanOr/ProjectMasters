@@ -10,6 +10,7 @@
     <script src="js/bootstrap/bootstrap.js"></script>
     <script src="js/colorpicker/jscolor.js"></script>
     <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
     <script src="js/actions.js"></script>
     <title></title>
 </head>
@@ -57,7 +58,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Color</span>
                                     </div>
-                                    <input class="form-control jscolor"  id="new-sphere-color" value="ab2567">
+                                    <input class="form-control jscolor"  id="new-sphere-color" value="1CD4DF">
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
@@ -67,7 +68,7 @@
                                     <input type="text" class="form-control" id="new-sphere-y" placeholder="Y">
                                     <input type="text" class="form-control" id="new-sphere-z" placeholder="Z">
                                 </div>
-                                <button id="addSphere" class="btn btn-secondary shapeButton">Add</button>
+                                <button id="add-sphere"  class="btn btn-secondary shape-add-button">Add</button>
                             </div>
                         </div>
                     </div>
@@ -89,15 +90,9 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Size</span>
-                                    </div>
-                                    <input type="text" class="form-control"  id="new-cube-size">
-                                </div>
-                                <div class="input-group input-group-sm mb-3">
-                                    <div class="input-group-prepend">
                                         <span class="input-group-text" >Color</span>
                                     </div>
-                                    <input class="form-control jscolor"  id="new-cube-color" value="ab2567">
+                                    <input class="form-control jscolor"  id="new-cube-color" value="1CD4DF">
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
@@ -107,7 +102,61 @@
                                     <input type="text" class="form-control" id="new-cube-y" placeholder="Y">
                                     <input type="text" class="form-control" id="new-cube-z" placeholder="Z">
                                 </div>
-                                <button id="addCube" class="btn btn-secondary shapeButton">Add</button>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Dimentions :</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-cube-w" placeholder="W">
+                                    <input type="text" class="form-control" id="new-cube-l" placeholder="L">
+                                    <input type="text" class="form-control" id="new-cube-h" placeholder="H">
+                                </div>
+                                <button id="add-cube" class="btn btn-secondary shape-add-button">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseThree">
+                                    Torus
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-torus-name">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Radius</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-torus-radius">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Tube Radius</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-torus-tube-radius">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Color</span>
+                                    </div>
+                                    <input class="form-control jscolor"  id="new-torus-color" value="1CD4DF">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Center Position</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-torus-x" placeholder="X">
+                                    <input type="text" class="form-control" id="new-torus-y" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-torus-z" placeholder="Z">
+                                </div>
+                                <button id="add-torus" class="btn btn-secondary shape-add-button">Add</button>
                             </div>
                         </div>
                     </div>
@@ -143,7 +192,7 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Color</span>
                                     </div>
-                                    <input class="form-control jscolor"  id="new-cylinder-color" value="ab2567">
+                                    <input class="form-control jscolor"  id="new-cylinder-color" value="1CD4DF">
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
@@ -153,7 +202,53 @@
                                     <input type="text" class="form-control" id="new-cylinder-y" placeholder="Y">
                                     <input type="text" class="form-control" id="new-cylinder-z" placeholder="Z">
                                 </div>
-                                <button id="addCylinder" class="btn btn-secondary shapeButton">Add</button>
+                                <button id="add-cylinder" class="btn btn-secondary shape-add-button">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFive">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
+                                    Plane
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseFive" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-plane-name">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Width</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-plane-w">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Height</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-plane-h">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Color</span>
+                                    </div>
+                                    <input class="form-control jscolor"  id="new-plane-color" value="1CD4DF">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Center Position</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-plane-x" placeholder="X">
+                                    <input type="text" class="form-control" id="new-plane-y" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-plane-z" placeholder="Z">
+                                </div>
+                                <button id="add-plane" class="btn btn-secondary shape-add-button">Add</button>
                             </div>
                         </div>
                     </div>
@@ -166,7 +261,7 @@
                         <div class="col-sm-12">
                             <div class="card">
                                 <h5 class="card-header">Shapes</h5>
-                                <div class="card-body">
+                                <div class="card-body" id="shape-list">
                                    <div class="shape-item" key="sphere1">
                                        <span class="shape-item-name">Sphere1</span>
                                        <span class="shape-item-edit">/</span>
