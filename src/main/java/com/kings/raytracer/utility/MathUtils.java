@@ -8,6 +8,8 @@ public class MathUtils {
     public static final double GEOMETRY_THRESHOLD = 0.0001d;
     public static final int RECURSION_DEPTH = 8;
     public static final int OFFESET_CONSTANT = -1;
+    public static final int ZERO = 0;
+    public static  final int UNIT = 1;
 
 
     public static Color floatArrayToColor(double[] color) {

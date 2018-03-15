@@ -5,38 +5,43 @@ import com.kings.raytracer.utility.MathUtils;
 
 public class Rectangle extends Figure {
 
-    private double[] p0, p1, p2, p3;
+    private double[] point0, point1, point2, point3;
     private double[] normal = null;
     private double[] intersectionPoint = null;
-    private double d;
     private double[] AB, AC;
+
+    private double projection;
     private double ABdotAB, ACdotAC;
     private double ABnorm;
     private double ACnorm;
 
 
-    public Rectangle(double[] p0, double[] p1, double[] p2, double[] color, String surfaceType) {
-        this.p0 = p0;
-        this.p1 = p1;
-        this.p2 = p2;
+    public Rectangle(double[] point0, double[] point1, double[] point2, double[] color, String surfaceType) {
+        this.point0 = point0;
+        this.point1 = point1;
+        this.point2 = point2;
         this.setAmbient(new double[]{0.1F,0.1F,0.1F});
         this.setSpecular(new double[]{0.6F,0.6F,0.8F});
         this.setShininess(120);
         this.setDiffuse(color);
         this.setSurfaceType("Checkers");
-        setUpRectangle();
+        setAdditionalValues();
     }
 
 
     @Override
     public double intersect(Ray ray) {
+        return intersectSolution(ray);
+
+    }
+
+    private double intersectSolution(Ray ray) {
         if (distanceToPlaneIntersection(ray) != Double.POSITIVE_INFINITY &&
                 distanceToPlaneIntersection(ray) != Double.NEGATIVE_INFINITY) {
             return intersectCentre(ray, distanceToPlaneIntersection(ray));
         }else{
             return Double.POSITIVE_INFINITY;
         }
-
     }
 
     @Override
@@ -49,8 +54,8 @@ public class Rectangle extends Figure {
 
         double[] AP;
 
-        AP = MathUtils.calcPointsDiff(p0, point);
-        double q = 1 / MathUtils.norm(MathUtils.calcPointsDiff(p0, p1));
+        AP = MathUtils.calcPointsDiff(point0, point);
+        double q = 1 / MathUtils.norm(MathUtils.calcPointsDiff(point0, point1));
 
         double u = MathUtils.dotProduct(AB, AP) / ABdotAB;
         double v = MathUtils.dotProduct(AC, AP) / ACdotAC;
@@ -64,7 +69,7 @@ public class Rectangle extends Figure {
     private double distanceToPlaneIntersection(Ray ray) {
         double distanceToPlane = 0;
         if (MathUtils.dotProduct(ray.getDirection(), normal) != 0) {
-            distanceToPlane = (-(MathUtils.dotProduct(ray.getPosition(), normal) + d)) / MathUtils.dotProduct(ray.getDirection(), normal);
+            distanceToPlane = (-(MathUtils.dotProduct(ray.getPosition(), normal) + projection)) / MathUtils.dotProduct(ray.getDirection(), normal);
         }
         return getDistance(distanceToPlane);
     }
@@ -78,59 +83,97 @@ public class Rectangle extends Figure {
 
     private double intersectCentre(Ray ray, double distance) {
 
-        double[] v0, v1, v2;
+        double[] d0, d1, d2;
         double dot00, dot01, dot02, dot11, dot12;
-        double denominator, u, v;
+        double denominator, a, b;
 
         ray.setMagnitude(distance);
         intersectionPoint = ray.getEndPoint();
 
-        v0 = MathUtils.calcPointsDiff(p0, p2);
-        v1 = MathUtils.calcPointsDiff(p0, p1);
-        v2 = MathUtils.calcPointsDiff(p0, intersectionPoint);
+        d0 = MathUtils.calcPointsDiff(point0, point2);
+        d1 = MathUtils.calcPointsDiff(point0, point1);
+        d2 = MathUtils.calcPointsDiff(point0, intersectionPoint);
 
-        dot00 = MathUtils.dotProduct(v0, v0);
-        dot01 = MathUtils.dotProduct(v0, v1);
-        dot02 = MathUtils.dotProduct(v0, v2);
-        dot11 = MathUtils.dotProduct(v1, v1);
-        dot12 = MathUtils.dotProduct(v1, v2);
+        dot00 = MathUtils.dotProduct(d0, d0);
+        dot01 = MathUtils.dotProduct(d0, d1);
+        dot02 = MathUtils.dotProduct(d0, d2);
+        dot11 = MathUtils.dotProduct(d1, d1);
+        dot12 = MathUtils.dotProduct(d1, d2);
 
-        denominator = 1 / (dot00 * dot11 - dot01 * dot01);
-        u = (dot11 * dot02 - dot01 * dot12) * denominator;
-        v = (dot00 * dot12 - dot01 * dot02) * denominator;
+        denominator = MathUtils.UNIT / (dot00 * dot11 - dot01 * dot01);
+        a = (dot11 * dot02 - dot01 * dot12) * denominator;
+        b = (dot00 * dot12 - dot01 * dot02) * denominator;
 
-        if ((u > 0) && (v > 0) && (u < 1) && (v < 1)) {
+        return getIntersect(distance, a, b);
+
+    }
+
+    private double getIntersect(double distance, double a, double b) {
+        if ((a > 0) && (b > 0) && (a < 1) && (b < 1)) {
             return distance;
         }else {
             return Double.POSITIVE_INFINITY;
         }
-
-
     }
+
     public double[] getNormal() {
         return normal;
     }
 
-    public void setUpRectangle() {
+    public void setAdditionalValues() {
 
-        p3 = calcFourthPoint(p0, p1, p2);
+        point3 = getFourthPoint(point0, point1, point2);
 
-        normal = MathUtils.crossProduct(MathUtils.calcPointsDiff(p0, p1), MathUtils.calcPointsDiff(p0, p2));
+        normal = MathUtils.crossProduct(MathUtils.calcPointsDiff(point0, point1), MathUtils.calcPointsDiff(point0, point2));
         MathUtils.normalize(normal);
-        d = -(MathUtils.dotProduct(normal, p0));
+        projection = -(MathUtils.dotProduct(normal, point0));
 
-        AB = MathUtils.calcPointsDiff(p0, p1);
+        AB = MathUtils.calcPointsDiff(point0, point1);
         ABdotAB = MathUtils.dotProduct(AB, AB);
-        AC = MathUtils.calcPointsDiff(p0, p2);
+        AC = MathUtils.calcPointsDiff(point0, point2);
         ACdotAC = MathUtils.dotProduct(AC, AC);
         ABnorm = MathUtils.norm(AB);
         ACnorm = MathUtils.norm(AC);
     }
 
-    private double[] calcFourthPoint(double[] p0, double[] p1, double[] p2) {
-        double[] p3 = {p1[0] + (p2[0] - p0[0]), p1[1] + (p2[1] - p0[1]), p1[2] + (p2[2] - p0[2])};
-        return p3;
+    private double[] getFourthPoint(double[] p0, double[] p1, double[] p2) {
+        double[] finalPoint = {p1[0] + (p2[0] - p0[0]), p1[1] + (p2[1] - p0[1]), p1[2] + (p2[2] - p0[2])};
+        return finalPoint;
     }
 
+    public double[] getPoint0() {
+        return point0;
+    }
 
+    public void setPoint0(double[] point0) {
+        this.point0 = point0;
+    }
+
+    public double[] getPoint1() {
+        return point1;
+    }
+
+    public void setPoint1(double[] point1) {
+        this.point1 = point1;
+    }
+
+    public double[] getPoint2() {
+        return point2;
+    }
+
+    public void setPoint2(double[] point2) {
+        this.point2 = point2;
+    }
+
+    public double[] getPoint3() {
+        return point3;
+    }
+
+    public void setPoint3(double[] point3) {
+        this.point3 = point3;
+    }
+
+    public void setNormal(double[] normal) {
+        this.normal = normal;
+    }
 }

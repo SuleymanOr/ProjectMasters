@@ -4,12 +4,12 @@ import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
 public class Triangle extends Figure {
-    private  double[] v0, v1, v2;
+    private  double[] point0, point1, point2;
 
-    public Triangle(double[] v0, double[] v1, double[] v2,double[] color,double reflectance, String surfaceType) {
-        this.v0 = v0;
-        this.v1 = v1;
-        this.v2 = v2;
+    public Triangle(double[] point0, double[] point1, double[] point2, double[] color, double reflectance, String surfaceType) {
+        this.point0 = point0;
+        this.point1 = point1;
+        this.point2 = point2;
         this.setDiffuse(color);
         this.setReflectance(reflectance);
         this.setSurfaceType(surfaceType);
@@ -17,80 +17,73 @@ public class Triangle extends Figure {
 
     @Override
     public double intersect(Ray ray) {
-        double[] T = MathUtils.calcPointsDiff( v0,ray.getPosition());
-
-        double[] q1 = MathUtils.calcPointsDiff( v0,v1);
-        double[] Q = MathUtils.crossProduct(T,q1);
-
-        double[] q2 = MathUtils.calcPointsDiff(v0,v2);
-        double[] P = MathUtils.crossProduct(ray.getDirection(), q2);
-
-        double pDotE1 = MathUtils.dotProduct(P,q1);
-
-        if (pDotE1 >= MathUtils.EPSILON || pDotE1 <= -MathUtils.EPSILON) {
-            double u =  MathUtils.dotProduct(P,T)/ pDotE1;
-            double v = MathUtils.dotProduct(Q,ray.getDirection()) / pDotE1;
-
-            if (u >= 0 && v >= 0 && u + v <= 1) {
-                double distance = MathUtils.dotProduct(Q,q2) / pDotE1;
-                return distance;
-            }
-        }
-
-        return Double.NaN;
+        return intersectSolution(ray);
     }
 
-    public double[] getV0() {
-        return v0;
-    }
+    private double intersectSolution(Ray ray) {
+        double[] T = MathUtils.calcPointsDiff(point0,ray.getPosition());
 
-    public void setV0(double[] v0) {
-        this.v0 = v0;
-    }
+        double[] d1 = MathUtils.calcPointsDiff(point0, point1);
+        double[] Q = MathUtils.crossProduct(T,d1);
 
-    public double[] getV1() {
-        return v1;
-    }
+        double[] d2 = MathUtils.calcPointsDiff(point0, point2);
+        double[] P = MathUtils.crossProduct(ray.getDirection(), d2);
 
-    public void setV1(double[] v1) {
-        this.v1 = v1;
-    }
+        double projection = MathUtils.dotProduct(P,d1);
 
-    public double[] getV2() {
-        return v2;
-    }
-
-    public void setV2(double[] v2) {
-        this.v2 = v2;
+        Double distance = distanceToIntersection(ray, T, Q, d2, P, projection);
+        return distance;
     }
 
     @Override
-    public double[] getNormal(double[] point) throws Exception {
-        double[] q1 = MathUtils.calcPointsDiff(v1, v0);
-        double[] q2 = MathUtils.calcPointsDiff(v2, v0);
-        double[] v  = MathUtils.crossProduct(q1,q2);
-        MathUtils.normalize(v);
-        return  v;
-       /* double denominator =1d/(MathUtils.sqr(v[0]) +
-                MathUtils.sqr(v[1]) +
-                MathUtils.sqr(v[2]));
-
-
-        double[] d = MathUtils.calcPointsDiff(point,v0);
-        double[] c = MathUtils.crossProduct(d,q2);
-        double l = Math.sqrt(
-                MathUtils.sqr(c[0]) +
-                        MathUtils.sqr(c[1]) +
-                        MathUtils.sqr(c[2])
-        );
-        double f1 = l *denominator;
-
-        double v = e1.crossProduct(dot.subtract(v0)).getLength() * denominator;
-        double w = 1d - u - v;*/
+    public double[] getNormal(double[] point) {
+        double[] d1 = MathUtils.calcPointsDiff(point1, point0);
+        double[] d2 = MathUtils.calcPointsDiff(point2, point0);
+        double[] normal  = MathUtils.crossProduct(d1,d2);
+        MathUtils.normalize(normal);
+        return  normal;
     }
 
     @Override
     public double[] getTexturePoints(double[] point) {
         return new double[0];
     }
+
+    private Double distanceToIntersection(Ray ray, double[] t, double[] q, double[] d2, double[] p, double projection) {
+        if (projection >= MathUtils.EPSILON || projection <= -MathUtils.EPSILON) {
+            double a =  MathUtils.dotProduct(p, t)/ projection;
+            double b = MathUtils.dotProduct(q,ray.getDirection()) / projection;
+
+            if (a >= MathUtils.ZERO  && b >= MathUtils.ZERO && a + b <= MathUtils.UNIT) {
+                double distance = MathUtils.dotProduct(q,d2) / projection;
+                return distance;
+            }
+        }
+        return Double.NaN;
+    }
+
+    public double[] getPoint0() {
+        return point0;
+    }
+
+    public void setPoint0(double[] point0) {
+        this.point0 = point0;
+    }
+
+    public double[] getPoint1() {
+        return point1;
+    }
+
+    public void setPoint1(double[] point1) {
+        this.point1 = point1;
+    }
+
+    public double[] getPoint2() {
+        return point2;
+    }
+
+    public void setPoint2(double[] point2) {
+        this.point2 = point2;
+    }
+
 }

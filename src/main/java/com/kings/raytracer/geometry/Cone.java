@@ -49,7 +49,6 @@ public class Cone extends Figure  {
     }
 
     private boolean isPointOnCone(double[] point) {
-        // Note that we suppose that point is at least on infinite cone
         double bottomCheck[] = MathUtils.calcPointsDiff(start,point);
         double l = Math.sqrt(
                 MathUtils.sqr(bottomCheck[0]) +

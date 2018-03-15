@@ -29,7 +29,6 @@ public class RayService {
         return new Intersection(minDistance, minFigure);
     }
 
-
     public double[] getObjectColor(Ray ray, Intersection intersection, int recursionDepth, Scene scene) throws Exception {
 
         if (recursionDepth > MathUtils.RECURSION_DEPTH)
@@ -61,29 +60,26 @@ public class RayService {
         double[] sceneLightAmbient = scene.getAmbientLight();
         double[] surfaceLightAmbient = figure.getAmbient();
 
-        color[0] += sceneLightAmbient[0] * surfaceLightAmbient[0];
-        color[1] += sceneLightAmbient[1] * surfaceLightAmbient[1];
-        color[2] += sceneLightAmbient[2] * surfaceLightAmbient[2];
+        addAmbientLight(color, sceneLightAmbient, surfaceLightAmbient);
 
         double[] figureEmission = figure.getEmission();
-        color[0] += figureEmission[0];
-        color[1] += figureEmission[1];
-        color[2] += figureEmission[2];
+        addEmission(color, figureEmission);
 
         double[] reflectionDirection = MathUtils.reflectVector(MathUtils.oppositeVector(ray.getDirection()), normalLight);
-        Ray reflectionRay = new Ray(pointOfIntersection, reflectionDirection, 1);
+        Ray reflectionRay = new Ray(pointOfIntersection, reflectionDirection, MathUtils.UNIT);
         reflectionRay.normalize();
 
         Intersection reflectionIntersection = findIntersection(reflectionRay, scene);
-        double[] reflectionColor = getObjectColor(reflectionRay, reflectionIntersection, recursionDepth + 1, scene);
+        double[] reflectionColor = getObjectColor(reflectionRay, reflectionIntersection, recursionDepth + MathUtils.UNIT, scene);
         MathUtils.addVectorAndMultiply(color, reflectionColor, figure.getReflectance());
     }
+
 
     private void shootLight(Ray ray, Scene scene, Figure figure, double[] color, double[] specularLight, double[] pointOfIntersection, double[] diffuseLight, double[] normalLight) throws Exception {
         for (Light light : scene.getLights()) {
             double[] vectorToLight = light.getVectorToLight(pointOfIntersection);
 
-            Ray rayToLight = new Ray(pointOfIntersection, vectorToLight, 1);
+            Ray rayToLight = new Ray(pointOfIntersection, vectorToLight, MathUtils.UNIT);
             rayToLight.normalize();
 
             double distanceToFigure = findIntersection(rayToLight, scene).getDistance();
@@ -101,10 +97,7 @@ public class RayService {
 
         double visibleDiffuseLight = MathUtils.dotProduct(vectorToLight, normalLight);
         if (visibleDiffuseLight > 0) {
-
-            color[0] += diffuseLight[0] * amountOfLightAtIntersection[0] * visibleDiffuseLight;
-            color[1] += diffuseLight[1] * amountOfLightAtIntersection[1] * visibleDiffuseLight;
-            color[2] += diffuseLight[2] * amountOfLightAtIntersection[2] * visibleDiffuseLight;
+            setAmountOfLight(color, diffuseLight, amountOfLightAtIntersection, visibleDiffuseLight);
         }
 
         double[] reflectedVectorToLight = MathUtils.reflectVector(vectorToLight, normalLight);
@@ -115,10 +108,27 @@ public class RayService {
         if (visibleSpecularLight < 0) {
             visibleSpecularLight = Math.pow(Math.abs(visibleSpecularLight), figure.getShininess());
 
-            color[0] += specularLight[0] * amountOfLightAtIntersection[0] * visibleSpecularLight;
-            color[1] += specularLight[1] * amountOfLightAtIntersection[1] * visibleSpecularLight;
-            color[2] += specularLight[2] * amountOfLightAtIntersection[2] * visibleSpecularLight;
+            setAmountOfLight(color, specularLight, amountOfLightAtIntersection, visibleSpecularLight);
         }
+    }
+
+    private void setAmountOfLight(double[] color, double[] diffuseLight, double[] amountOfLightAtIntersection, double visibleDiffuseLight) {
+        color[0] += diffuseLight[0] * amountOfLightAtIntersection[0] * visibleDiffuseLight;
+        color[1] += diffuseLight[1] * amountOfLightAtIntersection[1] * visibleDiffuseLight;
+        color[2] += diffuseLight[2] * amountOfLightAtIntersection[2] * visibleDiffuseLight;
+    }
+
+
+    private void addEmission(double[] color, double[] figureEmission) {
+        color[0] += figureEmission[0];
+        color[1] += figureEmission[1];
+        color[2] += figureEmission[2];
+    }
+
+    private void addAmbientLight(double[] color, double[] sceneLightAmbient, double[] surfaceLightAmbient) {
+        color[0] += sceneLightAmbient[0] * surfaceLightAmbient[0];
+        color[1] += sceneLightAmbient[1] * surfaceLightAmbient[1];
+        color[2] += sceneLightAmbient[2] * surfaceLightAmbient[2];
     }
 
 }

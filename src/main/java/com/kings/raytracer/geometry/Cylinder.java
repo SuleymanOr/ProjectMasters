@@ -82,8 +82,6 @@ public class Cylinder extends Figure {
         ABdotAB = MathUtils.dotProduct(AB, AB);
 
 
-
-
         AO = MathUtils.calcPointsDiff(start, ray.getPosition());
         AOxAB = MathUtils.crossProduct(AO, direction);
         VxAB = MathUtils.crossProduct(ray.getDirection(), direction);
