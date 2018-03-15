@@ -2,7 +2,9 @@
 
   function getAbsolutePath(path) {
     var isAbsolute = /^https?:/.test(path);
-    if (isAbsolute) { return path; };
+    if (isAbsolute) {
+      return path;
+    }
     var imgEl = _createImageElement();
     imgEl.src = path;
     var src = imgEl.src;
