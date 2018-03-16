@@ -30,8 +30,6 @@ public class Scene {
         this.imageWidth = imageWidth;
         this.imageHeight = imageHeight;
     }
-
-    // Returns the color of the background (or texture) at the given coordinates
     public double[] getBackgroundAt(int x, int y) {
         if (backgroundTexture != null) {
             int textureX = (int) Math.round((double) x / imageWidth * textureWidth);

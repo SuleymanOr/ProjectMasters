@@ -8,49 +8,43 @@ public class Sphere extends Figure {
     private double[] center;
     private double radius;
 
-    public Sphere(double[] center, double radius, double[] color, double reflectance, String surfaceType) {
+    public Sphere(double[] center, double radius, double[] color, double[] specular, double reflection, double shininess, double[] ambient,  String surfaceType) {
         this.center = center;
         this.radius = radius;
         this.setDiffuse(color);
-        this.setReflectance(reflectance);
+        this.setSpecular(specular);
+        this.setReflectance(reflection);
+        this.setShininess(shininess);
+        this.setAmbient(ambient);
         this.setSurfaceType(surfaceType);
     }
 
+
     @Override
     public double intersect(Ray ray) {
-
-        return intersectGeometric(ray);
+        return intersectSolution(ray);
     }
 
-    private double intersectGeometric(Ray ray) {
+    private double intersectSolution(Ray ray) {
 
-        // Note that locals are named according to the equations in the lecture notes.
-        double[] L = MathUtils.calcPointsDiff(ray.getPosition(), center);
-        double[] V = ray.getDirection();
+        double[] vectorDifference = MathUtils.calcPointsDiff(ray.getPosition(), center);
+        double[] vectorDirection = ray.getDirection();
 
-        double tCA = MathUtils.dotProduct(L, V);
+        double projection = MathUtils.dotProduct(vectorDifference, vectorDirection);
 
-        if (tCA < 0) {
+        if (projection < 0) {
             return Double.POSITIVE_INFINITY;
         }
 
-        double LSquare = MathUtils.dotProduct(L, L);
+        double lightSquare = MathUtils.dotProduct(vectorDifference, vectorDifference);
 
-        double dSquare = LSquare - MathUtils.sqr(tCA);
+        double distanceSquare = lightSquare - MathUtils.sqr(projection);
         double radiusSquare = MathUtils.sqr(radius);
 
-        if (dSquare > radiusSquare) {
-            // In this case the ray misses the sphere
+        if (distanceSquare > radiusSquare) {
             return Double.POSITIVE_INFINITY;
-        }
-
-        double tHC = Math.sqrt(radiusSquare - dSquare);
-
-        if (MathUtils.dotProduct(L, L) < LSquare) {
-
-            return tCA + tHC;
-        } else {
-            return tCA - tHC;
+        }else{
+            return getIntersectionDistance(vectorDifference, projection, lightSquare, distanceSquare, radiusSquare);
         }
     }
 
@@ -63,39 +57,77 @@ public class Sphere extends Figure {
     }
 
     @Override
-    public double[] getTextureCoords(double[] point) {
-        double[] rp = MathUtils.calcPointsDiff(center, point);
+    public double[] getTexturePoints(double[] point) {
+        double[] distanceToCenter = MathUtils.calcPointsDiff(center, point);
 
-        double v = rp[2] / radius;
+        double pointY = getPointY(distanceToCenter[2]);
 
-        if (Math.abs(v) > 1) v -= 1 * Math.signum(v);
-        v = Math.acos(v);
+        double pointX = getPointX(distanceToCenter[0] / (radius * Math.sin(pointY)));
 
-        double u = rp[0] / (radius * Math.sin(v));
+        if (distanceToCenter[1] < MathUtils.ZERO)
+            pointX = -pointX;
+        if (distanceToCenter[2] < MathUtils.ZERO)
+            pointY = pointY + Math.PI;
 
-        if (Math.abs(u) > 1) u = Math.signum(u);
-        u = Math.acos(u);
+        pointX = (pointX / (2 * Math.PI));
+        pointY = (pointY / Math.PI);
 
-        if (rp[1] < 0)
-            u = -u;
-        if (rp[2] < 0)
-            v = v + Math.PI;
+        pointX = finalPointX(pointX);
 
-        if (Double.isNaN(u)) {
-            int a = 0;
-            a++;
+        return new double[]{pointX, pointY};
+    }
+
+    private double getIntersectionDistance(double[] vectorDifference, double projection, double lightSquare, double distanceSquare, double radiusSquare) {
+        double offset = Math.sqrt(radiusSquare - distanceSquare);
+        double threshold= MathUtils.dotProduct(vectorDifference, vectorDifference);
+
+        if ( threshold < lightSquare) {
+            return projection + offset;
+        } else {
+            return projection - offset;
         }
+    }
 
-        u = (u / (2 * Math.PI));
-        v = (v / Math.PI);
+    private double finalPointX(double pointX) {
+        if (pointX > 1) pointX -= 1;
+        if (pointX < 0) pointX += 1;
+        return pointX;
+    }
 
-        if (u > 1) u -= 1;
-        if (u < 0) u += 1;
+    private double getPointX(double pointX1) {
+        double pointX = pointX1;
 
-        if (v > 1) v -= 1;
-        if (v < 0) v += 1;
+        if (Math.abs(pointX) > MathUtils.UNIT) {
+            pointX = Math.signum(pointX);
+        }
+        pointX = Math.acos(pointX);
+        return pointX;
+    }
 
-        return new double[]{u, v};
+    private double getPointY(double pointY1) {
+        double pointY = pointY1 / radius;
+
+        if (Math.abs(pointY) > MathUtils.UNIT) {
+            pointY -= MathUtils.UNIT * Math.signum(pointY);
+        }
+        pointY = Math.acos(pointY);
+        return pointY;
+    }
+
+    public double[] getCenter() {
+        return center;
+    }
+
+    public void setCenter(double[] center) {
+        this.center = center;
+    }
+
+    public double getRadius() {
+        return radius;
+    }
+
+    public void setRadius(double radius) {
+        this.radius = radius;
     }
 }
 

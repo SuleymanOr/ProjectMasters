@@ -2,13 +2,11 @@ package com.kings.raytracer.geometry;
 
 import com.kings.raytracer.auxiliary.Ray;
 
-/**
- * Abstract class from which all geometric primitives inherit
- */
+
 public abstract class Figure {
 
-    private double[] specular = {1.0F, 1.0F, 1.0F}; // from surface class, used for all shapes
-    private double[] diffuse = {1F, 1F, 1F}; // default values
+    private double[] specular = {1.0F, 1.0F, 1.0F};
+    private double[] diffuse = {1F, 1F, 1F};
     private double[] ambient = {0.1F, 0.1F, 0.1F};
     private double[] emission = {0, 0, 0};
     private double shininess = 100.0F;
@@ -18,13 +16,6 @@ public abstract class Figure {
     private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType = "Normal";
 
-    /**
-     * A generic intersection algorithm which returns the distance between the ray and the
-     * implementing primitive.  Returns Double.POSITIVE_INFINITY if there is no intersection.
-     *
-     * @param ray
-     * @return
-     */
     abstract public double intersect(Ray ray);
 
     public String getSurfaceType() {
@@ -83,7 +74,6 @@ public abstract class Figure {
         this.specular = specular;
     }
 
-    // Return a normal vector for the given point
     public abstract double[] getNormal(double[] point) throws Exception;
 
     public double[] getCheckersColor(double[] point2D) {
@@ -98,11 +88,11 @@ public abstract class Figure {
         return null;
     }
 
-    public abstract double[] getTextureCoords(double[] point);
+    public abstract double[] getTexturePoints(double[] point);
 
     public double[] getColorAt(double[] point) {
         if(surfaceType.equals("Checkers"))
-            return getCheckersColor(getTextureCoords(point));
+            return getCheckersColor(getTexturePoints(point));
         else if(surfaceType.equals("Normal"))
                 return getDiffuse();
 
