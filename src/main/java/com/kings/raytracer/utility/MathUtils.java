@@ -5,22 +5,12 @@ import java.awt.*;
 public class MathUtils {
 
     public static final double EPSILON = 0.00000001F;
+    public static final double GEOMETRY_THRESHOLD = 0.0001d;
     public static final int RECURSION_DEPTH = 8;
     public static final int OFFESET_CONSTANT = -1;
+    public static final int ZERO = 0;
+    public static  final int UNIT = 1;
 
-    public static double[] parseVector(final String[] vecElems) {
-        if (vecElems == null || vecElems.length != 3) {
-            throw new IllegalArgumentException("Invalid vector string");
-        }
-
-        double[] result = new double[3];
-
-        for (int i = 0; i < 3; i++) {
-            result[i] = Double.parseDouble(vecElems[i]);
-        }
-
-        return result;
-    }
 
     public static Color floatArrayToColor(double[] color) {
         int r = Math.min(255, (int) Math.round(color[0] * 255));
@@ -41,13 +31,36 @@ public class MathUtils {
     }
 
     // Vector addition, adds addition to vec
-    public static void addVector(double[] vec, double addition[]) {
+      public static void addVector(double[] vec, double addition[]) {
         checkSize(vec);
         checkSize(addition);
 
         vec[0] += addition[0];
         vec[1] += addition[1];
         vec[2] += addition[2];
+    }
+
+    public static double[] addVectorReturn(double[] vec, double addition[]) {
+        checkSize(vec);
+        checkSize(addition);
+
+        vec[0] += addition[0];
+        vec[1] += addition[1];
+        vec[2] += addition[2];
+
+        return  vec;
+    }
+
+    // Multiplies addition by a scalar and then adds the result to vec
+    public static double[] multiplyVector(double[] vec, double multiply) {
+        checkSize(vec);
+
+        vec[0] *= multiply;
+        vec[1] *= multiply;
+        vec[2] *= multiply;
+
+
+        return vec;
     }
 
     // Multiplies addition by a scalar and then adds the result to vec
