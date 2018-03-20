@@ -261,7 +261,8 @@ $(document).ready(function () {
         alert("sent");
         //stop submit the form, we will post it manually.
         event.preventDefault();
-        console.log(scene.toJSON());
+        console.log(local_scene.toJsonForRaytracer());
+        console.log(local_scene);
         fire_ajax_submit();
 
     });
@@ -285,7 +286,7 @@ $(document).ready(function () {
             type: "POST",
             contentType: "application/json",
             url: "/api/rayTracerJson",
-            data: JSON.stringify(dummy_scene),
+            data: JSON.stringify(local_scene.toJsonForRaytracer()),
             dataType: 'json',
             cache: false,
             timeout: 600000,
