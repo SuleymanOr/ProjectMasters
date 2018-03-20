@@ -13,6 +13,7 @@ public class LightDirected implements Light {
 
     @JsonCreator
     public LightDirected(@JsonProperty("direction")double[] direction, @JsonProperty("color")double[] color) {
+        super();
         position = new double[] { Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY };
         this.direction = MathUtils.normalizeReturn(direction);
         this.color = color;

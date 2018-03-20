@@ -1,6 +1,7 @@
 package com.kings.raytracer.controller;
 
 
+import com.kings.raytracer.auxiliary.Camera;
 import com.kings.raytracer.geometry.Figure;
 import com.kings.raytracer.light.Light;
 
@@ -13,7 +14,7 @@ public class RayTracingImage {
 
     ////////  Figure values ////////
     private List<Figure> figures = new ArrayList<>();
-    private List<Light> lights = new ArrayList<>();
+//    private List<Light> lights = new ArrayList<>();
 
     ////////  Scene values  ////////
     private double[] backgroundColor;
@@ -23,11 +24,7 @@ public class RayTracingImage {
     private int screenHeight;
 
     ////////  Camera values ///////
-    private double[] eye;
-    private double[] lookAt;
-    private double[] upDirection;
-    private double cameraScreenDist = 1;
-    private double cameraScreenWidth = 2;
+    private Camera camera;
 
     ////////////////////////////////  FIGURE VALUES  ////////////////////////////////////////
 
@@ -39,13 +36,13 @@ public class RayTracingImage {
         this.figures = figures;
     }
 
-    public List<Light> getLights() {
-        return lights;
-    }
-
-    public void setLights(List<Light> lights) {
-        this.lights = lights;
-    }
+//    public List<Light> getLights() {
+//        return lights;
+//    }
+//
+//    public void setLights(List<Light> lights) {
+//        this.lights = lights;
+//    }
 
 
     ////////////////////////////////  SCENE VALUES  ////////////////////////////////////////
@@ -93,44 +90,12 @@ public class RayTracingImage {
 
     /////////////////////////////  CAMERA VALUES  //////////////////////////////////////////
 
-    public double[] getEye() {
-        return eye;
+
+    public Camera getCamera() {
+        return camera;
     }
 
-    public void setEye(double[] eye) {
-        this.eye = eye;
+    public void setCamera(Camera camera) {
+        this.camera = camera;
     }
-
-    public double[] getLookAt() {
-        return lookAt;
-    }
-
-    public void setLookAt(double[] lookAt) {
-        this.lookAt = lookAt;
-    }
-
-    public double[] getUpDirection() {
-        return upDirection;
-    }
-
-    public void setUpDirection(double[] upDirection) {
-        this.upDirection = upDirection;
-    }
-
-    public double getCameraScreenDist() {
-        return cameraScreenDist;
-    }
-
-    public void setCameraScreenDist(double cameraScreenDist) {
-        this.cameraScreenDist = cameraScreenDist;
-    }
-
-    public double getCameraScreenWidth() {
-        return cameraScreenWidth;
-    }
-
-    public void setCameraScreenWidth(double cameraScreenWidth) {
-        this.cameraScreenWidth = cameraScreenWidth;
-    }
-
 }

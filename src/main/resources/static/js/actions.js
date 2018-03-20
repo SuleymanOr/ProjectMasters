@@ -179,8 +179,8 @@ function LocalScene(scene,camera){
       backScene.superSampleValue = 1;
       backScene.screenWidth = 1280;
       backScene.screenHeight = 800;
-      backScene.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
-      backScene.lights = [{"type":"LightDirected", "direction":[0,1,-1],"color":[1,1,1]}];
+      data.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
+      // data.lights = [{"type":"LightDirected", "direction":[0,1,-1],"color":[1,1,1]}];
       data.scene = backScene;
       data.camera = {"eye": [camera.position.x/100.0,camera.position.y/100.0,camera.position.z/100.0],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
       return data;
