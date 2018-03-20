@@ -1,5 +1,8 @@
 var id_increment  = 1;
-
+var scale = 100;
+var scalePos = function(val){
+    return val/100.0;
+}
 function refreshList(list){
     $("#shape-list").html("");
     list.forEach(function(e){
@@ -28,7 +31,7 @@ function Sphere (id,name,type,color,x,y,z,radius){
     Shape.call(this,id,name,type,color,x,y,z);
     this.radius = radius;
     this.toJsonForRaytracer = function () {
-        return {"type" : "Sphere", "center" : [x,y,z], "radius" : radius, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
+        return {"type" : "Sphere", "center" : [x/100.0,y/100.0,z/100.0], "radius" : radius/100.0, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
     };
 }
 
@@ -176,8 +179,9 @@ function LocalScene(scene,camera){
       backScene.superSampleValue = 1;
       backScene.screenWidth = 1280;
       backScene.screenHeight = 800;
-      backScene.camera = {"eye": [camera.position.x,camera.position.y,camera.position.z],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
+      backScene.camera = {"eye": [camera.position.x/100.0,camera.position.y/100.0,camera.position.z/100.0],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
       backScene.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
+      backScene.lights = [{"type":"LightDirected", "direction":[0,1,-1],"color":[1,1,1]}];
       data.scene = backScene;
       return data;
     };
@@ -269,9 +273,6 @@ $(document).ready(function () {
 
     function fire_ajax_submit() {
 
-        var formData = {
-            radius: 70
-        };
 
         var dummy_scene = {
             "figures":[{"type" : "Sphere", "center" : [0,0,0], "radius" : 0.5, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
