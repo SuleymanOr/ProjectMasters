@@ -19,11 +19,17 @@ function Shape(id,name,type,color,x,y,z){
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
+    this.toJsonForRaytracer= function () {
+      return {};
+    };
 }
 
 function Sphere (id,name,type,color,x,y,z,radius){
     Shape.call(this,id,name,type,color,x,y,z);
     this.radius = radius;
+    this.toJsonForRaytracer = function () {
+        return {"type" : "Sphere", "center" : [x,y,z], "radius" : radius, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
+    };
 }
 
 function Cube (id,name,type,color,x,y,z,w,l,h){
@@ -52,7 +58,7 @@ function Plane (id,name,type,color,x,y,z,w,h){
     this.height = h;
 }
 
-function LocalScene(scene){
+function LocalScene(scene,camera){
     this.elements = [];
     this.live_scene = scene;
     this.addSphere = function () {
@@ -161,6 +167,20 @@ function LocalScene(scene){
         this.live_scene.remove(tmp);
         delete this.elements[id];
     };
+
+    this.toJsonForRaytracer = function(){
+      var data = {};
+      var backScene = {};
+      backScene.backgroundColor = [0,0,0];
+      backScene.ambientLight = [1,1,1];
+      backScene.superSampleValue = 1;
+      backScene.screenWidth = 1280;
+      backScene.screenHeight = 800;
+      backScene.camera = {"eye": [camera.position.x,camera.position.y,camera.position.z],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
+      backScene.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
+      data.scene = backScene;
+      return data;
+    };
 };
 
 $(document).ready(function () {
@@ -172,7 +192,7 @@ $(document).ready(function () {
     document.getElementById('canvas-container').appendChild( renderer.domElement );
 
     camera.position.y=50;
-
+    console.log(camera);
     var light = new THREE.PointLight( 0xFFFFFF,2,0,2 );
     light.position.set( 0, 100, 0 );
     scene.add( light );
@@ -205,7 +225,7 @@ $(document).ready(function () {
 
     render();
 
-    var local_scene = new LocalScene(scene);
+    var local_scene = new LocalScene(scene,camera);
 
     $(".shape-add-button").click(function (event) {
         var id =  $(this).attr("id");
@@ -229,6 +249,7 @@ $(document).ready(function () {
                 alert("Unknown Object!");
         }
         refreshList(local_scene.elements);
+        console.log(camera);
     });
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
