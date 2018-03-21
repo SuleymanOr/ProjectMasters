@@ -178,8 +178,8 @@ function LocalScene(scene,camera,ambient,background){
     this.toJsonForRaytracer = function(){
       var data = {};
       var backScene = {};
-      backScene.backgroundColor = [0,0,0];
-      backScene.ambientLight = [1,1,1];
+      data.backgroundColor = this.background.toArray();
+      data.ambientLight = this.ambient.color.toArray();
       backScene.superSampleValue = 1;
       backScene.screenWidth = 1280;
       backScene.screenHeight = 800;
@@ -196,16 +196,16 @@ $(document).ready(function () {
     var camera = new THREE.PerspectiveCamera( 55, 2, 0.1, 1000 );
 
     camera.position.y=50;
-    var ambientInitial = 0xa0a0a0;
-    var backgroundInitial = 0x555555;
+    var ambientInitial = 0xffffff;
+    var backgroundInitial = 0x000000;
 
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
     scene.background =  new THREE.Color(backgroundInitial);
 
-    var light = new THREE.AmbientLight( 'rgb(200,200,250)' ,1);
-    scene.add( light );
+    var ambientLight = new THREE.AmbientLight( ambientInitial ,1);
+    scene.add( ambientLight );
 
     var controls = new THREE.OrbitControls( camera, document.getElementById("canvas-container") );
     controls.update();
@@ -216,9 +216,9 @@ $(document).ready(function () {
         scene.background.set(parseInt($("#scene-background").val(),16));
     });
     $("#ambient-light").change(function(){
-        light.color.set(parseInt($("#ambient-light").val(),16));
+        ambientLight.color.set(parseInt($("#ambient-light").val(),16));
     });
-    // renderer
+    // helper renderer
     renderer2 = new THREE.WebGLRenderer();
     renderer2.setSize( $("#axis-helper").width(), ($("#axis-helper").width()) );
     document.getElementById('axis-helper').appendChild( renderer2.domElement );
@@ -234,6 +234,7 @@ $(document).ready(function () {
     axes2 = new THREE.AxisHelper( 5 );
     scene2.add( axes2 );
 
+    //  render update function
     var render = function () {
         requestAnimationFrame( render );
 
@@ -253,7 +254,7 @@ $(document).ready(function () {
 
     render();
 
-    var local_scene = new LocalScene(scene,camera);
+    var local_scene = new LocalScene(scene,camera,ambientLight,scene.background);
 
     $(".shape-add-button").click(function (event) {
         var id =  $(this).attr("id");
