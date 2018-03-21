@@ -29,7 +29,7 @@ public class RayTracerController {
 
 //////////////////////////////////////////// VALUES PASSED FROM FRONT END  ////////////////////////////////////////////
         List<Figure> mFigures = data.getFigures();
-        List<Light> mLights = data.getLights();
+        //List<Light> mLights = data.getLights();
 
 //        values for the scene
 
@@ -43,32 +43,35 @@ public class RayTracerController {
 
 //        values for the camera
 
-        double[] eye = data.getEye();
-        double[] lookAt = data.getLookAt();
-        double[] upDirection = data.getUpDirection();
-        double cameraScreenDist = data.getCameraScreenDist();
-        double cameraScreenWidth = data.getCameraScreenWidth();
+//        double[] eye = data.getEye();
+//        double[] lookAt = data.getLookAt();
+//        double[] upDirection = data.getUpDirection();
+//        double cameraScreenDist = data.getCameraScreenDist();
+//        double cameraScreenWidth = data.getCameraScreenWidth();
 
 //
 
 
 //////////////////////////////////////////// HARDCODED VALUES  ////////////////////////////////////////////
 
-        List<Figure> figures = new ArrayList<>();
-        figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.6F, 0.5F, 1F}, 0.5, "Normal"));
+//        List<Figure> figures = new ArrayList<>();
+//        figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.6F, 0.5F, 1F}, 0.5, "Normal"));
         List<Light> lights = new ArrayList<>();
         LightDirected lightDirected = new LightDirected(new double[]{0, 1,-1}, new double[]{1,1,1});
         lights.add(lightDirected);
-        Scene scene = new Scene(figures, lights, new double[]{0.5,0.5,1}, new double[]{1,1,1},1, 1280, 800);
-        Camera camera = new Camera(new double[]{0,0,2}, new double[]{0,0,0}, new double[]{0,1,0}, 1, 2);
+//        Scene scene = new Scene(figures, lights, new double[]{0.5,0.5,1}, new double[]{1,1,1},1, 1280, 800);
+//        Camera camera = new Camera(new double[]{0,0,2}, new double[]{0,0,0}, new double[]{0,1,0}, 1, 2);
+
+        Scene scene = new Scene(mFigures, lights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
+        Camera camera = data.getCamera();
 
         byte[] result = imageRender.renderImage(scene, camera);
+//
+//        List<Figure> radius = data.getFigures();
+//        int screen = data.getScreenHeight();
 
-        List<Figure> radius = data.getFigures();
-        int screen = data.getScreenHeight();
-
-        System.out.println(screen);
-        System.out.println(radius.get(0).getReflectance());
+//        System.out.println(screen);
+//        System.out.println(radius.get(0).getReflectance());
 
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(result));
 
