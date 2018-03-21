@@ -47,6 +47,18 @@
     margin-left: 2px;
 }
 
+.scene-control-item{
+    display: inline-block;
+    width:28% ;
+    margin: 0 2%;
+    height: 28%;
+    vertical-align: top;
+}
+
+#axis-helper{
+    width: 10%;
+}
+
 #resultModal .modal-header{
     justify-content: left;
 }

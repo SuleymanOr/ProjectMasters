@@ -11,7 +11,7 @@ function refreshList(list){
     });
 };
 
-function Shape(id,name,type,color,x,y,z){
+function Shape(id,name,type,color,x,y,z,direction){
     this.id = id;
     this.name = name;
     this.type = type;
@@ -19,6 +19,7 @@ function Shape(id,name,type,color,x,y,z){
     this.x = x;
     this.y = y;
     this.z = z;
+    this.direction = direction;
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
@@ -27,8 +28,8 @@ function Shape(id,name,type,color,x,y,z){
     };
 }
 
-function Sphere (id,name,type,color,x,y,z,radius){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Sphere (id,name,type,color,x,y,z,radius,direction){
+    Shape.call(this,id,name,type,color,x,y,z,direction);
     this.radius = radius;
     this.toJsonForRaytracer = function () {
         return {"type" : "Sphere", "center" : [x/100.0,y/100.0,z/100.0], "radius" : radius/100.0, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
@@ -61,9 +62,12 @@ function Plane (id,name,type,color,x,y,z,w,h){
     this.height = h;
 }
 
-function LocalScene(scene,camera){
+function LocalScene(scene,camera,ambient,background){
     this.elements = [];
+    this.lights = [];
     this.live_scene = scene;
+    this.ambient = ambient;
+    this.background = background;
     this.addSphere = function () {
         // Adding rhe shape to local shape list
         var id = id_increment;
@@ -75,10 +79,10 @@ function LocalScene(scene,camera){
         var x = parseInt($("#new-sphere-x").val(),10);
         var y = parseInt($("#new-sphere-y").val(),10);
         var z = parseInt($("#new-sphere-z").val(),10);
-        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius);
+        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var material = new THREE.MeshPhongMaterial( { color: color , wireframe: false} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = id;
         sphere.position.set(x,y,z);
@@ -191,39 +195,57 @@ $(document).ready(function () {
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera( 55, 2, 0.1, 1000 );
 
+    camera.position.y=50;
+    var ambientInitial = 0xa0a0a0;
+    var backgroundInitial = 0x555555;
+
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
+    scene.background =  new THREE.Color(backgroundInitial);
 
-    camera.position.y=50;
-    console.log(camera);
-    var light = new THREE.PointLight( 0xFFFFFF,2,0,2 );
-    light.position.set( 0, 100, 0 );
+    var light = new THREE.AmbientLight( 'rgb(200,200,250)' ,1);
     scene.add( light );
-
-    var light2 = new THREE.AmbientLight( 0xa0a0a0 ); // soft white light
-    scene.add( light2 );
 
     var controls = new THREE.OrbitControls( camera, document.getElementById("canvas-container") );
     controls.update();
+
+    //scene controls and axis helper
+
+    $("#scene-background").change(function(){
+        scene.background.set(parseInt($("#scene-background").val(),16));
+        console.log(scene);
+    });
+    // renderer
+    renderer2 = new THREE.WebGLRenderer();
+    renderer2.setSize( $("#axis-helper").width(), ($("#axis-helper").width()) );
+    document.getElementById('axis-helper').appendChild( renderer2.domElement );
+
+    scene2 = new THREE.Scene();
+    scene2.background = new THREE.Color(0x333333);
+
+    // camera
+    camera2 = new THREE.PerspectiveCamera( 50, 1, 1, 1000 );
+    camera2.up = camera.up; // important!
+    camera2.position.y=15;
+    // axes
+    axes2 = new THREE.AxisHelper( 5 );
+    scene2.add( axes2 );
 
     var render = function () {
         requestAnimationFrame( render );
 
         // cube.rotation.x += 0.005;
         // cube.rotation.y += 0.008;
-        // camera.updateProjectionMatrix();
-        // camera.lookAt( scene.position );
-        //
+
         // // Move the camera in a circle with the pivot point in the centre of this circle...
-        // // ...so that the pivot point, and focus of the camera is on the centre of our scene.
-        // var timer = (new Date().getTime() % 30000)*3.14159265/15000;
-        // // var timer = (new Date().getTime() * 0.0005);
-        // camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
-        // camera.position.z = Math.floor(Math.sin( timer ) * 1000)/10.0;
-
         controls.update();
+        camera2.position.copy( camera.position );
+        camera2.position.sub( controls.target ); // added by @libe
+        camera2.position.setLength( 15);
+        camera2.lookAt( scene2.position );
 
+        renderer2.render( scene2, camera2 );
         renderer.render(scene, camera);
     };
 
