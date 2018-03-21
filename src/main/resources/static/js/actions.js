@@ -82,7 +82,7 @@ function LocalScene(scene,camera,ambient,background){
         this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
-        var material = new THREE.MeshPhongMaterial( { color: color , wireframe: false} );
+        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = id;
         sphere.position.set(x,y,z);
@@ -214,7 +214,9 @@ $(document).ready(function () {
 
     $("#scene-background").change(function(){
         scene.background.set(parseInt($("#scene-background").val(),16));
-        console.log(scene);
+    });
+    $("#ambient-light").change(function(){
+        light.color.set(parseInt($("#ambient-light").val(),16));
     });
     // renderer
     renderer2 = new THREE.WebGLRenderer();
