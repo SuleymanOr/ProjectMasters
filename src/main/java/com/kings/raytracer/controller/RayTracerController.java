@@ -59,7 +59,6 @@ public class RayTracerController {
 //        Light lightDirected = new Light(new double[]{0, 1,-1}, new double[]{1,1,1});
 //        lights.add(lightDirected);
         Scene scene = new Scene(mFigures, mLights, backgroundColor,ambientLight,superSampleValue,imageWidth,imageHeight);
-        String g = "f";
         //Camera camera = new Camera(new double[]{0,0,2}, new double[]{0,0,0}, new double[]{0,1,0}, 1, 2);
 
 //        Scene scene = new Scene(mFigures, lights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);

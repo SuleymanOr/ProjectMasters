@@ -18,13 +18,24 @@ public class Cylinder extends Figure {
     private double[] referenceVector;
     private double[] pivotVector;
 
-    public Cylinder(double[] start, double[] direction, double length, double radius, double[] color, String surfaceType) {
+    public Cylinder(double[] start,
+                    double[] direction,
+                    double length,
+                    double radius,
+                    double[] diffuse,
+                    double reflectance,
+                    String surfaceType,
+                    double[] ambient,
+                    double shininess,
+                    double[] emission,
+                    double[] checkersDiffuse1,
+                    double[] checkersDiffuse2,
+                    double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.start = start;
         this.direction = direction;
         this.length = length;
         this.radius = radius;
-        this.setDiffuse(color);
-        this.setSurfaceType(surfaceType);
     }
 
     /*

@@ -1,5 +1,6 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
@@ -14,14 +15,24 @@ public class Cone extends Figure  {
     private  double height;
 
 
-    public Cone( double[] start, double[] direction, double angle, double height,double[] color,double reflectance, String surfaceType) {
+    public Cone( @JsonProperty("start")double[] start,
+                 @JsonProperty("direction")double[] direction,
+                 @JsonProperty("angle")double angle,
+                 @JsonProperty("height")double height,
+                 @JsonProperty("diffuse")double[] diffuse,
+                 @JsonProperty("reflectance") double reflectance,
+                 @JsonProperty("surfaceType") String surfaceType,
+                 @JsonProperty("ambient") double[] ambient,
+                 @JsonProperty("shininess") double shininess,
+                 @JsonProperty("emission") double[] emission,
+                 @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                 @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                 @JsonProperty("specular") double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.start = start;
         this.direction = MathUtils.normalizeReturn(direction);
         this.angle = angle;
         this.height = height;
-        this.setDiffuse(color);
-        this.setReflectance(reflectance);
-        this.setSurfaceType(surfaceType);
     }
 
     @Override

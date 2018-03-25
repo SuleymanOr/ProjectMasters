@@ -1,12 +1,12 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
 public class Rectangle extends Figure {
 
     private double[] point0, point1, point2, point3;
-    private double[] s0, s1, s2, s3;
     private double[] normal = null;
     private double[] intersectionPoint = null;
     private double[] AB, AC;
@@ -17,15 +17,22 @@ public class Rectangle extends Figure {
     private double ACnorm;
 
 
-    public Rectangle(double[] point0, double[] point1, double[] point2, double[]color) {
+    public Rectangle(@JsonProperty("point0")double[] point0,
+                     @JsonProperty("point1")double[] point1,
+                     @JsonProperty("point2") double[] point2,
+                     @JsonProperty("diffuse") double[] diffuse,
+                     @JsonProperty("reflectance") double reflectance,
+                     @JsonProperty("surfaceType") String surfaceType,
+                     @JsonProperty("ambient") double[] ambient,
+                     @JsonProperty("shininess") double shininess,
+                     @JsonProperty("emission") double[] emission,
+                     @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                     @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                     @JsonProperty("specular") double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.point0 = point0;
         this.point1 = point1;
         this.point2 = point2;
-        this.setAmbient(new double[]{0.1F,0.1F,0.1F});
-        this.setSpecular(new double[]{0.6F,0.6F,0.8F});
-        this.setShininess(120);
-        this.setDiffuse(color);
-        this.setSurfaceType("Checkers");
         setAdditionalValues();
     }
 
