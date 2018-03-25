@@ -28,10 +28,20 @@ public abstract class Figure {
     private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType = "Normal";
 
-    public Figure(double[] diffuse, double reflectance, String surfaceType) {
+    public Figure(double[] diffuse, double reflectance,
+                  String surfaceType, double[] ambient,
+                  double shininess, double[] emission,
+                  double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular) {
         this.diffuse = diffuse;
         this.reflectance = reflectance;
         this.surfaceType = surfaceType;
+        this.ambient = ambient;
+        this.shininess = shininess;
+        this.emission = emission;
+        this.checkersDiffuse1 = checkersDiffuse1;
+        this.checkersDiffuse2 = checkersDiffuse2;
+        this.specular = specular;
+
     }
 
     /**
@@ -115,11 +125,11 @@ public abstract class Figure {
         return null;
     }
 
-    public abstract double[] getTextureCoords(double[] point);
+    public abstract double[] getTexturePoints(double[] point);
 
     public double[] getColorAt(double[] point) {
         if(surfaceType.equals("Checkers"))
-            return getCheckersColor(getTextureCoords(point));
+            return getCheckersColor(getTexturePoints(point));
         else if(surfaceType.equals("Normal"))
                 return getDiffuse();
 

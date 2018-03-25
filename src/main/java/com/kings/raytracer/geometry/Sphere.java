@@ -11,10 +11,19 @@ public class Sphere extends Figure {
     private double[] center;
     private double radius;
 
-//    @JsonIgnoreProperties({ "specular", "ambient", "emission", "shininess", "checkersSize", "checkersDiffuse1", "checkersDiffuse2" })
     @JsonCreator
-    public Sphere(@JsonProperty("center")double[] center,@JsonProperty("radius") double radius,@JsonProperty("diffuse") double[] diffuse,@JsonProperty("reflectance") double reflectance,@JsonProperty("surfaceType") String surfaceType) {
-        super(diffuse,reflectance,surfaceType);
+    public Sphere(@JsonProperty("center")double[] center,
+                  @JsonProperty("radius") double radius,
+                  @JsonProperty("diffuse") double[] diffuse,
+                  @JsonProperty("reflectance") double reflectance,
+                  @JsonProperty("surfaceType") String surfaceType,
+                  @JsonProperty("ambient") double[] ambient,
+                  @JsonProperty("shininess") double shininess,
+                  @JsonProperty("emission") double[] emission,
+                  @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                  @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                  @JsonProperty("specular") double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.center = center;
         this.radius = radius;
     }
@@ -65,7 +74,7 @@ public class Sphere extends Figure {
     }
 
     @Override
-    public double[] getTextureCoords(double[] point) {
+    public double[] getTexturePoints(double[] point) {
         double[] rp = MathUtils.calcPointsDiff(center, point);
 
         double v = rp[2] / radius;
