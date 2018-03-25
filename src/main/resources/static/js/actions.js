@@ -50,12 +50,13 @@ function Shape(id,name,type,color,x,y,z,direction){
     this.emission = [0,0,0];
     this.checkersDiffuse1 = [1,1,1];
     this.checkersDiffuse2 = [0.1,0.1,0.1];
+    this.specular = [1,1,1];
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
     this.shapeToJsonForRaytracer= function () {
         color =  new THREE.Color(this.color);
-        return {"type" : this.type, "position" : [x/100.0,y/100.0,z/100.0], "direction" : direction, "diffuse" : color.toArray(), "reflectance" : this.reflectance,  "ambient" : this. ambient, "shininess" : this.shininess, "emission" : this.emission, "checkersDiffuse1" : this.checkersDiffuse1, "checkersDiffuse2" : this.checkersDiffuse2};
+        return {"type" : this.type, "center" : [x/100.0,y/100.0,z/100.0], "direction" : direction, "diffuse" : color.toArray(),"surfaceType" : this.surfaceType, "reflectance" : this.reflectance,  "ambient" : this. ambient, "shininess" : this.shininess, "emission" : this.emission, "checkersDiffuse1" : this.checkersDiffuse1, "checkersDiffuse2" : this.checkersDiffuse2, "specular" : this.specular};
     };
 }
 
