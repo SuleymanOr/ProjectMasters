@@ -215,7 +215,7 @@ function LocalScene(scene,camera,ambient,background){
         var y = parseInt($("#new-light-y").val(),10);
         var z = parseInt($("#new-light-z").val(),10);
         this.lights[id] = new Light(id,name,type,color,x,y,z);
-        var light = new THREE.PointLight( color );
+        var light = new THREE.DirectionalLight( color,2 );
         light.position.set( x, y, z );
         scene.add( light );
 
@@ -353,11 +353,11 @@ $(document).ready(function () {
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
         local_scene.removeShape(parseInt($(this).parent().attr("key"),10));
-        refreshList(local_scene.lights,local_scene.lights);
+        refreshList(local_scene.shapes,local_scene.lights);
     }));
     $("#light-list").on("click",".light-item-delete",(function () {
         local_scene.removeLight(parseInt($(this).parent().attr("key"),10));
-        refreshList(local_scene.lights,local_scene.lights);
+        refreshList(local_scene.shapes,local_scene.lights);
     }));
 
     $("#render-button").click(function (event) {
