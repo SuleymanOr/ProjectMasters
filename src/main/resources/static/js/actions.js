@@ -30,7 +30,7 @@ function Light(id,name,type,color,x,y,z){
     };
     this.toJsonForRaytracer= function () {
         color =  new THREE.Color(this.color);
-        return {"type" : "Light", "position" : [x/100.0,y/100.0,z/100.0],"color" : color.toArray()};
+        return {"type" : "Light", "direction" : [x/100.0,y/100.0,z/100.0],"color" : color.toArray()};
     };
 }
 
@@ -43,12 +43,19 @@ function Shape(id,name,type,color,x,y,z,direction){
     this.y = y;
     this.z = z;
     this.direction = direction;
+    this.surfaceType = "Normal";
+    this.reflectance = 0.5;
+    this.ambient = [0.1,0.1,0.1];
+    this.shininess = 100;
+    this.emission = [0,0,0];
+    this.checkersDiffuse1 = [1,1,1];
+    this.checkersDiffuse2 = [0.1,0.1,0.1];
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
     this.shapeToJsonForRaytracer= function () {
         color =  new THREE.Color(this.color);
-        return {"type" : this.type, "position" : [x/100.0,y/100.0,z/100.0], "direction" : direction, "color" : color.toArray(), "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"};
+        return {"type" : this.type, "position" : [x/100.0,y/100.0,z/100.0], "direction" : direction, "diffuse" : color.toArray(), "reflectance" : this.reflectance,  "ambient" : this. ambient, "shininess" : this.shininess, "emission" : this.emission, "checkersDiffuse1" : this.checkersDiffuse1, "checkersDiffuse2" : this.checkersDiffuse2};
     };
 }
 
@@ -99,7 +106,7 @@ function LocalScene(scene,camera,ambient,background){
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-sphere-name").val();
-        var type = "sphere";
+        var type = "Sphere";
         var radius =  parseInt($("#new-sphere-radius").val(),10);
         var color = parseInt($("#new-sphere-color").val(),16);
         var x = parseInt($("#new-sphere-x").val(),10);
