@@ -1,5 +1,6 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
@@ -13,15 +14,22 @@ public class Circle extends Figure{
     private double[] pivotVector;
 
 
-    public Circle( double[] center, double radius, double[] normal, double[] color, double[] specular, double reflection, double shininess, String surfaceType) {
+    public Circle( @JsonProperty("center")double[] center,
+                   @JsonProperty("radius")double radius,
+                   @JsonProperty("normal")double[] normal,
+                   @JsonProperty("diffuse")double[] diffuse,
+                   @JsonProperty("reflectance") double reflectance,
+                   @JsonProperty("surfaceType") String surfaceType,
+                   @JsonProperty("ambient") double[] ambient,
+                   @JsonProperty("shininess") double shininess,
+                   @JsonProperty("emission") double[] emission,
+                   @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                   @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                   @JsonProperty("specular") double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.center = center;
         this.radius = radius;
         this.normal = normal;
-        this.setDiffuse(color);
-        this.setSpecular(specular);
-        this.setReflectance(reflection);
-        this.setShininess(shininess);
-        this.setSurfaceType(surfaceType);
     }
 
     /**
