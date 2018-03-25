@@ -241,7 +241,7 @@ $(document).ready(function () {
         //stop submit the form, we will post it manually.
         event.preventDefault();
         console.log(scene.toJSON());
-        //fire_ajax_submit();
+        fire_ajax_submit();
 
     });
 
