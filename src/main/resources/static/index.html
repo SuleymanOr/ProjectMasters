@@ -28,7 +28,7 @@
         <div class="row">
             <div class="col-sm-3">
                 <div class="alert alert-success" role="alert">
-                    Add New Shapes:
+                    Add New Items:
                 </div>
                 <div id="shapes-accordion">
                     <div class="card">
@@ -252,6 +252,41 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card">
+                        <div class="card-header" id="headingNine">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+                                    Light
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-light-name">
+                                </div>
+
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Color</span>
+                                    </div>
+                                    <input class="form-control jscolor"  id="new-light-color" value="1CD4DF">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Center Position</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-light-x" placeholder="X">
+                                    <input type="text" class="form-control" id="new-light-y" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-light-z" placeholder="Z">
+                                </div>
+                                <button id="add-light" class="btn btn-secondary shape-add-button">Add</button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <input type="button" class="btn btn-success" id="render-button" value="Render">
             </div>
@@ -262,16 +297,7 @@
                             <div class="card">
                                 <h5 class="card-header">Shapes</h5>
                                 <div class="card-body" id="shape-list">
-                                   <div class="shape-item" key="sphere1">
-                                       <span class="shape-item-name">Sphere1</span>
-                                       <span class="shape-item-edit">/</span>
-                                       <span class="shape-item-delete">x</span>
-                                   </div>
-                                    <div class="shape-item" key="cube2">
-                                        <span class="shape-item-name">cube2</span>
-                                        <span class="shape-item-edit">/</span>
-                                        <span class="shape-item-delete">x</span>
-                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -298,7 +324,7 @@
                                         <input class="form-control jscolor"  id="ambient-light" value="FFFFFF">
                                     </div>
                                 </div>
-                                <div class="scene-control-item">
+                                <div class="scene-control-item" id="light-list">
 
                                 </div>
                             </div>

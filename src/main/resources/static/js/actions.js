@@ -3,13 +3,36 @@ var scale = 100;
 var scalePos = function(val){
     return val/100.0;
 }
-function refreshList(list){
+function refreshList(shapeList,lightList){
     $("#shape-list").html("");
-    list.forEach(function(e){
+    shapeList.forEach(function(e){
         var element = "<div class='shape-item' key="+ e.id.toString() +"><span class='shape-item-name'>"+ e.name +"</span><span class='shape-item-edit'>/</span><span class='shape-item-delete'>x</span></div>"
         $("#shape-list").append(element);
     });
+    $("#light-list").html("");
+    lightList.forEach(function(e){
+        var element = "<div class='light-item' key="+ e.id.toString() +"><span class='light-item-name'>"+ e.name +"</span><span class='light-item-edit'>/</span><span class='light-item-delete'>x</span></div>"
+        $("#light-list").append(element);
+    });
 };
+
+function Light(id,name,type,color,x,y,z){
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.color = color;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+
+    this.toString = function () {
+        return "id :" + this.id + " name: " + this.name;
+    };
+    this.toJsonForRaytracer= function () {
+        color =  new THREE.Color(this.color);
+        return {"type" : "Light", "position" : [x/100.0,y/100.0,z/100.0],"color" : color.toArray()};
+    };
+}
 
 function Shape(id,name,type,color,x,y,z,direction){
     this.id = id;
@@ -23,8 +46,9 @@ function Shape(id,name,type,color,x,y,z,direction){
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
-    this.toJsonForRaytracer= function () {
-      return {};
+    this.shapeToJsonForRaytracer= function () {
+        color =  new THREE.Color(this.color);
+        return {"type" : this.type, "position" : [x/100.0,y/100.0,z/100.0], "direction" : direction, "color" : color.toArray(), "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"};
     };
 }
 
@@ -32,7 +56,9 @@ function Sphere (id,name,type,color,x,y,z,radius,direction){
     Shape.call(this,id,name,type,color,x,y,z,direction);
     this.radius = radius;
     this.toJsonForRaytracer = function () {
-        return {"type" : "Sphere", "center" : [x/100.0,y/100.0,z/100.0], "radius" : radius/100.0, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
+        console.log(this);
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"radius" : radius/100.0});
     };
 }
 
@@ -63,7 +89,7 @@ function Plane (id,name,type,color,x,y,z,w,h){
 }
 
 function LocalScene(scene,camera,ambient,background){
-    this.elements = [];
+    this.shapes = [];
     this.lights = [];
     this.live_scene = scene;
     this.ambient = ambient;
@@ -79,7 +105,7 @@ function LocalScene(scene,camera,ambient,background){
         var x = parseInt($("#new-sphere-x").val(),10);
         var y = parseInt($("#new-sphere-y").val(),10);
         var z = parseInt($("#new-sphere-z").val(),10);
-        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
+        this.shapes[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
@@ -100,7 +126,7 @@ function LocalScene(scene,camera,ambient,background){
         var w = parseInt($("#new-cube-w").val(),10);
         var l = parseInt($("#new-cube-l").val(),10);
         var h = parseInt($("#new-cube-h").val(),10);
-        this.elements[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
+        this.shapes[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.BoxGeometry( w, l , h, 5, 5 ,5);
         var box = new THREE.Mesh( geometry, material );
@@ -120,7 +146,7 @@ function LocalScene(scene,camera,ambient,background){
         var z = parseInt($("#new-cylinder-z").val(),10);
         var radius = parseInt($("#new-cylinder-radius").val(),10);
         var height = parseInt($("#new-cylinder-height").val(),10);
-        this.elements[id] = new Cylinder(id,name,type,color,x,y,z,radius,height);
+        this.shapes[id] = new Cylinder(id,name,type,color,x,y,z,radius,height);
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
         var cylinder = new THREE.Mesh( geometry, material );
@@ -140,7 +166,7 @@ function LocalScene(scene,camera,ambient,background){
         var z = parseInt($("#new-torus-z").val(),10);
         var radius = parseInt($("#new-torus-radius").val(),10);
         var tube_radius = parseInt($("#new-torus-tube-radius").val(),10);
-        this.elements[id] = new Tortus(id,name,type,color,x,y,z,radius,tube_radius);
+        this.shapes[id] = new Tortus(id,name,type,color,x,y,z,radius,tube_radius);
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
         var torus = new THREE.Mesh( geometry, material );
@@ -160,7 +186,7 @@ function LocalScene(scene,camera,ambient,background){
         var z = parseInt($("#new-plane-z").val(),10);
         var w = parseInt($("#new-plane-w").val(),10);
         var h = parseInt($("#new-plane-h").val(),10);
-        this.elements[id] = new Plane(id,name,type,color,x,y,z,w,h);
+        this.shapes[id] = new Plane(id,name,type,color,x,y,z,w,h);
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
         var geometry = new THREE.PlaneBufferGeometry( w,h,10,10 );
         var plane = new THREE.Mesh( geometry, material );
@@ -169,10 +195,36 @@ function LocalScene(scene,camera,ambient,background){
         scene.add( plane );
     };
 
+    this.addLight = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-light-name").val();
+        var type = "light";
+        var color = parseInt($("#new-plane-color").val(),16);
+        var x = parseInt($("#new-light-x").val(),10);
+        var y = parseInt($("#new-light-y").val(),10);
+        var z = parseInt($("#new-light-z").val(),10);
+        this.lights[id] = new Light(id,name,type,color,x,y,z);
+        var light = new THREE.PointLight( color );
+        light.position.set( x, y, z );
+        scene.add( light );
+
+        light.name = id;
+        light.position.set(x,y,z);
+        scene.add( light );
+    };
+
+
     this.removeShape = function (id) {
         var tmp = this.live_scene.getObjectByName(id);
         this.live_scene.remove(tmp);
-        delete this.elements[id];
+        delete this.shapes[id];
+    };
+
+    this.removeLight = function (id) {
+        var tmp = this.live_scene.getObjectByName(id);
+        this.live_scene.remove(tmp);
+        delete this.lights[id];
     };
 
     this.toJsonForRaytracer = function(){
@@ -183,12 +235,13 @@ function LocalScene(scene,camera,ambient,background){
       // backScene.superSampleValue = 1;
       // backScene.screenWidth = 1280;
       // backScene.screenHeight = 800;
-        data.superSampleValue = 1;
-        data.screenWidth = 1280;
-        data.screenHeight = 800;
-      data.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
-      data.figures= data.figures.filter(function(n){ return n != undefined });
-      data.lights = [{"direction":[0,1,-1],"color":[1,1,1]}];
+      data.superSampleValue = 1;
+      data.screenWidth = 1280;
+      data.screenHeight = 800;
+      data.figures = this.shapes.map(function(item){return item.toJsonForRaytracer()});
+      data.figures = data.figures.filter(function(n){ return n != undefined });
+      data.lights = this.lights.map(function(item){return item.toJsonForRaytracer()});
+      data.lights = data.lights.filter(function(n){ return n != undefined });
       data.scene = backScene;
       data.camera = {"eye": [camera.position.x/100.0,camera.position.y/100.0,camera.position.z/100.0],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
       return data;
@@ -278,16 +331,23 @@ $(document).ready(function () {
             case "add-plane":
                 local_scene.addPlane();
                 break;
+            case "add-light":
+                local_scene.addLight();
+                break;
             default:
                 alert("Unknown Object!");
         }
-        refreshList(local_scene.elements);
+        refreshList(local_scene.shapes,local_scene.lights);
         console.log(camera);
     });
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
         local_scene.removeShape(parseInt($(this).parent().attr("key"),10));
-        refreshList(local_scene.elements);
+        refreshList(local_scene.lights,local_scene.lights);
+    }));
+    $("#light-list").on("click",".light-item-delete",(function () {
+        local_scene.removeLight(parseInt($(this).parent().attr("key"),10));
+        refreshList(local_scene.lights,local_scene.lights);
     }));
 
     $("#render-button").click(function (event) {

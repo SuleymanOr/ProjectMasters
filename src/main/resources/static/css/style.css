@@ -17,7 +17,7 @@
     text-decoration: none;
 }
 
-.shape-item {
+.shape-item, .light-item {
     display: inline-block;
     width: 15%;
     border: solid 1px #333333;
@@ -26,15 +26,19 @@
     margin: 0 10px 0 0;
 }
 
-.shape-item:hover{
+.light-item {
+    width: 45%;
+}
+
+.shape-item:hover,.light-item:hover{
     box-shadow: 0px 0px 4px #333333;
 }
 
-.shape-item-name {
+.light-item-name, .shape-item-name {
     color: #333333;
 }
 
-.shape-item-edit, .shape-item-delete {
+.light-item-edit, .light-item-delete, .shape-item-edit, .shape-item-delete {
     float: right;
     background-color: #218838;
     color: white;
