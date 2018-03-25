@@ -6,6 +6,7 @@ import com.kings.raytracer.utility.MathUtils;
 public class Rectangle extends Figure {
 
     private double[] point0, point1, point2, point3;
+    private double[] s0, s1, s2, s3;
     private double[] normal = null;
     private double[] intersectionPoint = null;
     private double[] AB, AC;
@@ -16,7 +17,7 @@ public class Rectangle extends Figure {
     private double ACnorm;
 
 
-    public Rectangle(double[] point0, double[] point1, double[] point2, double[] color, String surfaceType) {
+    public Rectangle(double[] point0, double[] point1, double[] point2, double[]color) {
         this.point0 = point0;
         this.point1 = point1;
         this.point2 = point2;

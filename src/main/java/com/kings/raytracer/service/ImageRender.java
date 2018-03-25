@@ -26,12 +26,12 @@ public class ImageRender {
         ByteArrayOutputStream image = new ByteArrayOutputStream();
 
         List<Figure> figures = new ArrayList<>();
-        /*figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.6F, 0.5F, 1F}, 0.5, "Normal"));*/
-        figures.add(new Triangle(new double[]{-0.3,-0.3,0}, new double[]{0.3,-0.3,0}, new double[]{-0.3,0.3,0}, new double[]{1,1,0.2},0.5, "Normal"));
+        //figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.6F, 0.5F, 1F}, new double[] {0.7,0.7,0.7}, 0.5, 20, new double[]{1,1,1},"Normal"));
+        //figures.add(new Triangle(new double[]{-0.3,-0.3,0}, new double[]{0.3,-0.3,0}, new double[]{-0.3,0.3,0}, new double[]{1,1,0.2},0.5, "Normal"));
         /*figures.add(new Cone(new double[]{0, 0, 0.5}, new double[]{0, -0.4, -1}, 0.523,0.8, new double[]{1,1,0},0.5,"Normal"));*/
-        figures.add(new Rectangle(new double[]{-1,-1,0}, new double[]{1,-1,0}, new double[]{-1,1,0}, new double[]{1,0,0}, "Checkers"));
+        //figures.add(new Rectangle(new double[]{-1,-1,0}, new double[]{1,-1,0}, new double[]{-1,1,0}, new double[]{1,0,0}, "Checkers"));
 
-
+        figures.add(new Cube(new double[]{0,0,0}, new double[]{1,0,0}, new double[]{0,1,0}, new double[]{0,0,-1}, new double[]{0.98, 0.48, 0.4}));
 
         /*figures.add(new Rectangle(new double[]{-1,-1,0}, new double[]{1,-1,0}, new double[]{-1,1,0}, new double[]{1,0,0}, "Checkers"));*/
         //figures.add(new Cylinder(new double[]{-0.5 -0.5 -0.5}, new double[]{1, 1, 1}, 1.5,0.3, new double[]{0,1,0}, "Normal"));
