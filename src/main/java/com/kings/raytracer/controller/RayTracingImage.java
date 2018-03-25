@@ -14,7 +14,7 @@ public class RayTracingImage {
 
     ////////  Figure values ////////
     private List<Figure> figures = new ArrayList<>();
-//    private List<Light> lights = new ArrayList<>();
+    private List<Light> lights = new ArrayList<>();
 
     ////////  Scene values  ////////
     private double[] backgroundColor;
@@ -36,13 +36,13 @@ public class RayTracingImage {
         this.figures = figures;
     }
 
-//    public List<Light> getLights() {
-//        return lights;
-//    }
-//
-//    public void setLights(List<Light> lights) {
-//        this.lights = lights;
-//    }
+    public List<Light> getLights() {
+        return lights;
+    }
+
+    public void setLights(List<Light> lights) {
+        this.lights = lights;
+    }
 
 
     ////////////////////////////////  SCENE VALUES  ////////////////////////////////////////

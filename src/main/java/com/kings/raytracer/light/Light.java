@@ -1,26 +1,47 @@
 package com.kings.raytracer.light;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.kings.raytracer.geometry.Sphere;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.kings.raytracer.utility.MathUtils;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
-        property = "type")
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = Sphere.class, name = "LightDirected" ),
-})
-public interface Light {
+public class Light {
 
-    double[] getAmountOfLight(double[] point);
+    private double[] position;
+    private double[] direction;
+    private double[] oppositeDirection;
+    private double[] color = {1,1,1};
 
-    double[] getVectorToLight(double[] pointOfIntersection) throws Exception;
+    @JsonCreator
+    public Light(@JsonProperty("direction")double[] direction, @JsonProperty("color")double[] color) {
+        super();
+        position = new double[] { Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY };
+        this.direction = MathUtils.normalizeReturn(direction);
+        this.color = color;
+        this.oppositeDirection = MathUtils.oppositeVector(this.direction);
+    }
 
-    double[] getPosition();
+    public double[] getAmountOfLight(double[] point) {
+        return getColor(); // constant light, regardless of distance to target
+    }
 
-    void setPosition(double[] position);
+    public double[] getPosition() {
+        return position;
+    }
 
-    double[] getColor();
+    public void setPosition(double[] position) {
+        this.position = position;
+    }
 
-    void setColor(double[] color);
+    public double[] getColor() {
+        return color;
+    }
+
+    public void setColor(double[] color) {
+        this.color = color;
+    }
+
+    public double[] getVectorToLight(double[] pointOfIntersection) {
+        return oppositeDirection;
+    }
 }
+

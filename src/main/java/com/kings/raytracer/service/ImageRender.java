@@ -1,20 +1,13 @@
 package com.kings.raytracer.service;
 
 import com.kings.raytracer.auxiliary.Camera;
-import com.kings.raytracer.geometry.Figure;
-import com.kings.raytracer.geometry.Sphere;
-import com.kings.raytracer.light.Light;
-import com.kings.raytracer.light.LightDirected;
 import com.kings.raytracer.utility.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 public class ImageRender {
