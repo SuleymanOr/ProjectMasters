@@ -30,7 +30,7 @@ function Light(id,name,type,color,x,y,z){
     };
     this.toJsonForRaytracer= function () {
         color =  new THREE.Color(this.color);
-        return {"type" : "Light", "direction" : [x/100.0,y/100.0,z/100.0],"color" : color.toArray()};
+        return {"type" : "Light", "direction" : [x,y,z],"color" : color.toArray()};
     };
 }
 
@@ -210,7 +210,7 @@ function LocalScene(scene,camera,ambient,background){
         id_increment +=1;
         var name = $("#new-light-name").val();
         var type = "light";
-        var color = parseInt($("#new-plane-color").val(),16);
+        var color = parseInt($("#new-light-color").val(),16);
         var x = parseInt($("#new-light-x").val(),10);
         var y = parseInt($("#new-light-y").val(),10);
         var z = parseInt($("#new-light-z").val(),10);
