@@ -1,8 +1,6 @@
 var id_increment  = 1;
 var scale = 100;
-var scalePos = function(val){
-    return val/100.0;
-}
+
 function refreshList(shapeList,lightList){
     $("#shape-list").html("");
     shapeList.forEach(function(e){
@@ -34,7 +32,7 @@ function Light(id,name,type,color,x,y,z){
     };
 }
 
-function Shape(id,name,type,color,x,y,z,direction){
+function Shape(id,name,type,color,x,y,z,direction,surface,reflect){
     this.id = id;
     this.name = name;
     this.type = type;
@@ -43,8 +41,8 @@ function Shape(id,name,type,color,x,y,z,direction){
     this.y = y;
     this.z = z;
     this.direction = direction;
-    this.surfaceType = "Normal";
-    this.reflectance = 0.6;
+    this.surfaceType = surface;
+    this.reflectance = reflect;
     this.ambient = [0.5,0.5,0.5];
     this.shininess = 20;
     this.emission = [0,0,0];
@@ -62,8 +60,8 @@ function Shape(id,name,type,color,x,y,z,direction){
 
 
 
-function Sphere (id,name,type,color,x,y,z,radius,direction){
-    Shape.call(this,id,name,type,color,x,y,z,direction);
+function Sphere (id,name,type,color,x,y,z,radius,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.radius = radius;
     this.toJsonForRaytracer = function () {
         console.log(this);
@@ -115,7 +113,9 @@ function LocalScene(scene,camera,ambient,background){
         var x = parseInt($("#new-sphere-x").val(),10);
         var y = parseInt($("#new-sphere-y").val(),10);
         var z = parseInt($("#new-sphere-z").val(),10);
-        this.shapes[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
+        var surface = $("#new-sphere-surface").val();
+        var reflect = x = parseInt($("#new-sphere-reflect").val(),10)/100.0;
+        this.shapes[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0],surface,reflect);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
