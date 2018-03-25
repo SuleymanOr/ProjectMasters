@@ -1,18 +1,28 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
 public class Triangle extends Figure {
     private  double[] point0, point1, point2;
 
-    public Triangle(double[] point0, double[] point1, double[] point2, double[] color, double reflectance, String surfaceType) {
+    public Triangle(double[] point0,
+                    double[] point1,
+                    double[] point2,
+                    @JsonProperty("diffuse") double[] diffuse,
+                    @JsonProperty("reflectance") double reflectance,
+                    @JsonProperty("surfaceType") String surfaceType,
+                    @JsonProperty("ambient") double[] ambient,
+                    @JsonProperty("shininess") double shininess,
+                    @JsonProperty("emission") double[] emission,
+                    @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                    @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                    @JsonProperty("specular") double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.point0 = point0;
         this.point1 = point1;
         this.point2 = point2;
-        this.setDiffuse(color);
-        this.setReflectance(reflectance);
-        this.setSurfaceType(surfaceType);
     }
 
     @Override

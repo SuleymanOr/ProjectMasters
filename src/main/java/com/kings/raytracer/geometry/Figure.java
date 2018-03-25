@@ -1,12 +1,24 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kings.raytracer.auxiliary.Ray;
 
+/**
+ * Abstract class from which all geometric primitives inherit
+ */
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type")
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Sphere.class, name = "Sphere" ),
+})
 public abstract class Figure {
 
-    private double[] specular = {1.0F, 1.0F, 1.0F};
-    private double[] diffuse = {1F, 1F, 1F};
+
+    private double[] specular = {1.0F, 1.0F, 1.0F}; // from surface class, used for all shapes
+    private double[] diffuse = {1F, 1F, 1F}; // default values
     private double[] ambient = {0.1F, 0.1F, 0.1F};
     private double[] emission = {0, 0, 0};
     private double shininess = 100.0F;
@@ -15,6 +27,30 @@ public abstract class Figure {
     private double[] checkersDiffuse1 = {1.0F, 1.0F, 1.0F};
     private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType = "Normal";
+
+    public Figure(double[] diffuse, double reflectance,
+                  String surfaceType, double[] ambient,
+                  double shininess, double[] emission,
+                  double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular) {
+        this.diffuse = diffuse;
+        this.reflectance = reflectance;
+        this.surfaceType = surfaceType;
+        this.ambient = ambient;
+        this.shininess = shininess;
+        this.emission = emission;
+        this.checkersDiffuse1 = checkersDiffuse1;
+        this.checkersDiffuse2 = checkersDiffuse2;
+        this.specular = specular;
+
+    }
+
+    /**
+     * A generic intersection algorithm which returns the distance between the ray and the
+     * implementing primitive.  Returns Double.POSITIVE_INFINITY if there is no intersection.
+     *
+     * @param ray
+     * @return
+     */
 
     abstract public double intersect(Ray ray);
 
@@ -74,6 +110,7 @@ public abstract class Figure {
         this.specular = specular;
     }
 
+    // Return a normal vector for the given point
     public abstract double[] getNormal(double[] point) throws Exception;
 
     public double[] getCheckersColor(double[] point2D) {

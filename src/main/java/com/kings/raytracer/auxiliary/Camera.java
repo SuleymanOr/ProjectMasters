@@ -1,5 +1,7 @@
 package com.kings.raytracer.auxiliary;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.utility.MathUtils;
 
 public class Camera {
@@ -15,7 +17,12 @@ public class Camera {
 
     public Camera(){}
 
-    public Camera(double[] eye, double[] lookAt, double[] upDirection, double screenDist, double screenWidth) {
+    @JsonCreator
+    public Camera(@JsonProperty("eye")double[] eye,
+                  @JsonProperty("lookAt")double[] lookAt,
+                  @JsonProperty("upDirection")double[] upDirection,
+                  @JsonProperty("screenDist")double screenDist,
+                  @JsonProperty("screenWidth")double screenWidth) {
         this.eye = eye;
         this.lookAt = lookAt;
         this.upDirection = upDirection;

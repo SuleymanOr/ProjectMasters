@@ -1,5 +1,8 @@
 var id_increment  = 1;
-
+var scale = 100;
+var scalePos = function(val){
+    return val/100.0;
+}
 function refreshList(list){
     $("#shape-list").html("");
     list.forEach(function(e){
@@ -8,7 +11,7 @@ function refreshList(list){
     });
 };
 
-function Shape(id,name,type,color,x,y,z){
+function Shape(id,name,type,color,x,y,z,direction){
     this.id = id;
     this.name = name;
     this.type = type;
@@ -16,14 +19,21 @@ function Shape(id,name,type,color,x,y,z){
     this.x = x;
     this.y = y;
     this.z = z;
+    this.direction = direction;
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
+    this.toJsonForRaytracer= function () {
+      return {};
+    };
 }
 
-function Sphere (id,name,type,color,x,y,z,radius){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Sphere (id,name,type,color,x,y,z,radius,direction){
+    Shape.call(this,id,name,type,color,x,y,z,direction);
     this.radius = radius;
+    this.toJsonForRaytracer = function () {
+        return {"type" : "Sphere", "center" : [x/100.0,y/100.0,z/100.0], "radius" : radius/100.0, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
+    };
 }
 
 function Cube (id,name,type,color,x,y,z,w,l,h){
@@ -52,9 +62,12 @@ function Plane (id,name,type,color,x,y,z,w,h){
     this.height = h;
 }
 
-function LocalScene(scene){
+function LocalScene(scene,camera,ambient,background){
     this.elements = [];
+    this.lights = [];
     this.live_scene = scene;
+    this.ambient = ambient;
+    this.background = background;
     this.addSphere = function () {
         // Adding rhe shape to local shape list
         var id = id_increment;
@@ -66,7 +79,7 @@ function LocalScene(scene){
         var x = parseInt($("#new-sphere-x").val(),10);
         var y = parseInt($("#new-sphere-y").val(),10);
         var z = parseInt($("#new-sphere-z").val(),10);
-        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius);
+        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
         var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
@@ -161,51 +174,91 @@ function LocalScene(scene){
         this.live_scene.remove(tmp);
         delete this.elements[id];
     };
+
+    this.toJsonForRaytracer = function(){
+      var data = {};
+      var backScene = {};
+      data.backgroundColor = this.background.toArray();
+      data.ambientLight = this.ambient.color.toArray();
+      // backScene.superSampleValue = 1;
+      // backScene.screenWidth = 1280;
+      // backScene.screenHeight = 800;
+        data.superSampleValue = 1;
+        data.screenWidth = 1280;
+        data.screenHeight = 800;
+      data.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
+      data.figures= data.figures.filter(function(n){ return n != undefined });
+      data.lights = [{"direction":[0,1,-1],"color":[1,1,1]}];
+      data.scene = backScene;
+      data.camera = {"eye": [camera.position.x/100.0,camera.position.y/100.0,camera.position.z/100.0],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
+      return data;
+    };
 };
 
 $(document).ready(function () {
     var scene = new THREE.Scene();
     var camera = new THREE.PerspectiveCamera( 55, 2, 0.1, 1000 );
 
+    camera.position.y=50;
+    var ambientInitial = 0xffffff;
+    var backgroundInitial = 0x000000;
+
     var renderer = new THREE.WebGLRenderer();
     renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
+    scene.background =  new THREE.Color(backgroundInitial);
 
-    camera.position.y=50;
-
-    var light = new THREE.PointLight( 0xFFFFFF,2,0,2 );
-    light.position.set( 0, 100, 0 );
-    scene.add( light );
-
-    var light2 = new THREE.AmbientLight( 0xa0a0a0 ); // soft white light
-    scene.add( light2 );
+    var ambientLight = new THREE.AmbientLight( ambientInitial ,1);
+    scene.add( ambientLight );
 
     var controls = new THREE.OrbitControls( camera, document.getElementById("canvas-container") );
     controls.update();
 
+    //scene controls and axis helper
+
+    $("#scene-background").change(function(){
+        scene.background.set(parseInt($("#scene-background").val(),16));
+    });
+    $("#ambient-light").change(function(){
+        ambientLight.color.set(parseInt($("#ambient-light").val(),16));
+    });
+    // helper renderer
+    renderer2 = new THREE.WebGLRenderer();
+    renderer2.setSize( $("#axis-helper").width(), ($("#axis-helper").width()) );
+    document.getElementById('axis-helper').appendChild( renderer2.domElement );
+
+    scene2 = new THREE.Scene();
+    scene2.background = new THREE.Color(0x333333);
+
+    // camera
+    camera2 = new THREE.PerspectiveCamera( 50, 1, 1, 1000 );
+    camera2.up = camera.up; // important!
+    camera2.position.y=15;
+    // axes
+    axes2 = new THREE.AxisHelper( 5 );
+    scene2.add( axes2 );
+
+    //  render update function
     var render = function () {
         requestAnimationFrame( render );
 
         // cube.rotation.x += 0.005;
         // cube.rotation.y += 0.008;
-        // camera.updateProjectionMatrix();
-        // camera.lookAt( scene.position );
-        //
+
         // // Move the camera in a circle with the pivot point in the centre of this circle...
-        // // ...so that the pivot point, and focus of the camera is on the centre of our scene.
-        // var timer = (new Date().getTime() % 30000)*3.14159265/15000;
-        // // var timer = (new Date().getTime() * 0.0005);
-        // camera.position.x = Math.floor(Math.cos( timer ) * 1000)/10.0;
-        // camera.position.z = Math.floor(Math.sin( timer ) * 1000)/10.0;
-
         controls.update();
+        camera2.position.copy( camera.position );
+        camera2.position.sub( controls.target ); // added by @libe
+        camera2.position.setLength( 15);
+        camera2.lookAt( scene2.position );
 
+        renderer2.render( scene2, camera2 );
         renderer.render(scene, camera);
     };
 
     render();
 
-    var local_scene = new LocalScene(scene);
+    var local_scene = new LocalScene(scene,camera,ambientLight,scene.background);
 
     $(".shape-add-button").click(function (event) {
         var id =  $(this).attr("id");
@@ -229,6 +282,7 @@ $(document).ready(function () {
                 alert("Unknown Object!");
         }
         refreshList(local_scene.elements);
+        console.log(camera);
     });
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
@@ -240,23 +294,29 @@ $(document).ready(function () {
         alert("sent");
         //stop submit the form, we will post it manually.
         event.preventDefault();
-        console.log(scene.toJSON());
+        console.log(local_scene.toJsonForRaytracer());
+        console.log(local_scene);
         fire_ajax_submit();
 
     });
 
     function fire_ajax_submit() {
 
-        var formData = {
-            radius: 70
-        };
 
+        var dummy_scene = {
+            "figures":[{"type" : "Sphere", "center" : [0,0,0], "radius" : 0.5, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}],
+            "backgroundColor" : [0,0,0],
+            "ambientLight" : [1,1,1],
+            "superSampleValue" : 1,
+            "screenWidth" : 1280,
+            "screenHeight" : 800
+        };
 
         $.ajax({
             type: "POST",
             contentType: "application/json",
             url: "/api/rayTracerJson",
-            data: JSON.stringify(formData),
+            data: JSON.stringify(local_scene.toJsonForRaytracer()),
             dataType: 'json',
             cache: false,
             timeout: 600000,

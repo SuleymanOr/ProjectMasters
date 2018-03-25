@@ -1,5 +1,6 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 import com.kings.raytracer.utility.Matrix;
@@ -12,16 +13,24 @@ public class Torus extends Figure{
     private double tubeRadiusSquare;
     private double[] normal;
 
-    public Torus(double[] center, double centralRadius, double tubeRadius,
-                 double[] normal, double[] color, String surfaceType){
+    public Torus(double[] center,
+                 double centralRadius,
+                 double tubeRadius,
+                 @JsonProperty("diffuse") double[] diffuse,
+                 @JsonProperty("reflectance") double reflectance,
+                 @JsonProperty("surfaceType") String surfaceType,
+                 @JsonProperty("ambient") double[] ambient,
+                 @JsonProperty("shininess") double shininess,
+                 @JsonProperty("emission") double[] emission,
+                 @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                 @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                 @JsonProperty("specular") double[] specular){
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.center = center;
         this.centralRadius = centralRadius;
         this.tubeRadius = tubeRadius;
         centralRadiusSquare = MathUtils.sqr(centralRadius);
         tubeRadiusSquare = MathUtils.sqr(tubeRadius);
-        this.normal = normal;
-        this.setDiffuse(color);
-        this.setSurfaceType(surfaceType);
     }
 
     // quatric polynomial coefficients

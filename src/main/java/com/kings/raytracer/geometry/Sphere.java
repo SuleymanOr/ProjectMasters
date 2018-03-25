@@ -1,5 +1,8 @@
 package com.kings.raytracer.geometry;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
 
@@ -8,43 +11,57 @@ public class Sphere extends Figure {
     private double[] center;
     private double radius;
 
-    public Sphere(double[] center, double radius, double[] color, double[] specular, double reflection, double shininess, double[] ambient,  String surfaceType) {
+    @JsonCreator
+    public Sphere(@JsonProperty("center")double[] center,
+                  @JsonProperty("radius") double radius,
+                  @JsonProperty("diffuse") double[] diffuse,
+                  @JsonProperty("reflectance") double reflectance,
+                  @JsonProperty("surfaceType") String surfaceType,
+                  @JsonProperty("ambient") double[] ambient,
+                  @JsonProperty("shininess") double shininess,
+                  @JsonProperty("emission") double[] emission,
+                  @JsonProperty("checkersDiffuse1") double[] checkersDiffuse1,
+                  @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
+                  @JsonProperty("specular") double[] specular) {
+        super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
         this.center = center;
         this.radius = radius;
-        this.setDiffuse(color);
-        this.setSpecular(specular);
-        this.setReflectance(reflection);
-        this.setShininess(shininess);
-        this.setAmbient(ambient);
-        this.setSurfaceType(surfaceType);
     }
-
 
     @Override
     public double intersect(Ray ray) {
-        return intersectSolution(ray);
+        return intersectGeometric(ray);
     }
 
-    private double intersectSolution(Ray ray) {
+    private double intersectGeometric(Ray ray) {
 
-        double[] vectorDifference = MathUtils.calcPointsDiff(ray.getPosition(), center);
-        double[] vectorDirection = ray.getDirection();
+        // Note that locals are named according to the equations in the lecture notes.
+        double[] L = MathUtils.calcPointsDiff(ray.getPosition(), center);
+        double[] V = ray.getDirection();
 
-        double projection = MathUtils.dotProduct(vectorDifference, vectorDirection);
+        double tCA = MathUtils.dotProduct(L, V);
 
-        if (projection < 0) {
+        if (tCA < 0) {
             return Double.POSITIVE_INFINITY;
         }
 
-        double lightSquare = MathUtils.dotProduct(vectorDifference, vectorDifference);
+        double LSquare = MathUtils.dotProduct(L, L);
 
-        double distanceSquare = lightSquare - MathUtils.sqr(projection);
+        double dSquare = LSquare - MathUtils.sqr(tCA);
         double radiusSquare = MathUtils.sqr(radius);
 
-        if (distanceSquare > radiusSquare) {
+        if (dSquare > radiusSquare) {
+            // In this case the ray misses the sphere
             return Double.POSITIVE_INFINITY;
-        }else{
-            return getIntersectionDistance(vectorDifference, projection, lightSquare, distanceSquare, radiusSquare);
+        }
+
+        double tHC = Math.sqrt(radiusSquare - dSquare);
+
+        if (MathUtils.dotProduct(L, L) < LSquare) {
+
+            return tCA + tHC;
+        } else {
+            return tCA - tHC;
         }
     }
 
@@ -58,76 +75,38 @@ public class Sphere extends Figure {
 
     @Override
     public double[] getTexturePoints(double[] point) {
-        double[] distanceToCenter = MathUtils.calcPointsDiff(center, point);
+        double[] rp = MathUtils.calcPointsDiff(center, point);
 
-        double pointY = getPointY(distanceToCenter[2]);
+        double v = rp[2] / radius;
 
-        double pointX = getPointX(distanceToCenter[0] / (radius * Math.sin(pointY)));
+        if (Math.abs(v) > 1) v -= 1 * Math.signum(v);
+        v = Math.acos(v);
 
-        if (distanceToCenter[1] < MathUtils.ZERO)
-            pointX = -pointX;
-        if (distanceToCenter[2] < MathUtils.ZERO)
-            pointY = pointY + Math.PI;
+        double u = rp[0] / (radius * Math.sin(v));
 
-        pointX = (pointX / (2 * Math.PI));
-        pointY = (pointY / Math.PI);
+        if (Math.abs(u) > 1) u = Math.signum(u);
+        u = Math.acos(u);
 
-        pointX = finalPointX(pointX);
+        if (rp[1] < 0)
+            u = -u;
+        if (rp[2] < 0)
+            v = v + Math.PI;
 
-        return new double[]{pointX, pointY};
-    }
-
-    private double getIntersectionDistance(double[] vectorDifference, double projection, double lightSquare, double distanceSquare, double radiusSquare) {
-        double offset = Math.sqrt(radiusSquare - distanceSquare);
-        double threshold= MathUtils.dotProduct(vectorDifference, vectorDifference);
-
-        if ( threshold < lightSquare) {
-            return projection + offset;
-        } else {
-            return projection - offset;
+        if (Double.isNaN(u)) {
+            int a = 0;
+            a++;
         }
-    }
 
-    private double finalPointX(double pointX) {
-        if (pointX > 1) pointX -= 1;
-        if (pointX < 0) pointX += 1;
-        return pointX;
-    }
+        u = (u / (2 * Math.PI));
+        v = (v / Math.PI);
 
-    private double getPointX(double pointX1) {
-        double pointX = pointX1;
+        if (u > 1) u -= 1;
+        if (u < 0) u += 1;
 
-        if (Math.abs(pointX) > MathUtils.UNIT) {
-            pointX = Math.signum(pointX);
-        }
-        pointX = Math.acos(pointX);
-        return pointX;
-    }
+        if (v > 1) v -= 1;
+        if (v < 0) v += 1;
 
-    private double getPointY(double pointY1) {
-        double pointY = pointY1 / radius;
-
-        if (Math.abs(pointY) > MathUtils.UNIT) {
-            pointY -= MathUtils.UNIT * Math.signum(pointY);
-        }
-        pointY = Math.acos(pointY);
-        return pointY;
-    }
-
-    public double[] getCenter() {
-        return center;
-    }
-
-    public void setCenter(double[] center) {
-        this.center = center;
-    }
-
-    public double getRadius() {
-        return radius;
-    }
-
-    public void setRadius(double radius) {
-        this.radius = radius;
+        return new double[]{u, v};
     }
 }
 
