@@ -77,8 +77,8 @@ function Cube (id,name,type,color,x,y,z,w,l,h){
     
 }
 
-function Cylinder (id,name,type,color,x,y,z,radius,height){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Cylinder (id,name,type,color,x,y,z,radius,height,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.radius = radius;
     this.height = height;
     this.toJsonForRaytracer = function () {
@@ -115,7 +115,7 @@ function LocalScene(scene,camera,ambient,background){
         shape.y = parseInt($("#new-"+type+"-y").val(),10);
         shape.z = parseInt($("#new-"+type+"-z").val(),10);
         shape.surface = $("#new-"+type+"-surface").val();
-        shape.reflect = x = parseInt($("#new-"+type+"-reflect").val(),10)/scale;
+        shape.reflect = parseInt($("#new-"+type+"-reflect").val(),10)/scale;
         if(!(type === "sphere")){
             shape.direction = [];
             shape.direction[0] = parseInt($("#new-"+type+"-direction-x").val(),10);
@@ -164,7 +164,7 @@ function LocalScene(scene,camera,ambient,background){
         var shape =  this.addShape(type);
         var radius = parseInt($("#new-cylinder-radius").val(),10);
         var height = parseInt($("#new-cylinder-height").val(),10);
-        this.shapes[id] = new Cylinder(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,height);
+        this.shapes[id] = new Cylinder(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,height,shape.direction,shape.surface,shape.reflect);
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
         var cylinder = new THREE.Mesh( geometry, material );
