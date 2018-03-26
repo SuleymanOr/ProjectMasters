@@ -102,106 +102,102 @@ function LocalScene(scene,camera,ambient,background){
     this.live_scene = scene;
     this.ambient = ambient;
     this.background = background;
+    this.addShape = function (type) {
+        type = type.toLowerCase();
+        var shape = {};
+        shape.name = $("#new-"+type+"-name").val();
+        shape.color = parseInt($("#new-"+type+"-color").val(),16);
+        shape.x = parseInt($("#new-"+type+"-x").val(),10);
+        shape.y = parseInt($("#new-"+type+"-y").val(),10);
+        shape.z = parseInt($("#new-"+type+"-z").val(),10);
+        shape.surface = $("#new-"+type+"-surface").val();
+        shape.reflect = x = parseInt($("#new-"+type+"-reflect").val(),10)/100.0;
+        if(!(type === "sphere")){
+            shape.direction = [];
+            shape.direction[0] = parseInt($("#new-"+type+"-direction-x").val(),10);
+            shape.direction[1] = parseInt($("#new-"+type+"-direction-y").val(),10);
+            shape.direction[2] = parseInt($("#new-"+type+"-direction-z").val(),10);
+        }
+        return shape;
+    }
     this.addSphere = function () {
         // Adding rhe shape to local shape list
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-sphere-name").val();
         var type = "Sphere";
+        var shape =  this.addShape(type);
         var radius =  parseInt($("#new-sphere-radius").val(),10);
-        var color = parseInt($("#new-sphere-color").val(),16);
-        var x = parseInt($("#new-sphere-x").val(),10);
-        var y = parseInt($("#new-sphere-y").val(),10);
-        var z = parseInt($("#new-sphere-z").val(),10);
-        var surface = $("#new-sphere-surface").val();
-        var reflect = x = parseInt($("#new-sphere-reflect").val(),10)/100.0;
-        this.shapes[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0],surface,reflect);
+        this.shapes[id] = new Sphere(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,shape.direction,shape.surface,shape.reflect);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = id;
-        sphere.position.set(x,y,z);
+        sphere.position.set(shape.x,shape.y,shape.z);
         scene.add( sphere );
     };
     this.addCube = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-cube-name").val();
-        var type = "cube";
-        var color = parseInt($("#new-cube-color").val(),16);
-        var x = parseInt($("#new-cube-x").val(),10);
-        var y = parseInt($("#new-cube-y").val(),10);
-        var z = parseInt($("#new-cube-z").val(),10);
+        var type = "Cube";
+        var shape =  this.addShape(type);
         var w = parseInt($("#new-cube-w").val(),10);
         var l = parseInt($("#new-cube-l").val(),10);
         var h = parseInt($("#new-cube-h").val(),10);
-        this.shapes[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Cube(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,l,h);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.BoxGeometry( w, l , h, 5, 5 ,5);
         var box = new THREE.Mesh( geometry, material );
         box.name = id;
-        box.position.set(x,y,z);
+        box.position.set(shape.x,shape.y,shape.z);
         scene.add( box );
     };
 
     this.addCylinder = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-cylinder-name").val();
-        var type = "cylinder";
-        var color = parseInt($("#new-cylinder-color").val(),16);
-        var x = parseInt($("#new-cylinder-x").val(),10);
-        var y = parseInt($("#new-cylinder-y").val(),10);
-        var z = parseInt($("#new-cylinder-z").val(),10);
+        var type = "Cylinder";
+        var shape =  this.addShape(type);
         var radius = parseInt($("#new-cylinder-radius").val(),10);
         var height = parseInt($("#new-cylinder-height").val(),10);
-        this.shapes[id] = new Cylinder(id,name,type,color,x,y,z,radius,height);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Cylinder(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,height);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
         var cylinder = new THREE.Mesh( geometry, material );
         cylinder.name = id;
-        cylinder.position.set(x,y,z);
+        cylinder.position.set(shape.x,shape.y,shape.z);
         scene.add( cylinder );
     };
 
     this.addTorus = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-torus-name").val();
-        var type = "torus";
-        var color = parseInt($("#new-torus-color").val(),16);
-        var x = parseInt($("#new-torus-x").val(),10);
-        var y = parseInt($("#new-torus-y").val(),10);
-        var z = parseInt($("#new-torus-z").val(),10);
+        var type = "Torus";
+        var shape =  this.addShape(type);
         var radius = parseInt($("#new-torus-radius").val(),10);
         var tube_radius = parseInt($("#new-torus-tube-radius").val(),10);
-        this.shapes[id] = new Tortus(id,name,type,color,x,y,z,radius,tube_radius);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Tortus(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,tube_radius);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
         var torus = new THREE.Mesh( geometry, material );
         torus.name = id;
-        torus.position.set(x,y,z);
+        torus.position.set(shape.x,shape.y,shape.z);
         scene.add( torus );
     };
 
     this.addPlane = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-plane-name").val();
-        var type = "plane";
-        var color = parseInt($("#new-plane-color").val(),16);
-        var x = parseInt($("#new-plane-x").val(),10);
-        var y = parseInt($("#new-plane-y").val(),10);
-        var z = parseInt($("#new-plane-z").val(),10);
+        var type = "Plane";
+        var shape =  this.addShape(type);
         var w = parseInt($("#new-plane-w").val(),10);
         var h = parseInt($("#new-plane-h").val(),10);
-        this.shapes[id] = new Plane(id,name,type,color,x,y,z,w,h);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Plane(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,h);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.PlaneBufferGeometry( w,h,10,10 );
         var plane = new THREE.Mesh( geometry, material );
         plane.name = id;
-        plane.position.set(x,y,z);
+        plane.position.set(shape.x,shape.y,shape.z);
         scene.add( plane );
     };
 
@@ -209,7 +205,7 @@ function LocalScene(scene,camera,ambient,background){
         var id = id_increment;
         id_increment +=1;
         var name = $("#new-light-name").val();
-        var type = "light";
+        var type = "Light";
         var color = parseInt($("#new-light-color").val(),16);
         var x = parseInt($("#new-light-x").val(),10);
         var y = parseInt($("#new-light-y").val(),10);
@@ -218,7 +214,6 @@ function LocalScene(scene,camera,ambient,background){
         var light = new THREE.DirectionalLight( color,2 );
         light.position.set( x, y, z );
         scene.add( light );
-
         light.name = id;
         light.position.set(x,y,z);
         scene.add( light );
