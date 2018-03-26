@@ -97,7 +97,7 @@ function Cone (id,name,type,color,x,y,z,radius,height,direction,surface,reflect)
         bb = (height*1.0);
         cc = (radius*1.0)/(height*1.0);
         dd = Math.atan((radius*1.0)/(height*1.0));
-        return Object.assign(shape,{"start" : shape.center, "height" : height/scale, "angel" : Math.atan((radius*1.0)/(height*1.0))});
+        return Object.assign(shape,{"start" : shape.center, "height" : height/scale, "angle" : Math.atan((radius*1.0)/(height*1.0))});
     };
 }
 

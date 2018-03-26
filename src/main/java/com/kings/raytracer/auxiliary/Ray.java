@@ -17,13 +17,6 @@ public class Ray {
         this.magnitude = magnitude;
     }
 
-    // Returns the norm of the difference between this vector's position point and another point
-    public double normPointDiff(double[] p2) {
-        double[] p1 = this.position;
-
-        return Math.sqrt(MathUtils.sqrDiff(p1[0], p2[0]) + MathUtils.sqrDiff(p1[1], p2[1]) + MathUtils.sqrDiff(p1[2], p2[2]));
-    }
-
     // Normalizes the vector
     public void normalize() {
         double norm  = MathUtils.norm(direction);
@@ -33,24 +26,6 @@ public class Ray {
         direction[2] = direction[2] / norm;
 
         magnitude = 1;
-    }
-
-    // Returns the dot product of the current vector's direction with the other vector's direction
-    public double dotProduct(Ray otherVec) {
-        return (this.direction[0] * otherVec.direction[0] +
-                this.direction[1] * otherVec.direction[1] +
-                this.direction[2] * otherVec.direction[2]);
-    }
-
-    // Reflects a vector around a normal. assumes the normal vector is normalized
-    public void reflectAround(double[] normal) {
-        if (magnitude != 1) normalize();
-
-        double dotProduct = MathUtils.dotProduct(direction, normal);
-
-        direction[0] = -direction[0] + 2 * normal[0] * dotProduct;
-        direction[1] = -direction[1] + 2 * normal[1] * dotProduct;
-        direction[2] = -direction[2] + 2 * normal[2] * dotProduct;
     }
 
     // Returns the end of the vector as a point in 3D space

@@ -1,8 +1,8 @@
 package com.kings.raytracer.controller;
 
 import com.kings.raytracer.auxiliary.Camera;
+import com.kings.raytracer.entity.RayTracingImage;
 import com.kings.raytracer.geometry.Figure;
-import com.kings.raytracer.geometry.Sphere;
 import com.kings.raytracer.light.Light;
 import com.kings.raytracer.service.ImageRender;
 
@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 

@@ -2,6 +2,8 @@ package com.kings.raytracer.utility;
 
 import java.awt.*;
 
+//    Helper
+
 public class MathUtils {
 
     public static final double EPSILON = 0.00000001F;
