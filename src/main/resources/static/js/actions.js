@@ -262,7 +262,7 @@ $(document).ready(function () {
     var backgroundInitial = 0x000000;
 
     var renderer = new THREE.WebGLRenderer();
-    renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
+    renderer.setSize( $("#canvas-container").width(), ($("#canvas-container").width())/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
     scene.background =  new THREE.Color(backgroundInitial);
 

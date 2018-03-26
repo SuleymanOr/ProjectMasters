@@ -53,16 +53,23 @@
 
 .scene-control-item{
     display: inline-block;
-    width:70% ;
+    width:50% ;
     margin: 0 2%;
     height: 28%;
     vertical-align: top;
 }
 
 #axis-helper{
-    width: 20%;
+    width: 30%;
 }
 
+#light-card{
+    height: 100%;
+}
+#light-list{
+    overflow-y: scroll;
+    width: 100%;
+}
 #resultModal .modal-header{
     justify-content: left;
 }
