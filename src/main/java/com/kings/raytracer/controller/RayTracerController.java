@@ -40,8 +40,9 @@ public class RayTracerController {
 
 //////////////////////////////////////////// HARDCODED VALUES  ////////////////////////////////////////////
 
+
 //        List<Figure> figures = new ArrayList<>();
-//        figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.6F, 0.5F, 1F},
+//        figures.add(new Sphere(new double[]{0,0.5,0}, 0.5, new double[]{0.2F, 0.3F, 0.1F},
 //                0.5, "Normal",
 //                new double[]{0.1F, 0.1F, 0.1F},
 //                100F,
@@ -53,11 +54,11 @@ public class RayTracerController {
 //        List<Light> lights = new ArrayList<>();
 //        Light lightDirected = new Light(new double[]{0, 1,-1}, new double[]{1,1,1});
 //        lights.add(lightDirected);
-//        Scene scene = new Scene(figures, lights, new double[]{1,1,1},new double[]{1,1,1},1,1280,800);
+//        Scene scene = new Scene(figures, lights, new double[]{0,0,0},new double[]{1,1,1},1,1280,800);
 //        Camera camera = new Camera(new double[]{0,0,2}, new double[]{0,0,0}, new double[]{0,1,0}, 1, 2);
 
-        Scene scene = new Scene(mFigures, mLights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
         Camera camera = data.getCamera();
+        Scene scene = new Scene(mFigures, mLights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
 
         byte[] result = imageRender.renderImage(scene, camera);
 

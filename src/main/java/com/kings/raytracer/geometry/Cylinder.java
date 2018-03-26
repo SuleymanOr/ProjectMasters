@@ -6,8 +6,9 @@ import com.kings.raytracer.utility.MathUtils;
 
 public class Cylinder extends Figure {
 
-    private double[] start = null;
-    private double[] end = null;
+    private double[] start = new double[3];
+    private double[] center = null;
+    private double[] end = new double[3];
     private double[] direction = null;
     private double length;
     private double radius;
@@ -19,7 +20,7 @@ public class Cylinder extends Figure {
     private double[] referenceVector;
     private double[] pivotVector;
 
-    public Cylinder(@JsonProperty("start")double[] start,
+    public Cylinder(@JsonProperty("start")double[] center,
                     @JsonProperty("direction")double[] direction,
                     @JsonProperty("length")double length,
                     @JsonProperty("radius")double radius,
@@ -33,28 +34,23 @@ public class Cylinder extends Figure {
                     @JsonProperty("checkersDiffuse2")double[] checkersDiffuse2,
                     @JsonProperty("specular")double[] specular) {
         super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
-        this.start = start;
+        this.center = center;
         this.direction = direction;
         this.length = length;
         this.radius = radius;
     }
 
-    /*
-     * Note that some calculations are performed in the postInit method for optimization.
-     * (non-Javadoc)
-     * @see Primitive#getNormal(double[])
-     */
     @Override
     public double[] getNormal(double[] point) throws Exception {
 
         // Formulas according to http://answers.yahoo.com/question/index?qid=20080218071458AAYz1s1
-        double[] AP, center;
+//        double[] AP, center;
 
         // Calculate the projection of the intersection point onto the direction vector of the cylinder
-        AP = MathUtils.calcPointsDiff(start, point);
-        double t = MathUtils.dotProduct(AB, AP) / ABdotAB;
-        center = start.clone();
-        MathUtils.addVectorAndMultiply(center, AB, t);
+//        AP = MathUtils.calcPointsDiff(start, point);
+//        double t = MathUtils.dotProduct(AB, AP) / ABdotAB;
+//        center = start.clone();
+//        MathUtils.addVectorAndMultiply(center, AB, t);
 
         // Calculate the vector from the intersection point to its projection onto the direction of the cylinder.
         double[] normal = MathUtils.calcPointsDiff(center, point);
@@ -81,11 +77,22 @@ public class Cylinder extends Figure {
         pivotVector = MathUtils.crossProduct(direction, referenceVector);
         MathUtils.normalize(pivotVector);
 
+
+        start[0] = center[0] + (direction[0] * length/2);
+        start[1] = center[1] + (direction[1] * length/2);
+        start[2] = center[2] + (direction[2] * length/2);
+
+        end[0] = center[0] - (direction[0] * length/2);
+        end[1] = center[1] - (direction[1] * length/2);
+        end[2] = center[2] - (direction[2] * length/2);
+
+
+
         // The new end point determines the new direction, we just have to normalize it
-        end = new double[3];
-        end[0] = start[0] + (direction[0] * length);
-        end[1] = start[1] + (direction[1] * length);
-        end[2] = start[2] + (direction[2] * length);
+//        end = new double[3];
+//        end[0] = start[0] + (direction[0] * length);
+//        end[1] = start[1] + (direction[1] * length);
+//        end[2] = start[2] + (direction[2] * length);
 
 
         // Optimization:  Perform calculations for later use

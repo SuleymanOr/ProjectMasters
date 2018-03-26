@@ -2,6 +2,8 @@ package com.kings.raytracer.entity;
 
 import com.kings.raytracer.geometry.Figure;
 
+//TODO: Delete this class
+
 public class RayTracingImage {
     private double radius;
 

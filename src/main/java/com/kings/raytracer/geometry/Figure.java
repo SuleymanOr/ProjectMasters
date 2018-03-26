@@ -31,7 +31,9 @@ public abstract class Figure {
     public Figure(double[] diffuse, double reflectance,
                   String surfaceType, double[] ambient,
                   double shininess, double[] emission,
-                  double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular) {
+                  double[] checkersDiffuse1,
+                  double[] checkersDiffuse2,
+                  double[] specular) {
         this.diffuse = diffuse;
         this.reflectance = reflectance;
         this.surfaceType = surfaceType;
