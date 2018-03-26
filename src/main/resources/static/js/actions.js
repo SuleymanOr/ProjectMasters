@@ -1,5 +1,5 @@
 var id_increment  = 1;
-var scale = 100;
+var scale = 100.0;
 
 function refreshList(shapeList,lightList){
     $("#shape-list").html("");
@@ -54,7 +54,7 @@ function Shape(id,name,type,color,x,y,z,direction,surface,reflect){
     };
     this.shapeToJsonForRaytracer= function () {
         color =  new THREE.Color(this.color);
-        return {"type" : this.type, "center" : [x/100.0,y/100.0,z/100.0], "direction" : direction, "diffuse" : color.toArray(),"surfaceType" : this.surfaceType, "reflectance" : this.reflectance,  "ambient" : this. ambient, "shininess" : this.shininess, "emission" : this.emission, "checkersDiffuse1" : this.checkersDiffuse1, "checkersDiffuse2" : this.checkersDiffuse2, "specular" : this.specular};
+        return {"type" : this.type, "center" : [x/scale,y/scale,z/scale], "direction" : direction, "diffuse" : color.toArray(),"surfaceType" : this.surfaceType, "reflectance" : this.reflectance,  "ambient" : this. ambient, "shininess" : this.shininess, "emission" : this.emission, "checkersDiffuse1" : this.checkersDiffuse1, "checkersDiffuse2" : this.checkersDiffuse2, "specular" : this.specular};
     };
 }
 
@@ -64,9 +64,8 @@ function Sphere (id,name,type,color,x,y,z,radius,direction,surface,reflect){
     Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.radius = radius;
     this.toJsonForRaytracer = function () {
-        console.log(this);
         shape = this.shapeToJsonForRaytracer();
-        return Object.assign(shape,{"radius" : radius/100.0});
+        return Object.assign(shape,{"radius" : radius/scale});
     };
 }
 
@@ -75,12 +74,17 @@ function Cube (id,name,type,color,x,y,z,w,l,h){
     this.w = w;
     this.l = l;
     this.h = h;
+    
 }
 
 function Cylinder (id,name,type,color,x,y,z,radius,height){
     Shape.call(this,id,name,type,color,x,y,z);
     this.radius = radius;
     this.height = height;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"radius" : radius/scale, "lenght" : height/scale});
+    };
 }
 
 
@@ -111,7 +115,7 @@ function LocalScene(scene,camera,ambient,background){
         shape.y = parseInt($("#new-"+type+"-y").val(),10);
         shape.z = parseInt($("#new-"+type+"-z").val(),10);
         shape.surface = $("#new-"+type+"-surface").val();
-        shape.reflect = x = parseInt($("#new-"+type+"-reflect").val(),10)/100.0;
+        shape.reflect = x = parseInt($("#new-"+type+"-reflect").val(),10)/scale;
         if(!(type === "sphere")){
             shape.direction = [];
             shape.direction[0] = parseInt($("#new-"+type+"-direction-x").val(),10);
@@ -248,7 +252,7 @@ function LocalScene(scene,camera,ambient,background){
       data.lights = this.lights.map(function(item){return item.toJsonForRaytracer()});
       data.lights = data.lights.filter(function(n){ return n != undefined });
       data.scene = backScene;
-      data.camera = {"eye": [camera.position.x/100.0,camera.position.y/100.0,camera.position.z/100.0],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
+      data.camera = {"eye": [camera.position.x/scale,camera.position.y/scale,camera.position.z/scale],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
       return data;
     };
 };
