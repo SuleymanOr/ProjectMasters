@@ -241,8 +241,8 @@ function LocalScene(scene,camera,ambient,background){
       // backScene.screenWidth = 1280;
       // backScene.screenHeight = 800;
       data.superSampleValue = 1;
-      data.screenWidth = 1280;
-      data.screenHeight = 800;
+      data.screenWidth = parseInt($("#output-width").val(),10);
+      data.screenHeight = parseInt($("#output-height").val(),10);;
       data.figures = this.shapes.map(function(item){return item.toJsonForRaytracer()});
       data.figures = data.figures.filter(function(n){ return n != undefined });
       data.lights = this.lights.map(function(item){return item.toJsonForRaytracer()});
@@ -258,7 +258,7 @@ $(document).ready(function () {
     var camera = new THREE.PerspectiveCamera( 55, 2, 0.1, 1000 );
 
     camera.position.y=50;
-    var ambientInitial = 0xffffff;
+    var ambientInitial = 0x555555;
     var backgroundInitial = 0x000000;
 
     var renderer = new THREE.WebGLRenderer();
