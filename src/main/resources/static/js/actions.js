@@ -87,6 +87,16 @@ function Cylinder (id,name,type,color,x,y,z,radius,height,direction,surface,refl
     };
 }
 
+function Cone (id,name,type,color,x,y,z,radius,height,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
+    this.radius = radius;
+    this.height = height;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"start" : shape.center, "height" : height/scale, "angel" : Math.atan((radius*1.0)/(height*1.0))});
+    };
+}
+
 
 function Tortus (id,name,type,color,x,y,z,radius,tube_radius){
     Shape.call(this,id,name,type,color,x,y,z);
@@ -171,6 +181,23 @@ function LocalScene(scene,camera,ambient,background){
         cylinder.name = id;
         cylinder.position.set(shape.x,shape.y,shape.z);
         scene.add( cylinder );
+    };
+
+    this.addCone = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var type = "Cone";
+        var shape =  this.addShape(type);
+        var radius = parseInt($("#new-cone-radius").val(),10);
+        var height = parseInt($("#new-cone-height").val(),10);
+        this.shapes[id] = new Cone(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,height,shape.direction,shape.surface,shape.reflect);
+        var geometry = new THREE.ConeBufferGeometry( 5, 20, 32 );
+        var material = new THREE.MeshBasicMaterial( { color: shape.color , wireframe: true} );
+        var cone = new THREE.Mesh( geometry, material );
+        scene.add( cone );
+        cone.name = id;
+        cone.position.set(shape.x,shape.y,shape.z);
+        scene.add( cone );
     };
 
     this.addTorus = function () {
@@ -333,6 +360,9 @@ $(document).ready(function () {
                 break;
             case "add-cylinder":
                 local_scene.addCylinder();
+                break;
+            case "add-cone":
+                local_scene.addCone();
                 break;
             case "add-torus":
                 local_scene.addTorus();

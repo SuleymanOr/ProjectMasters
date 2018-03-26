@@ -268,6 +268,75 @@
                         </div>
                     </div>
                     <div class="card">
+                        <div class="card-header" id="headingCone">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseCone" aria-expanded="false" aria-controls="collapseCone">
+                                    Cone
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseCone" class="collapse" aria-labelledby="headingCone" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-cone-name">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Radius</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-cone-radius">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Height</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-cone-height">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Color</span>
+                                    </div>
+                                    <input class="form-control jscolor"  id="new-cone-color" value="1CD4DF">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Center Position</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-cone-x" placeholder="X">
+                                    <input type="text" class="form-control" id="new-cone-y" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-cone-z" placeholder="Z">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Surface</span>
+                                    </div>
+                                    <select class="form-control" id="new-cone-surface">
+                                        <option value="Normal">Normal</option>
+                                        <option value="Checkers">Checkers</option>
+                                    </select>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Direction :</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-cone-direction-x" placeholder="X" value="0">
+                                    <input type="text" class="form-control" id="new-cone-direction-y" placeholder="Y" value="1">
+                                    <input type="text" class="form-control" id="new-cone-direction-z" placeholder="Z" value="0">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Reflection</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-cone-reflect" placeholder="0-100">
+                                </div>
+                                <button id="add-cone" class="btn btn-secondary shape-add-button">Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
                         <div class="card-header" id="headingFive">
                             <h5 class="mb-0">
                                 <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseThree">
