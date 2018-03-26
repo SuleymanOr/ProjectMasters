@@ -83,7 +83,7 @@ function Cylinder (id,name,type,color,x,y,z,radius,height){
     this.height = height;
     this.toJsonForRaytracer = function () {
         shape = this.shapeToJsonForRaytracer();
-        return Object.assign(shape,{"radius" : radius/scale, "lenght" : height/scale});
+        return Object.assign(shape,{"radius" : radius/scale, "length" : height/scale});
     };
 }
 
