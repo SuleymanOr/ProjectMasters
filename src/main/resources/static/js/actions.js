@@ -1,17 +1,67 @@
 var id_increment  = 1;
-var scale = 100;
-var scalePos = function(val){
-    return val/100.0;
-}
-function refreshList(list){
+var scale = 100.0;
+
+function refreshList(shapeList,lightList){
     $("#shape-list").html("");
-    list.forEach(function(e){
+    shapeList.forEach(function(e){
         var element = "<div class='shape-item' key="+ e.id.toString() +"><span class='shape-item-name'>"+ e.name +"</span><span class='shape-item-edit'>/</span><span class='shape-item-delete'>x</span></div>"
         $("#shape-list").append(element);
     });
+    $("#light-list").html("");
+    lightList.forEach(function(e){
+        var element = "<div class='light-item' key="+ e.id.toString() +"><span class='light-item-name'>"+ e.name +"</span><span class='light-item-edit'>/</span><span class='light-item-delete'>x</span></div>"
+        $("#light-list").append(element);
+    });
 };
 
-function Shape(id,name,type,color,x,y,z,direction){
+//convert degree to radians
+function toRad (angle) {
+    return angle * (Math.PI / 180);
+}
+
+//calculate a point x,y,z, after rotating a,b,c and translating p,q,m
+function pointConvert(x,y,z,a,b,c,p,q,m){
+    //rotate a units around x
+    yp = y*Math.cos(a) - z*Math.sin(a);
+    zp = y*Math.sin(a) + z*Math.cos(a);
+    y = yp;
+    z = zp;
+    //rotate b units around y
+    zp = z*Math.cos(b) - x*Math.sin(b);
+    xp = z*Math.sin(b) + x*Math.cos(b);
+    z = zp;
+    x = xp;
+    //rotate c units around z
+    xp = x*Math.cos(c) - y*Math.sin(c);
+    yp = x*Math.sin(c) + y*Math.cos(c);
+    x = xp;
+    y = yp;
+    //translate
+    x = x + p;
+    y = y + q;
+    z = z + m;
+    return [x/scale,y/scale,z/scale];
+};
+
+function Light(id,name,type,color,x,y,z){
+    this.id = id;
+    this.name = name;
+    this.type = type;
+    this.color = color;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+
+    this.toString = function () {
+        return "id :" + this.id + " name: " + this.name;
+    };
+    this.toJsonForRaytracer= function () {
+        color =  new THREE.Color(this.color);
+        return {"type" : "Light", "direction" : [x,y,z],"color" : color.toArray()};
+    };
+}
+
+function Shape(id,name,type,color,x,y,z,direction,surface,reflect){
     this.id = id;
     this.name = name;
     this.type = type;
@@ -20,159 +70,249 @@ function Shape(id,name,type,color,x,y,z,direction){
     this.y = y;
     this.z = z;
     this.direction = direction;
+    this.surfaceType = surface;
+    this.reflectance = reflect;
+    this.ambient = [0.5,0.5,0.5];
+    this.shininess = 20;
+    this.emission = [0,0,0];
+    this.checkersDiffuse1 = [1,1,1];
+    this.checkersDiffuse2 = [0.1,0.1,0.1];
+    this.specular = [0.7,0.7,0.7];
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
-    this.toJsonForRaytracer= function () {
-      return {};
+    this.shapeToJsonForRaytracer= function () {
+        color =  new THREE.Color(this.color);
+        return {"type" : this.type, "center" : [x/scale,y/scale,z/scale], "direction" : direction, "diffuse" : color.toArray(),"surfaceType" : this.surfaceType, "reflectance" : this.reflectance,  "ambient" : this. ambient, "shininess" : this.shininess, "emission" : this.emission, "checkersDiffuse1" : this.checkersDiffuse1, "checkersDiffuse2" : this.checkersDiffuse2, "specular" : this.specular};
     };
 }
 
-function Sphere (id,name,type,color,x,y,z,radius,direction){
-    Shape.call(this,id,name,type,color,x,y,z,direction);
+
+
+function Sphere (id,name,type,color,x,y,z,radius,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.radius = radius;
     this.toJsonForRaytracer = function () {
-        return {"type" : "Sphere", "center" : [x/100.0,y/100.0,z/100.0], "radius" : radius/100.0, "diffuse" : [0,1,0], "reflectance" : 0.5, "surfaceType" : "Normal"}
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"radius" : radius/scale});
     };
 }
 
-function Cube (id,name,type,color,x,y,z,w,l,h){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Cube (id,name,type,color,x,y,z,w,h,d,height,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,height,direction,surface,reflect);
     this.w = w;
-    this.l = l;
+    this.d = d;
     this.h = h;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"p0" : pointConvert(-w/2,-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),
+                                    "p1" : pointConvert(w/2,-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),
+                                    "p2" : pointConvert(-w/2,-h/2,d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),
+                                    "p3" : pointConvert(-w/2,h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+    };
+    
 }
 
-function Cylinder (id,name,type,color,x,y,z,radius,height){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Cylinder (id,name,type,color,x,y,z,radius,height,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.radius = radius;
     this.height = height;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"radius" : radius/scale, "length" : height/scale});
+    };
+}
+
+function Cone (id,name,type,color,x,y,z,radius,height,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
+    this.radius = radius;
+    this.height = height;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        aa= (radius*1.0);
+        bb = (height*1.0);
+        cc = (radius*1.0)/(height*1.0);
+        dd = Math.atan((radius*1.0)/(height*1.0));
+        return Object.assign(shape,{"start" : shape.center, "height" : height/scale, "angel" : Math.atan((radius*1.0)/(height*1.0))});
+    };
 }
 
 
-function Tortus (id,name,type,color,x,y,z,radius,tube_radius){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Torus (id, name, type, color, x, y, z, radius, tube_radius, direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z, direction,surface,reflect);
     this.radius = radius;
     this.tube_radius = tube_radius;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape, {"centralRadius" : this.radius / scale, "tubeRadius" : this.tube_radius / scale});
+    }
 }
 
-function Plane (id,name,type,color,x,y,z,w,h){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Plane (id,name,type,color,x,y,z,w,h,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.width = w;
     this.height = h;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"point0" : pointConvert(-w/2,-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point1" : pointConvert(w/2,z-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point2" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+    };
 }
 
 function LocalScene(scene,camera,ambient,background){
-    this.elements = [];
+    this.shapes = [];
     this.lights = [];
     this.live_scene = scene;
     this.ambient = ambient;
     this.background = background;
+    this.addShape = function (type) {
+        type = type.toLowerCase();
+        var shape = {};
+        shape.name = $("#new-"+type+"-name").val();
+        shape.color = parseInt($("#new-"+type+"-color").val(),16);
+        shape.x = parseInt($("#new-"+type+"-x").val(),10);
+        shape.y = parseInt($("#new-"+type+"-y").val(),10);
+        shape.z = parseInt($("#new-"+type+"-z").val(),10);
+        shape.surface = $("#new-"+type+"-surface").val();
+        shape.reflect = parseInt($("#new-"+type+"-reflect").val(),10)/scale;
+        if(!(type === "sphere")){
+            shape.direction = [];
+            shape.direction[0] = parseInt($("#new-"+type+"-direction-x").val(),10);
+            shape.direction[1] = parseInt($("#new-"+type+"-direction-y").val(),10);
+            shape.direction[2] = parseInt($("#new-"+type+"-direction-z").val(),10);
+        }
+        return shape;
+    }
     this.addSphere = function () {
         // Adding rhe shape to local shape list
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-sphere-name").val();
-        var type = "sphere";
+        var type = "Sphere";
+        var shape =  this.addShape(type);
         var radius =  parseInt($("#new-sphere-radius").val(),10);
-        var color = parseInt($("#new-sphere-color").val(),16);
-        var x = parseInt($("#new-sphere-x").val(),10);
-        var y = parseInt($("#new-sphere-y").val(),10);
-        var z = parseInt($("#new-sphere-z").val(),10);
-        this.elements[id] = new Sphere(id,name,type,color,x,y,z,radius,[0,1,0]);
+        this.shapes[id] = new Sphere(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,shape.direction,shape.surface,shape.reflect);
         // Adding the shape to three.js scene
         var geometry = new THREE.SphereBufferGeometry( radius, 20, 20 );
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var sphere = new THREE.Mesh( geometry, material );
         sphere.name = id;
-        sphere.position.set(x,y,z);
+        sphere.position.set(shape.x,shape.y,shape.z);
         scene.add( sphere );
     };
     this.addCube = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-cube-name").val();
-        var type = "cube";
-        var color = parseInt($("#new-cube-color").val(),16);
-        var x = parseInt($("#new-cube-x").val(),10);
-        var y = parseInt($("#new-cube-y").val(),10);
-        var z = parseInt($("#new-cube-z").val(),10);
+        var type = "Cube";
+        var shape =  this.addShape(type);
         var w = parseInt($("#new-cube-w").val(),10);
-        var l = parseInt($("#new-cube-l").val(),10);
+        var d = parseInt($("#new-cube-d").val(),10);
         var h = parseInt($("#new-cube-h").val(),10);
-        this.elements[id] = new Cube(id,name,type,color,x,y,z,w,l,h);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
-        var geometry = new THREE.BoxGeometry( w, l , h, 5, 5 ,5);
+        this.shapes[id] = new Cube(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,h,d,shape.direction,shape.surface,shape.reflect);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
+        var geometry = new THREE.BoxGeometry( w, h , d, 5, 5 ,5);
         var box = new THREE.Mesh( geometry, material );
         box.name = id;
-        box.position.set(x,y,z);
+        box.position.set(shape.x,shape.y,shape.z);
         scene.add( box );
     };
 
     this.addCylinder = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-cylinder-name").val();
-        var type = "cylinder";
-        var color = parseInt($("#new-cylinder-color").val(),16);
-        var x = parseInt($("#new-cylinder-x").val(),10);
-        var y = parseInt($("#new-cylinder-y").val(),10);
-        var z = parseInt($("#new-cylinder-z").val(),10);
+        var type = "Cylinder";
+        var shape =  this.addShape(type);
         var radius = parseInt($("#new-cylinder-radius").val(),10);
         var height = parseInt($("#new-cylinder-height").val(),10);
-        this.elements[id] = new Cylinder(id,name,type,color,x,y,z,radius,height);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Cylinder(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,height,shape.direction,shape.surface,shape.reflect);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
         var cylinder = new THREE.Mesh( geometry, material );
         cylinder.name = id;
-        cylinder.position.set(x,y,z);
+        cylinder.position.set(shape.x,shape.y,shape.z);
         scene.add( cylinder );
+    };
+
+    this.addCone = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var type = "Cone";
+        var shape =  this.addShape(type);
+        var radius = parseInt($("#new-cone-radius").val(),10);
+        var height = parseInt($("#new-cone-height").val(),10);
+        this.shapes[id] = new Cone(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,height,shape.direction,shape.surface,shape.reflect);
+        var geometry = new THREE.ConeBufferGeometry( 5, 20, 32 );
+        var material = new THREE.MeshBasicMaterial( { color: shape.color , wireframe: true} );
+        var cone = new THREE.Mesh( geometry, material );
+        scene.add( cone );
+        cone.name = id;
+        cone.position.set(shape.x,shape.y,shape.z);
+        scene.add( cone );
     };
 
     this.addTorus = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-torus-name").val();
-        var type = "torus";
-        var color = parseInt($("#new-torus-color").val(),16);
-        var x = parseInt($("#new-torus-x").val(),10);
-        var y = parseInt($("#new-torus-y").val(),10);
-        var z = parseInt($("#new-torus-z").val(),10);
+        var type = "Torus";
+        var shape =  this.addShape(type);
         var radius = parseInt($("#new-torus-radius").val(),10);
         var tube_radius = parseInt($("#new-torus-tube-radius").val(),10);
-        this.elements[id] = new Tortus(id,name,type,color,x,y,z,radius,tube_radius);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Torus(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,tube_radius, shape.direction,shape.surface,shape.reflect);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
         var torus = new THREE.Mesh( geometry, material );
         torus.name = id;
-        torus.position.set(x,y,z);
+        torus.position.set(shape.x,shape.y,shape.z);
         scene.add( torus );
     };
 
     this.addPlane = function () {
         var id = id_increment;
         id_increment +=1;
-        var name = $("#new-plane-name").val();
-        var type = "plane";
-        var color = parseInt($("#new-plane-color").val(),16);
-        var x = parseInt($("#new-plane-x").val(),10);
-        var y = parseInt($("#new-plane-y").val(),10);
-        var z = parseInt($("#new-plane-z").val(),10);
+        var type = "Plane";
+        var shape =  this.addShape(type);
         var w = parseInt($("#new-plane-w").val(),10);
         var h = parseInt($("#new-plane-h").val(),10);
-        this.elements[id] = new Plane(id,name,type,color,x,y,z,w,h);
-        var material = new THREE.MeshLambertMaterial( { color: color , wireframe: true} );
+        this.shapes[id] = new Plane(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,h,shape.direction,shape.surface,shape.reflect);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.PlaneBufferGeometry( w,h,10,10 );
         var plane = new THREE.Mesh( geometry, material );
+        // plane.rotation.x = toRad(90);
+        plane.rotateOnAxis(new THREE.Vector3(1,0,0), toRad(shape.direction[0]));
+        plane.rotateOnAxis(new THREE.Vector3(0,1,0), toRad(shape.direction[1]));
+        plane.rotateOnAxis(new THREE.Vector3(0,0,1), toRad(shape.direction[2]));
         plane.name = id;
-        plane.position.set(x,y,z);
+        plane.position.set(shape.x,shape.y,shape.z);
         scene.add( plane );
     };
+
+    this.addLight = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var name = $("#new-light-name").val();
+        var type = "Light";
+        var color = parseInt($("#new-light-color").val(),16);
+        var x = parseInt($("#new-light-x").val(),10);
+        var y = parseInt($("#new-light-y").val(),10);
+        var z = parseInt($("#new-light-z").val(),10);
+        this.lights[id] = new Light(id,name,type,color,x,y,z);
+        var light = new THREE.DirectionalLight( color,2 );
+        light.position.set( x, y, z );
+        scene.add( light );
+        light.name = id;
+        light.position.set(-x,-y,-z);
+        scene.add( light );
+    };
+
 
     this.removeShape = function (id) {
         var tmp = this.live_scene.getObjectByName(id);
         this.live_scene.remove(tmp);
-        delete this.elements[id];
+        delete this.shapes[id];
+    };
+
+    this.removeLight = function (id) {
+        var tmp = this.live_scene.getObjectByName(id);
+        this.live_scene.remove(tmp);
+        delete this.lights[id];
     };
 
     this.toJsonForRaytracer = function(){
@@ -183,14 +323,15 @@ function LocalScene(scene,camera,ambient,background){
       // backScene.superSampleValue = 1;
       // backScene.screenWidth = 1280;
       // backScene.screenHeight = 800;
-        data.superSampleValue = 1;
-        data.screenWidth = 1280;
-        data.screenHeight = 800;
-      data.figures = this.elements.map(function(item){return item.toJsonForRaytracer()});
-      data.figures= data.figures.filter(function(n){ return n != undefined });
-      data.lights = [{"direction":[0,1,-1],"color":[1,1,1]}];
+      data.superSampleValue = 1;
+      data.screenWidth = parseInt($("#output-width").val(),10);
+      data.screenHeight = parseInt($("#output-height").val(),10);;
+      data.figures = this.shapes.map(function(item){return item.toJsonForRaytracer()});
+      data.figures = data.figures.filter(function(n){ return n != undefined });
+      data.lights = this.lights.map(function(item){return item.toJsonForRaytracer()});
+      data.lights = data.lights.filter(function(n){ return n != undefined });
       data.scene = backScene;
-      data.camera = {"eye": [camera.position.x/100.0,camera.position.y/100.0,camera.position.z/100.0],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
+      data.camera = {"eye": [camera.position.x/scale,camera.position.y/scale,camera.position.z/scale],"lookAt":[0,0,0],"upDirection":[0,1,0],"screenDist":1,"screenWidth":2};
       return data;
     };
 };
@@ -200,11 +341,11 @@ $(document).ready(function () {
     var camera = new THREE.PerspectiveCamera( 55, 2, 0.1, 1000 );
 
     camera.position.y=50;
-    var ambientInitial = 0xffffff;
+    var ambientInitial = 0x555555;
     var backgroundInitial = 0x000000;
 
     var renderer = new THREE.WebGLRenderer();
-    renderer.setSize( $("#canvas-container").width()-15, ($("#canvas-container").width()-15)/2 );
+    renderer.setSize( $("#canvas-container").width(), ($("#canvas-container").width())/2 );
     document.getElementById('canvas-container').appendChild( renderer.domElement );
     scene.background =  new THREE.Color(backgroundInitial);
 
@@ -272,22 +413,32 @@ $(document).ready(function () {
             case "add-cylinder":
                 local_scene.addCylinder();
                 break;
+            case "add-cone":
+                local_scene.addCone();
+                break;
             case "add-torus":
                 local_scene.addTorus();
                 break;
             case "add-plane":
                 local_scene.addPlane();
                 break;
+            case "add-light":
+                local_scene.addLight();
+                break;
             default:
                 alert("Unknown Object!");
         }
-        refreshList(local_scene.elements);
+        refreshList(local_scene.shapes,local_scene.lights);
         console.log(camera);
     });
 
     $("#shape-list").on("click",".shape-item-delete",(function () {
         local_scene.removeShape(parseInt($(this).parent().attr("key"),10));
-        refreshList(local_scene.elements);
+        refreshList(local_scene.shapes,local_scene.lights);
+    }));
+    $("#light-list").on("click",".light-item-delete",(function () {
+        local_scene.removeLight(parseInt($(this).parent().attr("key"),10));
+        refreshList(local_scene.shapes,local_scene.lights);
     }));
 
     $("#render-button").click(function (event) {

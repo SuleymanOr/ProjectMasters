@@ -29,7 +29,8 @@ public class Cube extends Figure{
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
-        setAdditionalValues();
+        setAdditionalValues(diffuse,reflectance,surfaceType,ambient,
+                shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
     }
 
     @Override
@@ -63,28 +64,24 @@ public class Cube extends Figure{
 
     }
 
-    public void setAdditionalValues(){
+    public void setAdditionalValues(double[] diffuse, double reflectance, String surfaceType, double[] ambient, double shininess,
+                                    double[] emission, double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular){
         double[] p0_p1 = MathUtils.calcPointsDiff(p0, p1);
         double[] p0_p3 = MathUtils.calcPointsDiff(p0, p3);
 
-        rectangles[0] = new Rectangle(p0, p1, p2, new double[]{0.8, 0.8, 0.8}, 0.0F, "Normal",
-                new double[]{0.1F, 0.1F, 0.1F}, 100F, new double[]{0,0,0},
-                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F}, new double[]{1.0F, 1.0F, 1.0F});        // Front facing rectangle
-        rectangles[1] = new Rectangle(p0, p2, p3, new double[]{0.8, 0.8, 0.8},0.0F, "Normal",
-                new double[]{0.1F, 0.1F, 0.1F}, 100F, new double[]{0,0,0},
-                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F}, new double[]{1.0F, 1.0F, 1.0F});        // Left facing rectangle
-        rectangles[2] = new Rectangle(p0, p3, p1, new double[]{0.8, 0.8, 0.8},0.0F, "Normal",
-                new double[]{0.1F, 0.1F, 0.1F}, 100F, new double[]{0,0,0},
-                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F}, new double[]{1.0F, 1.0F, 1.0F});        // Bottom facing rectangle
-        rectangles[3] = new Rectangle(p1, MathUtils.addPoints(p3, p0_p1), MathUtils.addPoints(p2, p0_p1), new double[]{0.8, 0.8, 0.8},0.0F, "Normal",
-                new double[]{0.1F, 0.1F, 0.1F}, 100F, new double[]{0,0,0},
-                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F}, new double[]{1.0F, 1.0F, 1.0F});        // Right facing rectangle
-        rectangles[4] = new Rectangle(p2, MathUtils.addPoints(p2, p0_p1), MathUtils.addPoints(p2, p0_p3), new double[]{0.8, 0.8, 0.8},0.0F, "Normal",
-                new double[]{0.1F, 0.1F, 0.1F}, 100F, new double[]{0,0,0},
-                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F}, new double[]{1.0F, 1.0F, 1.0F});        // Top facing rectangle
-        rectangles[5] = new Rectangle(p3, MathUtils.addPoints(p2, p0_p3), MathUtils.addPoints(p3, p0_p1), new double[]{0.8, 0.8, 0.8},0.0F, "Normal",
-                new double[]{0.1F, 0.1F, 0.1F}, 100F, new double[]{0,0,0},
-                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F}, new double[]{1.0F, 1.0F, 1.0F});        // Back facing rectangle
+        rectangles[0] = new Rectangle(p0, p1, p2, diffuse, reflectance, surfaceType, ambient, shininess, emission,
+                checkersDiffuse1, checkersDiffuse2, specular);        // Front facing rectangle
+        rectangles[1] = new Rectangle(p0, p2, p3, diffuse, reflectance, surfaceType, ambient, shininess, emission,
+                checkersDiffuse1, checkersDiffuse2, specular);        // Left facing rectangle
+        rectangles[2] = new Rectangle(p0, p3, p1, diffuse, reflectance, surfaceType, ambient, shininess, emission,
+                checkersDiffuse1, checkersDiffuse2, specular);        // Bottom facing rectangle
+        rectangles[3] = new Rectangle(p1, MathUtils.addPoints(p3, p0_p1), MathUtils.addPoints(p2, p0_p1), diffuse, reflectance, surfaceType, ambient, shininess, emission,
+                checkersDiffuse1, checkersDiffuse2, specular);        // Right facing rectangle
+        rectangles[4] = new Rectangle(p2, MathUtils.addPoints(p2, p0_p1), MathUtils.addPoints(p2, p0_p3), diffuse, reflectance, surfaceType, ambient, shininess, emission,
+                checkersDiffuse1, checkersDiffuse2, specular);        // Top facing rectangle
+        rectangles[5] = new Rectangle(p3, MathUtils.addPoints(p2, p0_p3), MathUtils.addPoints(p3, p0_p1), diffuse, reflectance, surfaceType, ambient, shininess, emission,
+                checkersDiffuse1, checkersDiffuse2, specular);        // Back facing rectangle
+
 
     }
 

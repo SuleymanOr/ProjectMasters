@@ -10,9 +10,13 @@ import com.kings.raytracer.auxiliary.Ray;
         property = "type")
 @JsonSubTypes({
         @JsonSubTypes.Type(value = Sphere.class, name = "Sphere" ),
+        @JsonSubTypes.Type(value = Cylinder.class, name = "Cylinder" ),
+        @JsonSubTypes.Type(value = Cone.class, name = "Cone" ),
+        @JsonSubTypes.Type(value = Rectangle.class, name = "Plane" ),
+        @JsonSubTypes.Type(value = Cube.class, name = "Cube" ),
+        @JsonSubTypes.Type(value = Torus.class, name = "Torus" ),
 })
 public abstract class Figure {
-
 
     private double[] specular;
     private double[] diffuse;
@@ -25,10 +29,13 @@ public abstract class Figure {
     private double[] checkersDiffuse2;
     private String surfaceType;
 
+
     public Figure(double[] diffuse, double reflectance,
                   String surfaceType, double[] ambient,
                   double shininess, double[] emission,
-                  double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular) {
+                  double[] checkersDiffuse1,
+                  double[] checkersDiffuse2,
+                  double[] specular) {
         this.diffuse = diffuse;
         this.reflectance = reflectance;
         this.surfaceType = surfaceType;

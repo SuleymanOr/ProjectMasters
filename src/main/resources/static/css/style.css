@@ -17,7 +17,7 @@
     text-decoration: none;
 }
 
-.shape-item {
+.shape-item, .light-item {
     display: inline-block;
     width: 15%;
     border: solid 1px #333333;
@@ -26,15 +26,19 @@
     margin: 0 10px 0 0;
 }
 
-.shape-item:hover{
+.light-item {
+    width: 30%;
+}
+
+.shape-item:hover,.light-item:hover{
     box-shadow: 0px 0px 4px #333333;
 }
 
-.shape-item-name {
+.light-item-name, .shape-item-name {
     color: #333333;
 }
 
-.shape-item-edit, .shape-item-delete {
+.light-item-edit, .light-item-delete, .shape-item-edit, .shape-item-delete {
     float: right;
     background-color: #218838;
     color: white;
@@ -49,16 +53,23 @@
 
 .scene-control-item{
     display: inline-block;
-    width:28% ;
+    width:50% ;
     margin: 0 2%;
     height: 28%;
     vertical-align: top;
 }
 
 #axis-helper{
-    width: 10%;
+    width: 30%;
 }
 
+#light-card{
+    height: 100%;
+}
+#light-list{
+    overflow-y: scroll;
+    width: 100%;
+}
 #resultModal .modal-header{
     justify-content: left;
 }
@@ -78,4 +89,16 @@
 
 #resultModal .modal-body{
     text-align: center;
+}
+
+#result{
+    max-width: 100%;
+}
+
+.no-padding-left{
+    padding-left: 0;
+}
+
+.no-padding-right{
+    padding-right: 0;
 }

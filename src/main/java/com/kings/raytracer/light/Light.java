@@ -13,7 +13,6 @@ public class Light {
 
     @JsonCreator
     public Light(@JsonProperty("direction")double[] direction, @JsonProperty("color")double[] color) {
-        super();
         position = new double[] { Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY };
         this.direction = MathUtils.normalizeReturn(direction);
         this.color = color;
@@ -22,6 +21,7 @@ public class Light {
 
     public double[] getAmountOfLight(double[] point) {
         return getColor();
+
     }
 
     public double[] getPosition() {
