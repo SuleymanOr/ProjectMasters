@@ -105,7 +105,10 @@ function Cube (id,name,type,color,x,y,z,w,h,d,height,direction,surface,reflect){
     this.h = h;
     this.toJsonForRaytracer = function () {
         shape = this.shapeToJsonForRaytracer();
-        return Object.assign(shape,{"p0" : pointConvert(-w/2,-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"p1" : pointConvert(w/2,z-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"p2" : pointConvert(-w/2,h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),toRad(shape.direction[2]),x,y,z),"p3" : pointConvert(-w/2,-h/2,+d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+        return Object.assign(shape,{"p0" : pointConvert(-w/2,-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),
+                                    "p1" : pointConvert(w/2,-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),
+                                    "p2" : pointConvert(-w/2,-h/2,d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),
+                                    "p3" : pointConvert(-w/2,h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
     };
     
 }
