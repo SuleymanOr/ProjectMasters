@@ -98,14 +98,14 @@ function Sphere (id,name,type,color,x,y,z,radius,direction,surface,reflect){
     };
 }
 
-function Cube (id,name,type,color,x,y,z,w,l,h){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Cube (id,name,type,color,x,y,z,w,h,d,height,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,height,direction,surface,reflect);
     this.w = w;
-    this.l = l;
+    this.d = d;
     this.h = h;
     this.toJsonForRaytracer = function () {
         shape = this.shapeToJsonForRaytracer();
-        return Object.assign(shape,{"point0" : pointConvert(-w/2,-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point1" : pointConvert(w/2,z-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point2" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),"point3" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+        return Object.assign(shape,{"p0" : pointConvert(-w/2,-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"p1" : pointConvert(w/2,z-h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"p2" : pointConvert(-w/2,h/2,-d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),toRad(shape.direction[2]),x,y,z),"p3" : pointConvert(-w/2,-h/2,+d/2,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
     };
     
 }
@@ -197,11 +197,11 @@ function LocalScene(scene,camera,ambient,background){
         var type = "Cube";
         var shape =  this.addShape(type);
         var w = parseInt($("#new-cube-w").val(),10);
-        var l = parseInt($("#new-cube-l").val(),10);
+        var d = parseInt($("#new-cube-d").val(),10);
         var h = parseInt($("#new-cube-h").val(),10);
-        this.shapes[id] = new Cube(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,l,h);
+        this.shapes[id] = new Cube(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,h,d,shape.direction,shape.surface,shape.reflect);
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
-        var geometry = new THREE.BoxGeometry( w, l , h, 5, 5 ,5);
+        var geometry = new THREE.BoxGeometry( w, h , d, 5, 5 ,5);
         var box = new THREE.Mesh( geometry, material );
         box.name = id;
         box.position.set(shape.x,shape.y,shape.z);
