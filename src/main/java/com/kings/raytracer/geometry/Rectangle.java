@@ -117,7 +117,7 @@ public class Rectangle extends Figure {
     }
 
     private double getIntersect(double distance, double a, double b) {
-        if ((a > 0) && (b > 0) && (a < 1) && (b < 1)) {
+        if ((a > MathUtils.ZERO) && (b > MathUtils.ZERO) && (a < MathUtils.UNIT) && (b < MathUtils.UNIT)) {
             return distance;
         }else {
             return Double.POSITIVE_INFINITY;
