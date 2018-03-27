@@ -2,6 +2,8 @@ package com.kings.raytracer.auxiliary;
 
 import com.kings.raytracer.geometry.Figure;
 
+import java.util.Objects;
+
 public class Intersection {
 
     private Figure figure;
@@ -19,6 +21,21 @@ public class Intersection {
     public double getDistance() {
         return distance;
     }
+
+    @Override
+    public boolean equals(Object o){
+        // self check
+        if(this == o){ return true; } else
+            // null check
+            if(o == null){ return false;} else
+                // type check and cast
+                if(getClass() != o.getClass()){ return false; } else {
+                    final Intersection a = (Intersection) o;
+                    // field comparison
+                    return Objects.equals(a, a);
+                }
+    }
+
 
 }
 

@@ -6,13 +6,12 @@ import com.kings.raytracer.utility.MathUtils;
 
 public class Cylinder extends Figure {
 
-    private double[] start = null;
+    private double[] start;
     private double[] end = null;
-    private double[] direction = null;
+    private double[] direction ;
     private double length;
     private double radius;
 
-    // Fields for calculation optimizations
     private double radiusSquare;
     private double[] AB;
     private double ABdotAB;
@@ -39,41 +38,30 @@ public class Cylinder extends Figure {
         this.radius = radius;
     }
 
-    /*
-     * Note that some calculations are performed in the postInit method for optimization.
-     * (non-Javadoc)
-     * @see Primitive#getNormal(double[])
-     */
     @Override
-    public double[] getNormal(double[] point) throws Exception {
+    public double[] getNormal(double[] point){
 
-        // Formulas according to http://answers.yahoo.com/question/index?qid=20080218071458AAYz1s1
         double[] AP, center;
 
-        // Calculate the projection of the intersection point onto the direction vector of the cylinder
         AP = MathUtils.calcPointsDiff(start, point);
         double t = MathUtils.dotProduct(AB, AP) / ABdotAB;
         center = start.clone();
         MathUtils.addVectorAndMultiply(center, AB, t);
-
-        // Calculate the vector from the intersection point to its projection onto the direction of the cylinder.
         double[] normal = MathUtils.calcPointsDiff(center, point);
         MathUtils.normalize(normal);
 
         return normal;
     }
 
-
-    /*
-     * Note that some calculations are performed in the postInit method for optimization.
-     * (non-Javadoc)
-     * @see Primitive#intersect(Ray)
-     */
     @Override
     public double intersect(Ray ray) {
 
-        double[] AO, AOxAB, VxAB;    // Vectors to work with
-        double a, b, c;        // Quadratic equation coefficients
+        return getIntersectSolution(ray);
+    }
+
+    private double getIntersectSolution(Ray ray) {
+        double[] AO, AOxAB, VxAB;
+        double a, b, c;
 
 
         initializeReferenceVector();
@@ -81,14 +69,11 @@ public class Cylinder extends Figure {
         pivotVector = MathUtils.crossProduct(direction, referenceVector);
         MathUtils.normalize(pivotVector);
 
-        // The new end point determines the new direction, we just have to normalize it
+
         end = new double[3];
-        end[0] = start[0] + (direction[0] * length);
-        end[1] = start[1] + (direction[1] * length);
-        end[2] = start[2] + (direction[2] * length);
+        endPointSet();
 
 
-        // Optimization:  Perform calculations for later use
         radiusSquare = radius * radius;
         AB = MathUtils.calcPointsDiff(start, end);
         ABdotAB = MathUtils.dotProduct(AB, AB);
@@ -103,32 +88,48 @@ public class Cylinder extends Figure {
         b = 2 * MathUtils.dotProduct(VxAB, AOxAB);
         c = MathUtils.dotProduct(AOxAB, AOxAB) - radiusSquare;
 
-        // Solve equation for at^2 + bt + c = 0
-        double[] roots = MathUtils.solveQuadraticEquation(a, b, c);
-        double distance;
 
+        double[] roots = MathUtils.solveQuadraticEquation(a, b, c);
+
+        return returnIntersectionDistance(ray, roots);
+    }
+
+    private void endPointSet() {
+        end[0] = start[0] + (direction[0] * length);
+        end[1] = start[1] + (direction[1] * length);
+        end[2] = start[2] + (direction[2] * length);
+    }
+
+    private double returnIntersectionDistance(Ray ray, double[] roots) {
+        double distance;
         if (roots[0] == Double.POSITIVE_INFINITY) {
             distance = Double.POSITIVE_INFINITY;
         } else if (roots[0] <= 0 && roots[1] <= 0) {
             distance = Double.POSITIVE_INFINITY;
         }
-        // We need to choose the closest intersection point which is within the cylinder length
+
         else if (roots[0] >= 0 && roots[1] >= 0) {
-            if (isPointOnCylinder(roots[0], ray)) {
-                if (isPointOnCylinder(roots[1], ray)) {
-                    distance = Math.min(roots[0], roots[1]);
-                } else {
-                    distance = roots[0];
-                }
-            } else if (isPointOnCylinder(roots[1], ray)) {
-                distance = roots[1];
-            } else {
-                distance = Double.POSITIVE_INFINITY;
-            }
+            distance = getDistance(ray, roots);
         } else {
             distance = Math.max(roots[0], roots[1]);
         }
 
+        return distance;
+    }
+
+    private double getDistance(Ray ray, double[] roots) {
+        double distance;
+        if (isPointOnCylinder(roots[0], ray)) {
+            if (isPointOnCylinder(roots[1], ray)) {
+                distance = Math.min(roots[0], roots[1]);
+            } else {
+                distance = roots[0];
+            }
+        } else if (isPointOnCylinder(roots[1], ray)) {
+            distance = roots[1];
+        } else {
+            distance = Double.POSITIVE_INFINITY;
+        }
         return distance;
     }
 
@@ -169,7 +170,7 @@ public class Cylinder extends Figure {
 
             double u = dist / length;
             double q = MathUtils.dotProduct(pointToCenter, referenceVector);
-            if (Math.abs(q) > 1) q = 1 * Math.signum(q);
+            if (Math.abs(q) > MathUtils.UNIT) q = 1 * Math.signum(q);
 
             double v = Math.acos(q);
             double[] orthoToPointToCenter = MathUtils.crossProduct(pointToCenter, referenceVector);

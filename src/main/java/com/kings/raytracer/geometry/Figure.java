@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kings.raytracer.auxiliary.Ray;
 
-/**
- * Abstract class from which all geometric primitives inherit
- */
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -17,16 +14,16 @@ import com.kings.raytracer.auxiliary.Ray;
 public abstract class Figure {
 
 
-    private double[] specular = {1.0F, 1.0F, 1.0F}; // from surface class, used for all shapes
-    private double[] diffuse = {1F, 1F, 1F}; // default values
-    private double[] ambient = {0.1F, 0.1F, 0.1F};
-    private double[] emission = {0, 0, 0};
-    private double shininess = 100.0F;
-    private double reflectance = 0.0F;
-    private double checkersSize = 0.1F;
-    private double[] checkersDiffuse1 = {1.0F, 1.0F, 1.0F};
-    private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
-    private String surfaceType = "Normal";
+    private double[] specular;
+    private double[] diffuse;
+    private double[] ambient;
+    private double[] emission;
+    private double shininess;
+    private double reflectance ;
+    private double checkersSize ;
+    private double[] checkersDiffuse1;
+    private double[] checkersDiffuse2;
+    private String surfaceType;
 
     public Figure(double[] diffuse, double reflectance,
                   String surfaceType, double[] ambient,
@@ -43,14 +40,6 @@ public abstract class Figure {
         this.specular = specular;
 
     }
-
-    /**
-     * A generic intersection algorithm which returns the distance between the ray and the
-     * implementing primitive.  Returns Double.POSITIVE_INFINITY if there is no intersection.
-     *
-     * @param ray
-     * @return
-     */
 
     abstract public double intersect(Ray ray);
 
