@@ -7,9 +7,9 @@ import com.kings.raytracer.utility.MathUtils;
 public class Triangle extends Figure {
     private  double[] point0, point1, point2;
 
-    public Triangle(double[] point0,
-                    double[] point1,
-                    double[] point2,
+    public Triangle(@JsonProperty("point0")double[] point0,
+                    @JsonProperty("point1")double[] point1,
+                    @JsonProperty("point2")double[] point2,
                     @JsonProperty("diffuse") double[] diffuse,
                     @JsonProperty("reflectance") double reflectance,
                     @JsonProperty("surfaceType") String surfaceType,

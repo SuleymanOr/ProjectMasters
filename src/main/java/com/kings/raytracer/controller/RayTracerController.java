@@ -58,21 +58,7 @@ public class RayTracerController {
 //        Scene scene = new Scene(figures, lights, new double[]{0,0,0},new double[]{1,1,1},1,1280,800);
 //        Camera camera = new Camera(new double[]{0,0,2}, new double[]{0,0,0}, new double[]{0,1,0}, 1, 2);
 //        List<Figure> mFigures = new ArrayList<>();
-        Cube rectangle = new Cube(new double[]{-0.1+0.2,-0.1+0.2,-0.1+0.2},
-                new double[]{0.1+0.2,-0.1+0.2,-0.1+0.2},
-                new double[]{-0.1+0.2,0.1+0.2,-0.1+0.2},
-                new double[]{-0.1+0.2,-0.1+0.2,0.1+0.2},
-                new double[]{1,0,0},
-                0.2,
-                "Normal",
-                new double[]{1,1,1},
-                100,
-                new double[]{0,0,0},
-                new double[]{1,1,1},
-                new double[]{0.1,0.1,0.1},
-                new double[]{1,1,1});
 
-        mFigures.add(rectangle);
         Camera camera = data.getCamera();
         Scene scene = new Scene(mFigures, mLights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
 

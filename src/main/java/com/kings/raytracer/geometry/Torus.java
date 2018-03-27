@@ -13,9 +13,9 @@ public class Torus extends Figure{
     private double tubeRadiusSquare;
     private double[] normal;
 
-    public Torus(double[] center,
-                 double centralRadius,
-                 double tubeRadius,
+    public Torus(@JsonProperty("center")double[] center,
+                 @JsonProperty("centralRadius")double centralRadius,
+                 @JsonProperty("tubeRadius")double tubeRadius,
                  @JsonProperty("diffuse") double[] diffuse,
                  @JsonProperty("reflectance") double reflectance,
                  @JsonProperty("surfaceType") String surfaceType,

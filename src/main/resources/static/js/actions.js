@@ -138,10 +138,14 @@ function Cone (id,name,type,color,x,y,z,radius,height,direction,surface,reflect)
 }
 
 
-function Tortus (id,name,type,color,x,y,z,radius,tube_radius){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Torus (id, name, type, color, x, y, z, radius, tube_radius, direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z, direction,surface,reflect);
     this.radius = radius;
     this.tube_radius = tube_radius;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape, {"centralRadius" : this.radius / scale, "tubeRadius" : this.tube_radius / scale});
+    }
 }
 
 function Plane (id,name,type,color,x,y,z,w,h,direction,surface,reflect){
@@ -251,7 +255,7 @@ function LocalScene(scene,camera,ambient,background){
         var shape =  this.addShape(type);
         var radius = parseInt($("#new-torus-radius").val(),10);
         var tube_radius = parseInt($("#new-torus-tube-radius").val(),10);
-        this.shapes[id] = new Tortus(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,tube_radius);
+        this.shapes[id] = new Torus(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,tube_radius, shape.direction,shape.surface,shape.reflect);
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
         var torus = new THREE.Mesh( geometry, material );
