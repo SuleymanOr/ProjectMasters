@@ -14,6 +14,35 @@ function refreshList(shapeList,lightList){
     });
 };
 
+//convert degree to radians
+function toRad (angle) {
+    return angle * (Math.PI / 180);
+}
+
+//calculate a point x,y,z, after rotating a,b,c and translating p,q,m
+function pointConvert(x,y,z,a,b,c,p,q,m){
+    //rotate a units around x
+    yp = y*Math.cos(a) - z*Math.sin(a);
+    zp = y*Math.sin(a) + z*Math.cos(a);
+    y = yp;
+    z = zp;
+    //rotate b units around y
+    zp = z*Math.cos(b) - x*Math.sin(b);
+    xp = z*Math.sin(b) + x*Math.cos(b);
+    z = zp;
+    x = xp;
+    //rotate c units around z
+    xp = x*Math.cos(c) - y*Math.sin(c);
+    yp = x*Math.sin(c) + y*Math.cos(c);
+    x = xp;
+    y = yp;
+    //translate
+    x = x + p;
+    y = y + q;
+    z = z + m;
+    return [x/scale,y/scale,z/scale];
+};
+
 function Light(id,name,type,color,x,y,z){
     this.id = id;
     this.name = name;
@@ -74,6 +103,10 @@ function Cube (id,name,type,color,x,y,z,w,l,h){
     this.w = w;
     this.l = l;
     this.h = h;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"point0" : pointConvert(-w/2,-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point1" : pointConvert(w/2,z-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point2" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),"point3" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+    };
     
 }
 
@@ -97,7 +130,7 @@ function Cone (id,name,type,color,x,y,z,radius,height,direction,surface,reflect)
         bb = (height*1.0);
         cc = (radius*1.0)/(height*1.0);
         dd = Math.atan((radius*1.0)/(height*1.0));
-        return Object.assign(shape,{"start" : shape.center, "height" : height/scale, "angle" : Math.atan((radius*1.0)/(height*1.0))});
+        return Object.assign(shape,{"start" : shape.center, "height" : height/scale, "angel" : Math.atan((radius*1.0)/(height*1.0))});
     };
 }
 
@@ -108,10 +141,14 @@ function Tortus (id,name,type,color,x,y,z,radius,tube_radius){
     this.tube_radius = tube_radius;
 }
 
-function Plane (id,name,type,color,x,y,z,w,h){
-    Shape.call(this,id,name,type,color,x,y,z);
+function Plane (id,name,type,color,x,y,z,w,h,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
     this.width = w;
     this.height = h;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"point0" : pointConvert(-w/2,-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point1" : pointConvert(w/2,z-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point2" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+    };
 }
 
 function LocalScene(scene,camera,ambient,background){
@@ -227,10 +264,14 @@ function LocalScene(scene,camera,ambient,background){
         var shape =  this.addShape(type);
         var w = parseInt($("#new-plane-w").val(),10);
         var h = parseInt($("#new-plane-h").val(),10);
-        this.shapes[id] = new Plane(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,h);
+        this.shapes[id] = new Plane(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,w,h,shape.direction,shape.surface,shape.reflect);
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.PlaneBufferGeometry( w,h,10,10 );
         var plane = new THREE.Mesh( geometry, material );
+        // plane.rotation.x = toRad(90);
+        plane.rotateOnAxis(new THREE.Vector3(1,0,0), toRad(shape.direction[0]));
+        plane.rotateOnAxis(new THREE.Vector3(0,1,0), toRad(shape.direction[1]));
+        plane.rotateOnAxis(new THREE.Vector3(0,0,1), toRad(shape.direction[2]));
         plane.name = id;
         plane.position.set(shape.x,shape.y,shape.z);
         scene.add( plane );
@@ -250,7 +291,7 @@ function LocalScene(scene,camera,ambient,background){
         light.position.set( x, y, z );
         scene.add( light );
         light.name = id;
-        light.position.set(x,y,z);
+        light.position.set(-x,-y,-z);
         scene.add( light );
     };
 
