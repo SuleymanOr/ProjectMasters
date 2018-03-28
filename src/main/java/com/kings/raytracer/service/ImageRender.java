@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
+/*Service class used for rendering the image*/
 @Service
 public class ImageRender {
 

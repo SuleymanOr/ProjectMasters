@@ -7,7 +7,8 @@ import com.kings.raytracer.light.Light;
 import com.kings.raytracer.utility.MathUtils;
 import com.kings.raytracer.utility.Scene;
 import org.springframework.stereotype.Service;
-
+/*Complementary service class
+* Hold methods for finding the intersection and color of the objects*/
 @Service
 public class RayService {
 
@@ -98,6 +99,7 @@ public class RayService {
         }
     }
 
+    /*Find all the amount of light available at the intersection point*/
     private void checkAllLightAtIntersection(Ray ray, Figure figure, double[] color, double[] specularLight, double[] pointOfIntersection, double[] diffuseLight, double[] normalLight, Light light, double[] vectorToLight) {
         double[] amountOfLightAtIntersection = light.getAmountOfLight(pointOfIntersection);
 
@@ -118,19 +120,21 @@ public class RayService {
         }
     }
 
+    /*Set amount of diffuse lighting*/
     private void setAmountOfLight(double[] color, double[] diffuseLight, double[] amountOfLightAtIntersection, double visibleDiffuseLight) {
         color[0] += diffuseLight[0] * amountOfLightAtIntersection[0] * visibleDiffuseLight;
         color[1] += diffuseLight[1] * amountOfLightAtIntersection[1] * visibleDiffuseLight;
         color[2] += diffuseLight[2] * amountOfLightAtIntersection[2] * visibleDiffuseLight;
     }
 
-
+    /*Set amount of emission*/
     private void addEmission(double[] color, double[] figureEmission) {
         color[0] += figureEmission[0];
         color[1] += figureEmission[1];
         color[2] += figureEmission[2];
     }
 
+    /*Set amount of ambient light*/
     private void addAmbientLight(double[] color, double[] sceneLightAmbient, double[] surfaceLightAmbient) {
         color[0] += sceneLightAmbient[0] * surfaceLightAmbient[0];
         color[1] += sceneLightAmbient[1] * surfaceLightAmbient[1];

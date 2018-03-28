@@ -2,8 +2,7 @@ package com.kings.raytracer.utility;
 
 import java.awt.*;
 
-//    Helper
-
+/*Helper class used to solve mathematical aspects*/
 public class MathUtils {
 
     public static final double EPSILON = 0.00000001F;
@@ -32,17 +31,17 @@ public class MathUtils {
         return new Color(r, g, b);
     }
 
-    // Returns the square of a
+
     public static double sqr(double a) {
         return a * a;
     }
 
-    // Returns the square of a - b
+
     public static double sqrDiff(double a, double b) {
         return (a - b) * (a - b);
     }
 
-    // Vector addition, adds addition to vec
+
       public static void addVector(double[] vec, double addition[]) {
         checkSize(vec);
         checkSize(addition);
@@ -63,7 +62,6 @@ public class MathUtils {
         return  vec;
     }
 
-    // Multiplies addition by a scalar and then adds the result to vec
     public static double[] multiplyVector(double[] vec, double multiply) {
         checkSize(vec);
 
@@ -75,7 +73,6 @@ public class MathUtils {
         return vec;
     }
 
-    // Multiplies addition by a scalar and then adds the result to vec
     public static void addVectorAndMultiply(double[] vec, double addition[], double scalar) {
         checkSize(vec);
         checkSize(addition);
@@ -85,7 +82,6 @@ public class MathUtils {
         vec[2] += addition[2] * scalar;
     }
 
-    // Multiplies vec by a scalar
     public static void multiplyVectorByScalar(double[] vec, double scalar) {
         checkSize(vec);
 
@@ -105,12 +101,11 @@ public class MathUtils {
     }
 
     public static double[] SolveQuadric(double[] c) {
-        // Dim the roots array
+
         double[] s = new double[0];
 
         double p, q, D;
 
-        /* normal form: x^2 + px + q = 0 */
 
         p = c[1] / (2 * c[2]);
         q = c[0] / c[2];
@@ -131,7 +126,7 @@ public class MathUtils {
     }
 
     public static double[] SolveQuartic(double[] c) {
-        // Dim the roots array
+
         double[] s = new double[4];
 
         double[] coeffs = new double[4];
@@ -142,16 +137,11 @@ public class MathUtils {
 
         boolean noRoots = false;
 
-        /* normal form: x^4 + Ax^3 + Bx^2 + Cx + D = 0 */
         A = c[3] / c[4];
         B = c[2] / c[4];
         C = c[1] / c[4];
         D = c[0] / c[4];
 
-        //
-        // substitute x = y - A/4 to eliminate cubic term:
-        // x^4 + px^2 + qx + r = 0
-        //
         sq_A = A * A;
         p = -3.0 / 8 * sq_A + B;
         q = 1.0 / 8 * sq_A * A - 1.0 / 2 * A * B + C;
@@ -159,7 +149,6 @@ public class MathUtils {
                 + D;
 
         if (IsZero(r)) {
-            /* no absolute term: y(y^3 + py + q) = 0 */
             coeffs[0] = q;
             coeffs[1] = p;
             coeffs[2] = 0;
@@ -173,7 +162,6 @@ public class MathUtils {
             }
             s[2] = 0;
         } else {
-            /* solve the resolvent cubic ... */
             coeffs[0] = 1.0 / 2 * r * p - 1.0 / 8 * q * q;
             coeffs[1] = -r;
             coeffs[2] = -1.0 / 2 * p;
@@ -181,11 +169,7 @@ public class MathUtils {
 
             double[] roots;
             roots = SolveCubic(coeffs);
-
-            /* ... and take the one real solution ... */
             z = roots[0];
-
-            /* ... to build two quadric equations */
             u = z * z - r;
             v = 2 * z - p;
 
@@ -217,12 +201,10 @@ public class MathUtils {
                 double[] secondQuadric = SolveQuadric(coeffs);
 
                 s = new double[roots.length + secondQuadric.length];
-                //if(s == null || s.length == 0) return s;
                 for (i = 0; i < roots.length; i++) {
                     s[i] = roots[i];
                 }
 
-                //if(secondQuadric == null || secondQuadric.length == 0) return s;
                 for (i = roots.length; i < s.length; i++) {
                     s[i] = secondQuadric[i - roots.length];
                 }
@@ -241,7 +223,7 @@ public class MathUtils {
     }
 
     public static double[] SolveCubic(double[] c) {
-        // Dim the roots array
+
         double[] s = new double[0];
 
         int i;
@@ -250,36 +232,34 @@ public class MathUtils {
         double sq_A, p, q;
         double cb_p, D;
 
-        /* normal form: x^3 + Ax^2 + Bx + C = 0 */
+
         A = c[2] / c[3];
         B = c[1] / c[3];
         C = c[0] / c[3];
 
-        /*
-         * substitute x = y - A/3 to eliminate quadric term: x^3 +px + q = 0
-         */
+
         sq_A = A * A;
         p = 1.0 / 3 * (-1.0 / 3 * sq_A + B);
         q = 1.0 / 2 * (2.0 / 27 * A * sq_A - 1.0 / 3 * A * B + C);
 
-        /* use Cardano's formula */
+
         cb_p = p * p * p;
         D = q * q + cb_p;
 
         if (IsZero(D)) {
             if (IsZero(q))
-                /* one triple solution */ {
+                 {
                 s = new double[1];
                 s[0] = 0;
             } else
-                /* one single and one double solution */ {
+                 {
                 double u = Math.cbrt(-q);
                 s = new double[2];
                 s[0] = 2 * u;
                 s[1] = -u;
             }
         } else if (D < 0)
-            /* Casus irreducibilis: three real solutions */ {
+             {
             double phi = 1.0 / 3 * Math.acos(-q / Math.sqrt(-cb_p));
             double t = 2 * Math.sqrt(-p);
 
@@ -297,7 +277,6 @@ public class MathUtils {
             s[0] = u + v;
         }
 
-        /* resubstitute */
         sub = 1.0 / 3 * A;
 
         for (i = 0; i < s.length; ++i)
@@ -326,7 +305,6 @@ public class MathUtils {
         return new double [] { p2[0] - p1[0] , p2[1] - p1[1] , p2[2] - p1[2] };
     }
 
-    // Returns the norm of the difference between this vector's position point and another point
     public static double norm(double[] p) {
         checkSize(p);
 
@@ -362,7 +340,6 @@ public class MathUtils {
         return vec;
     }
 
-    // Returns the cross product of 2 vectors
     public static double[] crossProduct(double[] d1, double[] d2) {
         checkSize(d1);
         checkSize(d2);
@@ -370,7 +347,6 @@ public class MathUtils {
         return new double[]{ (d1[1] * d2[2]) - (d1[2] * d2[1]), (d1[2] * d2[0]) - (d1[0] * d2[2]), (d1[0] * d2[1]) - (d1[1] * d2[0]) };
     }
 
-    // Reflects a vector around a normal vector. both vectors are assumed to have the same shift from the origin
     public static double[] reflectVector(double[] vec, double[] normal) {
         checkSize(vec);
         checkSize(normal);
@@ -382,7 +358,6 @@ public class MathUtils {
                 -vec[2] + 2 * normal[2] * dotProduct };
     }
 
-    // Returns the vector opposite to vec
     public static double[] oppositeVector(double[] vec) {
         return new double[] { -vec[0], -vec[1], -vec[2] };
     }

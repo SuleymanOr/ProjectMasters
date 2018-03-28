@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.utility.MathUtils;
 
+/*Helper class responsible for setting the camera values to inspect different
+* parts of the scene*/
 public class Camera {
 
     private double[] eye;

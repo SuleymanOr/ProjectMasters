@@ -5,6 +5,7 @@ import com.kings.raytracer.light.Light;
 
 import java.util.List;
 
+/*Helper class that creates the image environment with all the available entity*/
 public class Scene {
 
     private List<Figure> figures;

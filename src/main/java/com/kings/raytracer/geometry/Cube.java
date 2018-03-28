@@ -41,7 +41,8 @@ public class Cube extends Figure{
 
     }
 
-
+/*Beginning the process by setting the distance to infinte by default
+* an alter it once a closer intersection point was found */
     @Override
 
     public double intersect(Ray ray) {
@@ -63,7 +64,7 @@ public class Cube extends Figure{
         return minDistance;
 
     }
-
+/*Helper values for constructing the cube*/
     public void setAdditionalValues(double[] diffuse, double reflectance, String surfaceType, double[] ambient, double shininess,
                                     double[] emission, double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular){
         double[] p0_p1 = MathUtils.calcPointsDiff(p0, p1);

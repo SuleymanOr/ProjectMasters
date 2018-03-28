@@ -45,14 +45,12 @@ public class Cylinder extends Figure {
 
         // Formulas according to http://answers.yahoo.com/question/index?qid=20080218071458AAYz1s1
         double[] AP, center;
-//
-//         Calculate the projection of the intersection point onto the direction vector of the cylinder
+
         AP = MathUtils.calcPointsDiff(start, point);
         double t = MathUtils.dotProduct(AB, AP) / ABdotAB;
         center = start.clone();
         MathUtils.addVectorAndMultiply(center, AB, t);
 
-//         Calculate the vector from the intersection point to its projection onto the direction of the cylinder.
         double[] normal = MathUtils.calcPointsDiff(center, point);
         MathUtils.normalize(normal);
 
@@ -61,15 +59,19 @@ public class Cylinder extends Figure {
 
 
     /*
-     * Note that some calculations are performed in the postInit method for optimization.
+     * Calculate the intersect to the cylinder.
      * (non-Javadoc)
      * @see Primitive#intersect(Ray)
      */
     @Override
     public double intersect(Ray ray) {
 
-        double[] AO, AOxAB, VxAB;    // Vectors to work with
-        double a, b, c;        // Quadratic equation coefficients
+        return getIntersectionSolution(ray);
+    }
+
+    private double getIntersectionSolution(Ray ray) {
+        double[] AO, AOxAB, VxAB;
+        double a, b, c;
 
 
         initializeReferenceVector();
@@ -86,7 +88,7 @@ public class Cylinder extends Figure {
         end[1] = center[1] + (direction[1] * length/2);
         end[2] = center[2] + (direction[2] * length/2);
 
-        // Optimization:  Perform calculations for later use
+
         radiusSquare = radius * radius;
         AB = MathUtils.calcPointsDiff(start, end);
         ABdotAB = MathUtils.dotProduct(AB, AB);
@@ -101,8 +103,12 @@ public class Cylinder extends Figure {
         b = 2 * MathUtils.dotProduct(VxAB, AOxAB);
         c = MathUtils.dotProduct(AOxAB, AOxAB) - radiusSquare;
 
-        // Solve equation for at^2 + bt + c = 0
+
         double[] roots = MathUtils.solveQuadraticEquation(a, b, c);
+        return returnIntersectionDistance(ray, roots);
+    }
+
+    private double returnIntersectionDistance(Ray ray, double[] roots) {
         double distance;
 
         if (roots[0] == Double.POSITIVE_INFINITY) {
@@ -110,7 +116,7 @@ public class Cylinder extends Figure {
         } else if (roots[0] <= 0 && roots[1] <= 0) {
             distance = Double.POSITIVE_INFINITY;
         }
-        // We need to choose the closest intersection point which is within the cylinder length
+
         else if (roots[0] >= 0 && roots[1] >= 0) {
             if (isPointOnCylinder(roots[0], ray)) {
                 if (isPointOnCylinder(roots[1], ray)) {

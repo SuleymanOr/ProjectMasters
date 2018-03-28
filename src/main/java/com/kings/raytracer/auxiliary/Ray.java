@@ -3,7 +3,7 @@ package com.kings.raytracer.auxiliary;
 import com.kings.raytracer.utility.MathUtils;
 
 import java.util.Objects;
-
+/*Helper class which acts as a vector within the scene image*/
 public class Ray {
 
     private double[] position;

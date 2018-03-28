@@ -13,7 +13,8 @@ import java.awt.image.BufferedImage;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
+/*Main service class used to render the image
+* using the raytracing algortihm*/
 @Service
 public class RayTracer {
 

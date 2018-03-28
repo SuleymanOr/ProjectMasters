@@ -115,6 +115,9 @@ public class Torus extends Figure{
         return getIntersectionSolution(ray);
     }
 
+    /*Convert the ray position and direction in matrix format
+    Calculate the intersect solution by solving the paramatric equation of the torus
+    * */
     private double getIntersectionSolution(Ray ray) {
         Matrix rayPosition = new Matrix(4, 1);
         Matrix rayDirection = new Matrix(4, 1);

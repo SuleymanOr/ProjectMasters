@@ -3,7 +3,8 @@ package com.kings.raytracer.geometry;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kings.raytracer.auxiliary.Ray;
-
+/*Abstract class inherited by all geometric objects
+* Holds light and texture attributes*/
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
