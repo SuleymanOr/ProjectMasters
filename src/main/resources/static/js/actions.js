@@ -164,7 +164,8 @@ function Torus (id, name, type, color, x, y, z, radius, tube_radius, direction,s
     this.tube_radius = tube_radius;
     this.toJsonForRaytracer = function () {
         shape = this.shapeToJsonForRaytracer();
-        return Object.assign(shape, {"centralRadius" : this.radius / scale, "tubeRadius" : this.tube_radius / scale});
+        var normal = pointConvert(0,0,100,toRad(direction[0]),toRad(direction[1]),toRad(direction[2]),0,0,0);
+        return Object.assign(shape, {"centralRadius" : this.radius / scale, "tubeRadius" : this.tube_radius / scale, "normal" : normal});
     }
 }
 
@@ -300,6 +301,8 @@ function LocalScene(scene,camera,ambient,background){
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.TorusBufferGeometry( radius,tube_radius, 10, 20 );
         var torus = new THREE.Mesh( geometry, material );
+        torus.rotateOnAxis(new THREE.Vector3(1,0,0), toRad(shape.direction[0]));
+        torus.rotateOnAxis(new THREE.Vector3(0,1,0), toRad(shape.direction[1]));
         torus.name = id;
         torus.position.set(shape.x,shape.y,shape.z);
         scene.add( torus );
@@ -335,9 +338,8 @@ function LocalScene(scene,camera,ambient,background){
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.CircleBufferGeometry( radius, 20 );
         var disc = new THREE.Mesh( geometry, material );
-        var rotattion = dirToAngles(shape.direction,"Disc");
-        disc.rotateOnAxis(new THREE.Vector3(1,0,0),rotattion[0] );
-        disc.rotateOnAxis(new THREE.Vector3(0,1,0),rotattion[1] );
+        disc.rotateOnAxis(new THREE.Vector3(1,0,0), toRad(shape.direction[0]));
+        disc.rotateOnAxis(new THREE.Vector3(0,1,0), toRad(shape.direction[1]));
         disc.name = id;
         disc.position.set(shape.x,shape.y,shape.z);
         scene.add( disc );
