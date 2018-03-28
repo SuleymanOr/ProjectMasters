@@ -33,12 +33,6 @@ public class Cube extends Figure{
                 shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
     }
 
-    /**
-
-     * Get the normal of the rectangle which is currently intersected.
-
-     */
-
     @Override
 
     public double[] getNormal(double[] point) throws Exception {
@@ -51,29 +45,20 @@ public class Cube extends Figure{
     @Override
 
     public double intersect(Ray ray) {
-        // Start off with infinite distance and no intersecting primitive
 
         double minDistance = Double.POSITIVE_INFINITY;
 
         for (int i = 0; i < rectangles.length; i++) {
-
             double t = rectangles[i].intersect(ray);
 
-            // If we found a closer intersecting rectangle, keep a reference to and it
-
             if (t < minDistance) {
-
                 minDistance = t;
-
                 currentIntersectingRectangle = rectangles[i];
-
                 intersectingRectangleIndex = i;
 
             }
 
         }
-
-
 
         return minDistance;
 
@@ -83,8 +68,6 @@ public class Cube extends Figure{
                                     double[] emission, double[] checkersDiffuse1, double[] checkersDiffuse2, double[] specular){
         double[] p0_p1 = MathUtils.calcPointsDiff(p0, p1);
         double[] p0_p3 = MathUtils.calcPointsDiff(p0, p3);
-
-        // Assume this is a cube just for the documentation
 
         rectangles[0] = new Rectangle(p0, p1, p2, diffuse, reflectance, surfaceType, ambient, shininess, emission,
                 checkersDiffuse1, checkersDiffuse2, specular);        // Front facing rectangle
@@ -98,6 +81,7 @@ public class Cube extends Figure{
                 checkersDiffuse1, checkersDiffuse2, specular);        // Top facing rectangle
         rectangles[5] = new Rectangle(p3, MathUtils.addPoints(p2, p0_p3), MathUtils.addPoints(p3, p0_p1), diffuse, reflectance, surfaceType, ambient, shininess, emission,
                 checkersDiffuse1, checkersDiffuse2, specular);        // Back facing rectangle
+
 
     }
 

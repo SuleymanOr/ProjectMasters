@@ -35,7 +35,6 @@ public class Torus extends Figure{
         tubeRadiusSquare = MathUtils.sqr(tubeRadius);
     }
 
-    // quatric polynomial coefficients
     private double a4, a3, a2, a1, a0;
     private double alpha, beta, gamma;
 
@@ -51,32 +50,29 @@ public class Torus extends Figure{
         normal[1] = 4 * point[1] * innerComponent;
         normal[2] = 4 * point[2] * innerComponent + (8 * centralRadiusSquare * MathUtils.sqr(point[2]));
 
-        // Create the normal in matrix form
-
 
         Matrix normalMatrix = new Matrix(4, 1);
-        normalMatrix.setValue(0, 0, normal[0]);
-        normalMatrix.setValue(1, 0, normal[1]);
-        normalMatrix.setValue(2, 0, normal[2]);
-        normalMatrix.setValue(3, 0, 1);
-
-        // Create the translation matrix
+        setNormalMatrix(normal, normalMatrix);
 
         Matrix M = Matrix.generateIdentity(4, 4);
         M.setValue(0, 3, center[0]);
         M.setValue(1, 3, center[1]);
         M.setValue(2, 3, center[2]);
 
-        // Translate the normal
 
         Matrix Mnormal = M.times(normalMatrix);
-
-        // Extract it from the matrix form
 
         double[] translatedNormal = {Mnormal.getValue(0, 0), Mnormal.getValue(1, 0), Mnormal.getValue(2, 0)};
 
         MathUtils.normalize(translatedNormal);
         return translatedNormal;
+    }
+
+    private void setNormalMatrix(double[] normal, Matrix normalMatrix) {
+        normalMatrix.setValue(0, 0, normal[0]);
+        normalMatrix.setValue(1, 0, normal[1]);
+        normalMatrix.setValue(2, 0, normal[2]);
+        normalMatrix.setValue(3, 0, 1);
     }
 
     @Override
@@ -94,6 +90,10 @@ public class Torus extends Figure{
             u = 2 * Math.PI - u;
         }
 
+        return getTextureSolution(point, referenceVector, pointOnRing, u);
+    }
+
+    private double[] getTextureSolution(double[] point, double[] referenceVector, double[] pointOnRing, double u) {
         u /= (2 * Math.PI);
 
         double[] fromRingToPoint = MathUtils.calcPointsDiff(pointOnRing, point);
@@ -101,10 +101,7 @@ public class Torus extends Figure{
         MathUtils.normalize(fromRingToPoint);
 
         double v = Math.acos(MathUtils.dotProduct(referenceVector, fromRingToPoint));
-//	    if(MathUtils.dotProduct(MathUtils.crossProduct(referenceVector, fromRingToPoint), normal) < 0)
-//	    {
-//	    	v = 2 * Math.PI - v;
-//	    }
+
         v /= (2 * Math.PI);
 
 
@@ -112,71 +109,72 @@ public class Torus extends Figure{
     }
 
 
-
     @Override
     public double intersect(Ray ray) {
 
-        // Convert the ray position and direction to matrix style
+        return getIntersectionSolution(ray);
+    }
+
+    private double getIntersectionSolution(Ray ray) {
         Matrix rayPosition = new Matrix(4, 1);
         Matrix rayDirection = new Matrix(4, 1);
-        rayPosition.setValue(0, 0, ray.getPosition()[0]);
-        rayPosition.setValue(1, 0, ray.getPosition()[1]);
-        rayPosition.setValue(2, 0, ray.getPosition()[2]);
-        rayPosition.setValue(3, 0, 1);
-        rayDirection.setValue(0, 0, ray.getDirection()[0]);
-        rayDirection.setValue(1, 0, ray.getDirection()[1]);
-        rayDirection.setValue(2, 0, ray.getDirection()[2]);
-        rayDirection.setValue(3, 0, 1);
+        setNormalMatrix(ray.getPosition(), rayPosition);
+        setNormalMatrix(ray.getDirection(), rayDirection);
 
-        // Create the translation matrix
         Matrix M = Matrix.generateIdentity(4, 4);
         M.setValue(0, 3, -center[0]);
         M.setValue(1, 3, -center[1]);
         M.setValue(2, 3, -center[2]);
 
-        // Translate the position and direction vectors
         Matrix MPosition = M.times(rayPosition);
         Matrix MDirection = M.times(rayDirection);
 
-        // Extract them from the matrix form
         double[] translatedPosition = {MPosition.getValue(0, 0), MPosition.getValue(1, 0), MPosition.getValue(2, 0)};
         double[] translatedDirection = {MDirection.getValue(0, 0), MDirection.getValue(1, 0), MDirection.getValue(2, 0)};
 
         MathUtils.normalize(translatedDirection);
 
-        // Reconstruct the ray after translation
         ray.setPosition(translatedPosition);
         ray.setDirection(translatedDirection);
 
-        // Prepare parameters to work with for solving the polynomial
         double[] p = ray.getPosition();
         double[] d = ray.getDirection();
         alpha = MathUtils.dotProduct(d, d);
         beta = 2 * MathUtils.dotProduct(p, d);
         gamma = MathUtils.dotProduct(p, p) - tubeRadiusSquare - centralRadiusSquare;
 
-        // Quatric polynomial coefficients
-        a4 = MathUtils.sqr(alpha);
-        a3 = 2 * alpha * beta;
-        a2 = (MathUtils.sqr(beta)) + (2 * alpha * gamma) + (4 * centralRadiusSquare * MathUtils.sqr(d[2]));
-        a1 = (2 * beta * gamma) + (8 * centralRadiusSquare * p[2] * d[2]);
-        a0 = MathUtils.sqr(gamma) + (4 * centralRadiusSquare * MathUtils.sqr(p[2])) - (4 * centralRadiusSquare * tubeRadiusSquare);
+        setValues(p, d);
 
-        // Solve quatric
         double[] coefficients = {a0, a1, a2, a3, a4};
         double[] roots = MathUtils.SolveQuartic(coefficients);
 
-        if (roots == null || roots.length == 0) return Double.POSITIVE_INFINITY;
+        return geDistanceFromIntersect(roots);
+    }
 
-        // Find the closest intersecting point
+    private double geDistanceFromIntersect(double[] roots) {
+        if (roots == null || roots.length == 0)
+            return Double.POSITIVE_INFINITY;
+        double min = getMin(roots);
+
+        return (min == Double.POSITIVE_INFINITY) ? Double.POSITIVE_INFINITY : min;
+    }
+
+    private double getMin(double[] roots) {
         double min = Double.POSITIVE_INFINITY;
         for (int i = 0; i < roots.length; i++) {
             if (roots[i] < min) {
                 min = roots[i];
             }
         }
+        return min;
+    }
 
-        return (min == Double.POSITIVE_INFINITY) ? Double.POSITIVE_INFINITY : min;
+    private void setValues(double[] p, double[] d) {
+        a4 = MathUtils.sqr(alpha);
+        a3 = 2 * alpha * beta;
+        a2 = (MathUtils.sqr(beta)) + (2 * alpha * gamma) + (4 * centralRadiusSquare * MathUtils.sqr(d[2]));
+        a1 = (2 * beta * gamma) + (8 * centralRadiusSquare * p[2] * d[2]);
+        a0 = MathUtils.sqr(gamma) + (4 * centralRadiusSquare * MathUtils.sqr(p[2])) - (4 * centralRadiusSquare * tubeRadiusSquare);
     }
 
 }

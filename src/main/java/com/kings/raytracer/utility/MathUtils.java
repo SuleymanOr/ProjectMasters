@@ -13,6 +13,16 @@ public class MathUtils {
     public static final int ZERO = 0;
     public static  final int UNIT = 1;
 
+    public static double[] addVectorReturn2(double[] vec, double addition) {
+        checkSize(vec);
+
+        vec[0] += addition;
+        vec[1] += addition;
+        vec[2] += addition;
+
+        return  vec;
+    }
+
 
     public static Color floatArrayToColor(double[] color) {
         int r = Math.min(255, (int) Math.round(color[0] * 255));

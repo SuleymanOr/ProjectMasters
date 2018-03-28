@@ -43,6 +43,26 @@ function pointConvert(x,y,z,a,b,c,p,q,m){
     return [x/scale,y/scale,z/scale];
 };
 
+// calculate rotation around axises , assuming that the shape is symmetric in respect to Y axis (like cylinder)
+function dirToAngles(direction,type) {
+    angels = [];
+    if(type === "Disc" ) {
+        angels[0] = Math.atan(1.0*direction[1]/direction[2]);
+        if(direction[1] === 0) angels[0] = 0;
+        angels[1] = Math.atan(1.0*direction[0]/direction[2]);
+        if(direction[0] === 0) angels[1] = 0;
+        angels[2] = 0;
+    }else{
+        angels[0] = Math.atan(1.0*direction[2]/direction[1]);
+        if(direction[2] === 0) angels[0] = 0;
+        angels[1] = 0;
+        angels[2] = Math.atan(1.0 * direction[0] / direction[1]);
+        if(direction[0] === 0) angels[2] = 0;
+    }
+
+    return angels;
+}
+
 function Light(id,name,type,color,x,y,z){
     this.id = id;
     this.name = name;
@@ -155,6 +175,27 @@ function Plane (id,name,type,color,x,y,z,w,h,direction,surface,reflect){
     this.toJsonForRaytracer = function () {
         shape = this.shapeToJsonForRaytracer();
         return Object.assign(shape,{"point0" : pointConvert(-w/2,-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point1" : pointConvert(w/2,z-h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z),"point2" : pointConvert(-w/2,h/2,0,toRad(shape.direction[0]),toRad(shape.direction[1]),toRad(shape.direction[2]),x,y,z)});
+    };
+}
+
+function Disc (id,name,type,color,x,y,z,radius,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
+    this.radius = radius;
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        var normal = pointConvert(0,0,100,direction[0],direction[1],direction[2],0,0,0);
+        return Object.assign(shape,{"radius" : radius/scale, "normal" : normal});
+    };
+}
+
+function Triangle (id,name,type,color,x,y,z,a,b,c,p,q,m,direction,surface,reflect){
+    Shape.call(this,id,name,type,color,x,y,z,direction,surface,reflect);
+    this.p0 = [x/scale,y/scale,z/scale];
+    this.p1 = [a/scale,b/scale,c/scale];
+    this.p2 = [p/scale,q/scale,m/scale];
+    this.toJsonForRaytracer = function () {
+        shape = this.shapeToJsonForRaytracer();
+        return Object.assign(shape,{"point0" : this.p0, "point1" : this.p1, "point2" : this.p2});
     };
 }
 
@@ -282,6 +323,57 @@ function LocalScene(scene,camera,ambient,background){
         plane.name = id;
         plane.position.set(shape.x,shape.y,shape.z);
         scene.add( plane );
+    };
+
+    this.addDisc = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var type = "Disc";
+        var shape =  this.addShape(type);
+        var radius = parseInt($("#new-disc-radius").val(),10);
+        this.shapes[id] = new Disc(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,radius,shape.direction,shape.surface,shape.reflect);
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
+        var geometry = new THREE.CircleBufferGeometry( radius, 20 );
+        var disc = new THREE.Mesh( geometry, material );
+        var rotattion = dirToAngles(shape.direction,"Disc");
+        disc.rotateOnAxis(new THREE.Vector3(1,0,0),rotattion[0] );
+        disc.rotateOnAxis(new THREE.Vector3(0,1,0),rotattion[1] );
+        disc.name = id;
+        disc.position.set(shape.x,shape.y,shape.z);
+        scene.add( disc );
+    };
+
+    this.addTriangle = function () {
+        var id = id_increment;
+        id_increment +=1;
+        var type = "Triangle";
+        var shape =  this.addShape(type);
+        var a = parseInt($("#new-triangle-a").val(),10);
+        var b = parseInt($("#new-triangle-b").val(),10);
+        var c = parseInt($("#new-triangle-c").val(),10);
+        var p = parseInt($("#new-triangle-p").val(),10);
+        var q = parseInt($("#new-triangle-q").val(),10);
+        var m = parseInt($("#new-triangle-m").val(),10);
+        this.shapes[id] = new Triangle(id,shape.name,type,shape.color,shape.x,shape.y,shape.z,a,b,c,p,q,m,shape.direction,shape.surface,shape.reflect);
+
+        var geom = new THREE.Geometry();
+        var v1 = new THREE.Vector3(shape.x,shape.y,shape.z);
+        var v2 = new THREE.Vector3(a,b,c);
+        var v3 = new THREE.Vector3(p,q,m);
+        var triangle = new THREE.Triangle( v1, v2, v3 );
+        var normal = triangle.normal();
+
+        // An example of getting the area from the Triangle class
+        console.log( 'Area of triangle is: '+ triangle.area() );
+
+        geom.vertices.push(triangle.a);
+        geom.vertices.push(triangle.b);
+        geom.vertices.push(triangle.c);
+        geom.faces.push( new THREE.Face3( 0, 1, 2, normal ) );
+        var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
+        var tri= new THREE.Mesh( geom, material );
+        tri.name = id;
+        scene.add( tri );
     };
 
     this.addLight = function () {
@@ -421,6 +513,12 @@ $(document).ready(function () {
                 break;
             case "add-plane":
                 local_scene.addPlane();
+                break;
+            case "add-disc":
+                local_scene.addDisc();
+                break;
+            case "add-triangle":
+                   local_scene.addTriangle();
                 break;
             case "add-light":
                 local_scene.addLight();

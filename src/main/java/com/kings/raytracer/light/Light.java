@@ -9,7 +9,7 @@ public class Light {
     private double[] position;
     private double[] direction;
     private double[] oppositeDirection;
-    private double[] color = {1,1,1};
+    private double[] color ;
 
     @JsonCreator
     public Light(@JsonProperty("direction")double[] direction, @JsonProperty("color")double[] color) {
@@ -20,7 +20,8 @@ public class Light {
     }
 
     public double[] getAmountOfLight(double[] point) {
-        return getColor();          // constant light, regardless of distance
+        return getColor();
+
     }
 
     public double[] getPosition() {
