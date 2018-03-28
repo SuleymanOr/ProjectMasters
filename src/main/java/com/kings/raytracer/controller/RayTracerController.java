@@ -2,20 +2,17 @@ package com.kings.raytracer.controller;
 
 import com.kings.raytracer.auxiliary.Camera;
 import com.kings.raytracer.entity.RayTracingImage;
-import com.kings.raytracer.geometry.Cube;
 import com.kings.raytracer.geometry.Figure;
-import com.kings.raytracer.geometry.Rectangle;
-import com.kings.raytracer.geometry.Torus;
 import com.kings.raytracer.light.Light;
 import com.kings.raytracer.service.ImageRender;
-
 import com.kings.raytracer.utility.Scene;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -41,6 +38,15 @@ public class RayTracerController {
         int superSampleValue = data.getSuperSampleValue();
         int imageWidth = data.getScreenWidth();
         int imageHeight = data.getScreenHeight();
+
+
+//                List<Figure> figures = new ArrayList<>();
+//        Torus torus = new Torus(new double[]{0,0,0}, 0.1,0.05, new double[]{0,1,1} ,new double[]{0.3,0.3,0.3},  0, "Checkers",
+//                new double[]{0.2,0.1,0.1}, 100, new double[]{0,0,0}, new double[]{1.0F, 1.0F, 1.0F} ,
+//                new double[]{0.1F, 0.1F, 0.1F},new double[]{0.6,0.6,0.8});
+//
+//        figures.add(torus);
+
 
         Camera camera = data.getCamera();
 

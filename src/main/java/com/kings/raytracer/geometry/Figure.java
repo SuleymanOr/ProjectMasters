@@ -24,13 +24,13 @@ public abstract class Figure {
     private double[] ambient = {0.1F, 0.1F, 0.1F};
     private double[] emission = {0, 0, 0};
     private double shininess = 100.0F;
-    private double reflectance;
+    private double reflectance ;
     private double checkersSize = 0.1F;
     private double[] checkersDiffuse1 = {1.0F, 1.0F, 1.0F};
     private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType;
-    private double[] diffuse = {0.8F, 0.8F, 0.8F};
 
+    private double[] diffuse;
 
     public Figure(double[] diffuse, double reflectance,
                   String surfaceType, double[] ambient,

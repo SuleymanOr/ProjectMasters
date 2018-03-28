@@ -15,12 +15,6 @@ class CylinderTest {
     }
 
     @Test
-    void testGetTexturePoints() {
-        double[] result = cylinder.getTexturePoints(new double[]{0d});
-        Assertions.assertArrayEquals(new double[]{0,0}, result);
-    }
-
-    @Test
     void testGetDiffuse() {
         double[] result = cylinder.getDiffuse();
         Assertions.assertArrayEquals(new double[]{1,1,1}, result);

@@ -30,15 +30,28 @@ class CubeTest {
         Assertions.assertEquals(0d, result);
     }
 
+    private double[] specular = {1.0F, 1.0F, 1.0F};
+    private double[] ambient = {0.1F, 0.1F, 0.1F};
+    private double[] emission = {0, 0, 0};
+    private double shininess = 100.0F;
+    private double reflectance ;
+    private double checkersSize = 0.1F;
+    private double[] checkersDiffuse1 = {1.0F, 1.0F, 1.0F};
+    private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
+
+
     @Test
     void testSetAdditionalValues() {
-       // cube.setAdditionalValues();
+        cube.setAdditionalValues(new double[]{0.5,0.3,0.4}, 10, "Normal",
+                new double[]{0.1F, 0.1F, 0.1F}, 100.0F, new double[]{0,0,0},
+                new double[]{1.0F, 1.0F, 1.0F}, new double[]{0.1F, 0.1F, 0.1F},
+                new double[]{1.0F, 1.0F, 1.0F});
     }
 
 
     @Test
     void testGetColorAt() {
-        when(currentIntersectingRectangle.getDiffuse()).thenReturn(new double[]{0d});
-        when(currentIntersectingRectangle.getTexturePoints(new double[]{0,1,1}));
+        when(currentIntersectingRectangle.getDiffuse()).thenReturn(new double[]{0,0,0});
+        when(currentIntersectingRectangle.getTexturePoints(new double[]{0,1,1})).thenReturn(new double[]{0,0,0});
     }
 }

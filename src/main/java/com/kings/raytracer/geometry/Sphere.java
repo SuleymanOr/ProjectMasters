@@ -1,7 +1,6 @@
 package com.kings.raytracer.geometry;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.auxiliary.Ray;
 import com.kings.raytracer.utility.MathUtils;
