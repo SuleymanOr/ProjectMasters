@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class RayService {
 
 
+    /*Find the intersection point for each geormetric shape within the image scene*/
     public Intersection findIntersection(final Ray ray, Scene scene) {
         double minDistance = Double.POSITIVE_INFINITY;
         double intersection;
@@ -29,6 +30,8 @@ public class RayService {
         return new Intersection(minDistance, minFigure);
     }
 
+    /*Propagate the ray towards the point of intersection and return the normal to the spehere
+    * In order to infer the color from it*/
     public double[] getObjectColor(Ray ray, Intersection intersection, int recursionDepth, Scene scene) throws Exception {
 
         if (recursionDepth > MathUtils.RECURSION_DEPTH)
@@ -57,6 +60,7 @@ public class RayService {
         return color;
     }
 
+    /*find the reflection ray*/
     private void findReflection(Ray ray, int recursionDepth, Scene scene, Figure figure, double[] color, double[] pointOfIntersection, double[] normalLight) throws Exception {
         double[] sceneLightAmbient = scene.getAmbientLight();
         double[] surfaceLightAmbient = figure.getAmbient();
@@ -76,6 +80,7 @@ public class RayService {
     }
 
 
+    /*Shoot light in order find the distance and the ammount of light that is visible on the surface of the shape*/
     private void shootLight(Ray ray, Scene scene, Figure figure, double[] color, double[] specularLight, double[] pointOfIntersection, double[] diffuseLight, double[] normalLight) throws Exception {
         for (Light light : scene.getLights()) {
             double[] vectorToLight = light.getVectorToLight(pointOfIntersection);
