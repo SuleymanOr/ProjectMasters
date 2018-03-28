@@ -5,6 +5,7 @@ import com.kings.raytracer.entity.RayTracingImage;
 import com.kings.raytracer.geometry.Cube;
 import com.kings.raytracer.geometry.Figure;
 import com.kings.raytracer.geometry.Rectangle;
+import com.kings.raytracer.geometry.Torus;
 import com.kings.raytracer.light.Light;
 import com.kings.raytracer.service.ImageRender;
 
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -59,9 +61,16 @@ public class RayTracerController {
 //        Camera camera = new Camera(new double[]{0,0,2}, new double[]{0,0,0}, new double[]{0,1,0}, 1, 2);
 //        List<Figure> mFigures = new ArrayList<>();
 
-        Camera camera = data.getCamera();
-        Scene scene = new Scene(mFigures, mLights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
 
+//        List<Figure> figures = new ArrayList<>();
+//        Torus torus = new Torus(new double[]{0,0,0}, 1,0.5, new double[]{0.3,0.3,0.3},  0, "Checkers",
+//                new double[]{0.2,0.1,0.1}, 100, new double[]{0,0,0}, new double[]{1.0F, 1.0F, 1.0F} ,
+//                new double[]{0.1F, 0.1F, 0.1F},new double[]{0.6,0.6,0.8});
+
+//        figures.add(torus);
+        Camera camera = data.getCamera();
+//        Scene scene = new Scene(mFigures, mLights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
+        Scene scene = new Scene(mFigures, mLights, new double[]{0.5, 0.5, 0.1}, new double[]{1,1,1}, 1, 1280, 800);
         byte[] result = imageRender.renderImage(scene, camera);
 
         return ResponseEntity.ok(Base64.getEncoder().encodeToString(result));
@@ -69,3 +78,4 @@ public class RayTracerController {
     }
 
 }
+
