@@ -69,6 +69,7 @@ public class RayTracerController {
 
 //        figures.add(torus);
         Camera camera = data.getCamera();
+
 //        Scene scene = new Scene(mFigures, mLights, backgroundColor, ambientLight, superSampleValue, imageWidth, imageHeight);
         Scene scene = new Scene(mFigures, mLights, new double[]{0.5, 0.5, 0.1}, new double[]{1,1,1}, 1, 1280, 800);
         byte[] result = imageRender.renderImage(scene, camera);
