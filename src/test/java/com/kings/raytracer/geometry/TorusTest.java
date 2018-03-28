@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test;
 
 class TorusTest {
 
-    Torus torus = new Torus(new double[]{1,1,0}, 1, 1, new double[]{1,0,1}, 0.2, "surfaceType", new double[]{1,1,1}, 0d, new double[]{1,1,0}, new double[]{1,0,0}, new double[]{0d}, new double[]{0d});
+    Torus torus = new Torus(new double[]{1,1,0}, 1, 1, new double[]{0,1,1} ,new double[]{1,0,1}, 0.2, "surfaceType", new double[]{1,1,1}, 0d, new double[]{1,1,0}, new double[]{1,0,0}, new double[]{0d}, new double[]{0d});
 
     @Test
     void testGetNormal() throws Exception {

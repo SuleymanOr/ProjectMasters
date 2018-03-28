@@ -20,16 +20,16 @@ import com.kings.raytracer.auxiliary.Ray;
 })
 public abstract class Figure {
 
-    private double[] specular;
-    private double[] diffuse;
-    private double[] ambient;
-    private double[] emission;
-    private double shininess;
-    private double reflectance ;
-    private double checkersSize ;
-    private double[] checkersDiffuse1;
-    private double[] checkersDiffuse2;
+    private double[] specular = {1.0F, 1.0F, 1.0F};
+    private double[] ambient = {0.1F, 0.1F, 0.1F};
+    private double[] emission = {0, 0, 0};
+    private double shininess = 100.0F;
+    private double reflectance;
+    private double checkersSize = 0.1F;
+    private double[] checkersDiffuse1 = {1.0F, 1.0F, 1.0F};
+    private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType;
+    private double[] diffuse = {0.8F, 0.8F, 0.8F};
 
 
     public Figure(double[] diffuse, double reflectance,

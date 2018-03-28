@@ -45,11 +45,12 @@ public class RayService {
         ray.setMagnitude(intersection.getDistance());
 
         double[] pointOfIntersection = ray.getEndPoint();
+        double[] normalLight = figure.getNormal(pointOfIntersection);
         double[] diffuseLight = figure.getColorAt(pointOfIntersection);
 
         ray.setMagnitude(intersection.getDistance() - 1);
 
-        double[] normalLight = figure.getNormal(pointOfIntersection);
+//        double[] normalLight = figure.getNormal(pointOfIntersection);
         shootLight(ray, scene, figure, color, specularLight, pointOfIntersection, diffuseLight, normalLight);
         findReflection(ray, recursionDepth, scene, figure, color, pointOfIntersection, normalLight);
 
