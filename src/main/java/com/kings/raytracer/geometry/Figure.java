@@ -3,7 +3,8 @@ package com.kings.raytracer.geometry;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.kings.raytracer.auxiliary.Ray;
-
+/*Abstract class inherited by all geometric objects
+* Holds light and texture attributes*/
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -15,20 +16,22 @@ import com.kings.raytracer.auxiliary.Ray;
         @JsonSubTypes.Type(value = Rectangle.class, name = "Plane" ),
         @JsonSubTypes.Type(value = Cube.class, name = "Cube" ),
         @JsonSubTypes.Type(value = Torus.class, name = "Torus" ),
+        @JsonSubTypes.Type(value = Circle.class, name = "Disc" ),
+        @JsonSubTypes.Type(value = Triangle.class, name = "Triangle" ),
 })
 public abstract class Figure {
 
-    private double[] specular;
-    private double[] diffuse;
-    private double[] ambient;
-    private double[] emission;
-    private double shininess;
+    private double[] specular = {1.0F, 1.0F, 1.0F};
+    private double[] ambient = {0.1F, 0.1F, 0.1F};
+    private double[] emission = {0, 0, 0};
+    private double shininess = 100.0F;
     private double reflectance ;
-    private double checkersSize ;
-    private double[] checkersDiffuse1;
-    private double[] checkersDiffuse2;
+    private double checkersSize = 0.1F;
+    private double[] checkersDiffuse1 = {1.0F, 1.0F, 1.0F};
+    private double[] checkersDiffuse2 = {0.1F, 0.1F, 0.1F};
     private String surfaceType;
 
+    private double[] diffuse;
 
     public Figure(double[] diffuse, double reflectance,
                   String surfaceType, double[] ambient,

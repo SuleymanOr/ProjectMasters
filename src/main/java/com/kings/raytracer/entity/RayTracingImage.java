@@ -8,8 +8,8 @@ import com.kings.raytracer.light.Light;
 import java.util.ArrayList;
 import java.util.List;
 
-// A POJO class populated by Spring using the information passed on in JSON format
 
+/*A POJO class populated by Spring using the information passed on in JSON format*/
 public class RayTracingImage {
 
     ////////  Figure values ////////

@@ -43,6 +43,7 @@ public class Rectangle extends Figure {
 
     }
 
+    /*Calculate the intersaction distance using the dot product*/
     private double intersectSolution(Ray ray) {
         if (distanceToPlaneIntersection(ray) != Double.POSITIVE_INFINITY &&
                 distanceToPlaneIntersection(ray) != Double.NEGATIVE_INFINITY) {

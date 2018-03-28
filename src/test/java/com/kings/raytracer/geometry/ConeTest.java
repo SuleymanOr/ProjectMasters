@@ -9,22 +9,14 @@ class ConeTest {
     Cone cone = new Cone(new double[]{1,1,0},new double[]{0,1,1},1, 1, new double[]{0,1,1},1, "surfaceType", new double[]{1,1,1}, 0d, new double[]{0,1,1}, new double[]{1,1,0}, new double[]{0,1,1}, new double[]{0,0,0});
 
     @Test
-    void testGetNormal() {
-        double[] result = cone.getNormal(new double[]{0,1,1});
-        Assertions.assertArrayEquals(new double[]{-0.408248290463863,-0.816496580927726,-0.408248290463863}, result);
-    }
-
-
-    @Test
     void testIntersect() {
         double result = cone.intersect(new Ray(new double[]{1,0,1}, new double[]{0,1,1}, 0.2));
-        Assertions.assertEquals(0.642092615934331, result);
+        Assertions.assertEquals(Double.NaN, result);
     }
-
     @Test
     void testGetDirection() {
         double[] result = cone.getDirection();
-        Assertions.assertArrayEquals(new double[]{0,0.7071067811865475,0.7071067811865475}, result);
+        Assertions.assertArrayEquals(new double[]{0,-0.37139067635410367,-0.9284766908852592}, result);
     }
 
     @Test

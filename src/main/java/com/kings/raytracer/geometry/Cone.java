@@ -29,10 +29,10 @@ public class Cone extends Figure  {
                  @JsonProperty("checkersDiffuse2") double[] checkersDiffuse2,
                  @JsonProperty("specular") double[] specular) {
         super(diffuse,reflectance,surfaceType, ambient, shininess, emission, checkersDiffuse1, checkersDiffuse2, specular);
-        this.start = start;
-        this.direction = MathUtils.normalizeReturn(direction);
-        this.angle = angle;
-        this.height = height;
+        this.start = new double[]{0, 0, 0.5};
+        this.direction = MathUtils.normalizeReturn(new double[]{0, -0.4, -1});
+        this.angle = 0.5;
+        this.height = 0.8;
     }
 
     @Override
@@ -102,10 +102,15 @@ public class Cone extends Figure  {
             } else {
                 if (checkRoot(ray, roots[0])) {
                     return roots[0];
-                }else
-                    return roots[1];
+                }
+                else if(checkRoot(ray, roots[1])){
+                        return roots[1];
+                    }
+                else
+                    return Double.POSITIVE_INFINITY;
+                }
             }
-        }
+
 
         return Double.NaN;
     }

@@ -7,11 +7,13 @@ import com.kings.raytracer.light.Light;
 import com.kings.raytracer.utility.MathUtils;
 import com.kings.raytracer.utility.Scene;
 import org.springframework.stereotype.Service;
-
+/*Complementary service class
+* Hold methods for finding the intersection and color of the objects*/
 @Service
 public class RayService {
 
 
+    /*Find the intersection point for each geormetric shape within the image scene*/
     public Intersection findIntersection(final Ray ray, Scene scene) {
         double minDistance = Double.POSITIVE_INFINITY;
         double intersection;
@@ -29,6 +31,8 @@ public class RayService {
         return new Intersection(minDistance, minFigure);
     }
 
+    /*Propagate the ray towards the point of intersection and return the normal to the spehere
+    * In order to infer the color from it*/
     public double[] getObjectColor(Ray ray, Intersection intersection, int recursionDepth, Scene scene) throws Exception {
 
         if (recursionDepth > MathUtils.RECURSION_DEPTH)
@@ -45,17 +49,19 @@ public class RayService {
         ray.setMagnitude(intersection.getDistance());
 
         double[] pointOfIntersection = ray.getEndPoint();
+        double[] normalLight = figure.getNormal(pointOfIntersection);
         double[] diffuseLight = figure.getColorAt(pointOfIntersection);
 
         ray.setMagnitude(intersection.getDistance() - 1);
 
-        double[] normalLight = figure.getNormal(pointOfIntersection);
+//        double[] normalLight = figure.getNormal(pointOfIntersection);
         shootLight(ray, scene, figure, color, specularLight, pointOfIntersection, diffuseLight, normalLight);
         findReflection(ray, recursionDepth, scene, figure, color, pointOfIntersection, normalLight);
 
         return color;
     }
 
+    /*find the reflection ray*/
     private void findReflection(Ray ray, int recursionDepth, Scene scene, Figure figure, double[] color, double[] pointOfIntersection, double[] normalLight) throws Exception {
         double[] sceneLightAmbient = scene.getAmbientLight();
         double[] surfaceLightAmbient = figure.getAmbient();
@@ -75,6 +81,7 @@ public class RayService {
     }
 
 
+    /*Shoot light in order find the distance and the ammount of light that is visible on the surface of the shape*/
     private void shootLight(Ray ray, Scene scene, Figure figure, double[] color, double[] specularLight, double[] pointOfIntersection, double[] diffuseLight, double[] normalLight) throws Exception {
         for (Light light : scene.getLights()) {
             double[] vectorToLight = light.getVectorToLight(pointOfIntersection);
@@ -92,6 +99,7 @@ public class RayService {
         }
     }
 
+    /*Find all the amount of light available at the intersection point*/
     private void checkAllLightAtIntersection(Ray ray, Figure figure, double[] color, double[] specularLight, double[] pointOfIntersection, double[] diffuseLight, double[] normalLight, Light light, double[] vectorToLight) {
         double[] amountOfLightAtIntersection = light.getAmountOfLight(pointOfIntersection);
 
@@ -112,19 +120,21 @@ public class RayService {
         }
     }
 
+    /*Set amount of diffuse lighting*/
     private void setAmountOfLight(double[] color, double[] diffuseLight, double[] amountOfLightAtIntersection, double visibleDiffuseLight) {
         color[0] += diffuseLight[0] * amountOfLightAtIntersection[0] * visibleDiffuseLight;
         color[1] += diffuseLight[1] * amountOfLightAtIntersection[1] * visibleDiffuseLight;
         color[2] += diffuseLight[2] * amountOfLightAtIntersection[2] * visibleDiffuseLight;
     }
 
-
+    /*Set amount of emission*/
     private void addEmission(double[] color, double[] figureEmission) {
         color[0] += figureEmission[0];
         color[1] += figureEmission[1];
         color[2] += figureEmission[2];
     }
 
+    /*Set amount of ambient light*/
     private void addAmbientLight(double[] color, double[] sceneLightAmbient, double[] surfaceLightAmbient) {
         color[0] += sceneLightAmbient[0] * surfaceLightAmbient[0];
         color[1] += sceneLightAmbient[1] * surfaceLightAmbient[1];

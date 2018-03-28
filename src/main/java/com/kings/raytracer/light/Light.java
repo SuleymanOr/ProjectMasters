@@ -3,7 +3,7 @@ package com.kings.raytracer.light;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.kings.raytracer.utility.MathUtils;
-
+/*Principal class used for propagating light within the scene environment*/
 public class Light {
 
     private double[] position;

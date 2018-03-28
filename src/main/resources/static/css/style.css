@@ -53,7 +53,7 @@
 
 .scene-control-item{
     display: inline-block;
-    width:50% ;
+    width:55% ;
     margin: 0 2%;
     height: 28%;
     vertical-align: top;
@@ -101,4 +101,15 @@
 
 .no-padding-right{
     padding-right: 0;
+}
+
+.advanced{
+    cursor: pointer;
+    float: right;
+    font-size: .8em;
+    color: #555555;
+}
+
+.shape-item-edit{
+    display: none;
 }

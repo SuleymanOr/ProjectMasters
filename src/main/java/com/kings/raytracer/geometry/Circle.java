@@ -38,7 +38,8 @@ public class Circle extends Figure{
         return getIntersectSolution(ray);
 
     }
-
+    /*Used for calculating the intersection distance to the sphere give the ray
+    * using pythagorean calculations*/
     private double getIntersectSolution(Ray ray) {
         MathUtils.normalize(normal);
 

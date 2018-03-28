@@ -62,7 +62,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Center Possition</span>
+                                        <span class="input-group-text" >Center Position</span>
                                     </div>
                                     <input type="text" class="form-control" id="new-sphere-x" placeholder="X">
                                     <input type="text" class="form-control" id="new-sphere-y" placeholder="Y">
@@ -70,7 +70,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Center Possition</span>
+                                        <span class="input-group-text" >Surface</span>
                                     </div>
                                     <select class="form-control" id="new-sphere-surface">
                                         <option value="Normal">Normal</option>
@@ -81,9 +81,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Reflection</span>
                                     </div>
-                                    <input type="text" class="form-control" id="new-sphere-reflect" placeholder="0-100">
+                                    <input type="text" class="form-control" id="new-sphere-reflect" placeholder="0-100" value="50" value="50">
                                 </div>
                                 <button id="add-sphere"  class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
                             </div>
                         </div>
                     </div>
@@ -136,7 +137,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Direction :</span>
+                                        <span class="input-group-text" >Rotation :</span>
                                     </div>
                                     <input type="text" class="form-control" id="new-cube-direction-x" placeholder="X" value="0">
                                     <input type="text" class="form-control" id="new-cube-direction-y" placeholder="Y" value="1">
@@ -146,9 +147,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Reflection</span>
                                     </div>
-                                    <input type="text" class="form-control" id="new-cube-reflect" placeholder="0-100">
+                                    <input type="text" class="form-control" id="new-cube-reflect" placeholder="0-100" value="50" value="50">
                                 </div>
                                 <button id="add-cube" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
                             </div>
                         </div>
                     </div>
@@ -205,7 +207,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Direction :</span>
+                                        <span class="input-group-text" >Rotation :</span>
                                     </div>
                                     <input type="text" class="form-control" id="new-torus-direction-x" placeholder="X" value="0">
                                     <input type="text" class="form-control" id="new-torus-direction-y" placeholder="Y" value="1">
@@ -215,9 +217,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Reflection</span>
                                     </div>
-                                    <input type="text" class="form-control" id="new-torus-reflect" placeholder="0-100">
+                                    <input type="text" class="form-control" id="new-torus-reflect" placeholder="0-100" value="50" value="50">
                                 </div>
                                 <button id="add-torus" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
                             </div>
                         </div>
                     </div>
@@ -274,7 +277,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Direction :</span>
+                                        <span class="input-group-text" >Rotation :</span>
                                     </div>
                                     <input type="text" class="form-control" id="new-cylinder-direction-x" placeholder="X" value="0">
                                     <input type="text" class="form-control" id="new-cylinder-direction-y" placeholder="Y" value="1">
@@ -284,9 +287,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Reflection</span>
                                     </div>
-                                    <input type="text" class="form-control" id="new-cylinder-reflect" placeholder="0-100">
+                                    <input type="text" class="form-control" id="new-cylinder-reflect" placeholder="0-100" value="50" value="50">
                                 </div>
                                 <button id="add-cylinder" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
                             </div>
                         </div>
                     </div>
@@ -343,7 +347,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Direction :</span>
+                                        <span class="input-group-text" >Rotation :</span>
                                     </div>
                                     <input type="text" class="form-control" id="new-cone-direction-x" placeholder="X" value="0">
                                     <input type="text" class="form-control" id="new-cone-direction-y" placeholder="Y" value="1">
@@ -353,9 +357,10 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Reflection</span>
                                     </div>
-                                    <input type="text" class="form-control" id="new-cone-reflect" placeholder="0-100">
+                                    <input type="text" class="form-control" id="new-cone-reflect" placeholder="0-100" value="50" value="50">
                                 </div>
                                 <button id="add-cone" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
                             </div>
                         </div>
                     </div>
@@ -412,7 +417,7 @@
                                 </div>
                                 <div class="input-group input-group-sm mb-3">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" >Direction :</span>
+                                        <span class="input-group-text" >Rotation :</span>
                                     </div>
                                     <input type="text" class="form-control" id="new-plane-direction-x" placeholder="X" value="0">
                                     <input type="text" class="form-control" id="new-plane-direction-y" placeholder="Y" value="1">
@@ -422,9 +427,148 @@
                                     <div class="input-group-prepend">
                                         <span class="input-group-text" >Reflection</span>
                                     </div>
-                                    <input type="text" class="form-control" id="new-plane-reflect" placeholder="0-100">
+                                    <input type="text" class="form-control" id="new-plane-reflect" placeholder="0-100" value="50" value="50">
                                 </div>
                                 <button id="add-plane" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingDisc">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseDisc" aria-expanded="false" aria-controls="collapseDisc">
+                                    Disc
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseDisc" class="collapse" aria-labelledby="headingDisc" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-disc-name">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Radius</span>
+                                    </div>
+                                    <input type="text" class="form-control"  id="new-disc-radius">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Color</span>
+                                    </div>
+                                    <input class="form-control jscolor"  id="new-disc-color" value="1CD4DF">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Center Position</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-disc-x" placeholder="X">
+                                    <input type="text" class="form-control" id="new-disc-y" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-disc-z" placeholder="Z">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Surface</span>
+                                    </div>
+                                    <select class="form-control" id="new-disc-surface">
+                                        <option value="Normal">Normal</option>
+                                        <option value="Checkers">Checkers</option>
+                                    </select>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Rotation :</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-disc-direction-x" placeholder="X" value="0">
+                                    <input type="text" class="form-control" id="new-disc-direction-y" placeholder="Y" value="1">
+                                    <input type="text" class="form-control" id="new-disc-direction-z" placeholder="Z" value="0">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Reflection</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-disc-reflect" placeholder="0-100" value="50" value="50">
+                                </div>
+                                <button id="add-disc" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTriangle">
+                            <h5 class="mb-0">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTriangle" aria-expanded="false" aria-controls="collapseTriangle">
+                                    Triangle
+                                </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTriangle" class="collapse" aria-labelledby="headingTriangle" data-parent="#accordion">
+                            <div class="card-body">
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Name</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-triangle-name">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Color</span>
+                                    </div>
+                                    <input class="form-control jscolor"  id="new-triangle-color" value="1CD4DF">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Point1</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-triangle-x" placeholder="X">
+                                    <input type="text" class="form-control" id="new-triangle-y" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-triangle-z" placeholder="Z">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Point2</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-triangle-a" placeholder="X">
+                                    <input type="text" class="form-control" id="new-triangle-b" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-triangle-c" placeholder="Z">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Point3</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-triangle-p" placeholder="X">
+                                    <input type="text" class="form-control" id="new-triangle-q" placeholder="Y">
+                                    <input type="text" class="form-control" id="new-triangle-m" placeholder="Z">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Surface</span>
+                                    </div>
+                                    <select class="form-control" id="new-triangle-surface">
+                                        <option value="Normal">Normal</option>
+                                        <option value="Checkers">Checkers</option>
+                                    </select>
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Rotation</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-triangle-direction-x" placeholder="X" value="0">
+                                    <input type="text" class="form-control" id="new-triangle-direction-y" placeholder="Y" value="1">
+                                    <input type="text" class="form-control" id="new-triangle-direction-z" placeholder="Z" value="0">
+                                </div>
+                                <div class="input-group input-group-sm mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" >Reflection</span>
+                                    </div>
+                                    <input type="text" class="form-control" id="new-triangle-reflect" placeholder="0-100"  value="50">
+                                </div>
+                                <button id="add-triangle" class="btn btn-secondary shape-add-button">Add</button>
+                                <a class="advanced">advanced</a>
                             </div>
                         </div>
                     </div>
@@ -506,6 +650,16 @@
                                         <input type="text" class="form-control" id="output-width" placeholder="Width" value="1280">
                                         <input type="text" class="form-control" id="output-height" placeholder="Height" value="800">
                                     </div>
+                                    <div class="input-group input-group-sm mb-3">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text" >Super Sampling</span>
+                                        </div>
+                                        <select class="form-control" id="super-sample">
+                                            <option value="1">Low</option>
+                                            <option value="2">Medium</option>
+                                            <option value="4">High</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -530,7 +684,7 @@
         </div>
     </div>
 
-    <!-- Modal -->
+    <!-- result Modal -->
     <div id="resultModal" class="modal fade" role="dialog">
         <div class="modal-dialog">
 
@@ -545,6 +699,78 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!--advanced config modal-->
+    <div id="advancedModal" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Advanced shape properties</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" >ambient</span>
+                        </div>
+                        <input type="text" class="form-control" id="new-ambient-x" placeholder="0-1" value="0.5">
+                        <input type="text" class="form-control" id="new-ambient-y" placeholder="0-1" value="0.5">
+                        <input type="text" class="form-control" id="new-ambient-z" placeholder="0-1" value="0.5">
+                    </div>
+                    <!--this.ambient = [0.5,0.5,0.5];-->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" >Emission</span>
+                        </div>
+                        <input type="text" class="form-control" id="new-emission-x" placeholder="0-1" value="0">
+                        <input type="text" class="form-control" id="new-emission-y" placeholder="0-1" value="0">
+                        <input type="text" class="form-control" id="new-emission-z" placeholder="0-1" value="0">
+                    </div>
+                    <!--this.emission = [0,0,0];-->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" >Checkers Diffuse 1</span>
+                        </div>
+                        <input type="text" class="form-control" id="new-checkd1-x" placeholder="0-1" value="1">
+                        <input type="text" class="form-control" id="new-checkd1-y" placeholder="0-1" value="1">
+                        <input type="text" class="form-control" id="new-checkd1-z" placeholder="0-1" value="1">
+                    </div>
+                    <!--this.checkersDiffuse1 = [1,1,1];-->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" >Checkers Diffuse 1</span>
+                        </div>
+                        <input type="text" class="form-control" id="new-checkd2-x" placeholder="0-1" value="0.1">
+                        <input type="text" class="form-control" id="new-checkd2-y" placeholder="0-1" value="0.1">
+                        <input type="text" class="form-control" id="new-checkd2-z" placeholder="0-1" value="0.1">
+                    </div>
+                    <!--this.checkersDiffuse2 = [0.1,0.1,0.1];-->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" >Specular</span>
+                        </div>
+                        <input type="text" class="form-control" id="new-specular-x" placeholder="0-1" value="0.7">
+                        <input type="text" class="form-control" id="new-specular-y" placeholder="0-1" value="0.7">
+                        <input type="text" class="form-control" id="new-specular-z" placeholder="0-1" value="0.7">
+                    </div>
+                    <!--this.specular = [0.7,0.7,0.7];-->
+                    <div class="input-group input-group-sm mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" >Shininess</span>
+                        </div>
+                        <input type="text" class="form-control" id="new-shininess" placeholder="1-100" value="20">
+                    </div>
+                    <!--this.shininess = 20;-->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Done</button>
                 </div>
             </div>
         </div>

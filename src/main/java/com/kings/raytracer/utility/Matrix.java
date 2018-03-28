@@ -1,5 +1,6 @@
 package com.kings.raytracer.utility;
 
+/*Helper Matrix class*/
 public class Matrix {
 
     private double[][] A;

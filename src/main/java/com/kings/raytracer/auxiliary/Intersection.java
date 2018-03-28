@@ -3,7 +3,7 @@ package com.kings.raytracer.auxiliary;
 import com.kings.raytracer.geometry.Figure;
 
 import java.util.Objects;
-
+/*Helper class used in storing the intersection*/
 public class Intersection {
 
     private Figure figure;
