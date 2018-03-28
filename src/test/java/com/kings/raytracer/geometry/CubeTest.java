@@ -32,7 +32,7 @@ class CubeTest {
 
     @Test
     void testSetAdditionalValues() {
-        cube.setAdditionalValues();
+       // cube.setAdditionalValues();
     }
 
 

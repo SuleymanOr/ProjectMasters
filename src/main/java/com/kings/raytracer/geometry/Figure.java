@@ -15,6 +15,8 @@ import com.kings.raytracer.auxiliary.Ray;
         @JsonSubTypes.Type(value = Rectangle.class, name = "Plane" ),
         @JsonSubTypes.Type(value = Cube.class, name = "Cube" ),
         @JsonSubTypes.Type(value = Torus.class, name = "Torus" ),
+        @JsonSubTypes.Type(value = Circle.class, name = "Disc" ),
+        @JsonSubTypes.Type(value = Triangle.class, name = "Triangle" ),
 })
 public abstract class Figure {
 
