@@ -92,12 +92,18 @@ function Shape(id,name,type,color,x,y,z,direction,surface,reflect){
     this.direction = direction;
     this.surfaceType = surface;
     this.reflectance = reflect;
-    this.ambient = [0.5,0.5,0.5];
-    this.shininess = 20;
-    this.emission = [0,0,0];
-    this.checkersDiffuse1 = [1,1,1];
-    this.checkersDiffuse2 = [0.1,0.1,0.1];
-    this.specular = [0.7,0.7,0.7];
+    // this.ambient = [0.5,0.5,0.5];
+    // this.shininess = 20;
+    // this.emission = [0,0,0];
+    // this.checkersDiffuse1 = [1,1,1];
+    // this.checkersDiffuse2 = [0.1,0.1,0.1];
+    // this.specular = [0.7,0.7,0.7];
+    this.ambient = [parseFloat($("#new-ambient-x").val()),parseFloat($("#new-ambient-y").val()),parseFloat($("#new-ambient-z").val())];
+    this.shininess =  parseInt($("#new-shininess").val(),10);
+    this.emission = [parseFloat($("#new-emission-x").val()),parseFloat($("#new-emission-y").val()),parseFloat($("#new-emission-z").val())];
+    this.checkersDiffuse1 = [parseFloat($("#new-checkd1-x").val()),parseFloat($("#new-checkd1-y").val()),parseFloat($("#new-checkd1-z").val())];
+    this.checkersDiffuse2 = [parseFloat($("#new-checkd2-x").val()),parseFloat($("#new-checkd2-y").val()),parseFloat($("#new-checkd2-z").val())];
+    this.specular = [parseFloat($("#new-specular-x").val()),parseFloat($("#new-specular-y").val()),parseFloat($("#new-specular-z").val())];
     this.toString = function () {
         return "id :" + this.id + " name: " + this.name;
     };
@@ -217,6 +223,7 @@ function LocalScene(scene,camera,ambient,background){
         shape.z = parseInt($("#new-"+type+"-z").val(),10);
         shape.surface = $("#new-"+type+"-surface").val();
         shape.reflect = parseInt($("#new-"+type+"-reflect").val(),10)/scale;
+
         if(!(type === "sphere")){
             shape.direction = [];
             shape.direction[0] = parseInt($("#new-"+type+"-direction-x").val(),10);
@@ -421,7 +428,7 @@ function LocalScene(scene,camera,ambient,background){
       // backScene.superSampleValue = 1;
       // backScene.screenWidth = 1280;
       // backScene.screenHeight = 800;
-      data.superSampleValue = 1;
+      data.superSampleValue = parseInt($("#super-sample").val(),10);;
       data.screenWidth = parseInt($("#output-width").val(),10);
       data.screenHeight = parseInt($("#output-height").val(),10);;
       data.figures = this.shapes.map(function(item){return item.toJsonForRaytracer()});
@@ -553,6 +560,14 @@ $(document).ready(function () {
         console.log(local_scene);
         fire_ajax_submit();
 
+    })
+
+    $(".advanced").click(function (event) {
+
+        event.preventDefault();
+        $("#advancedModal").modal();
+        $("#advancedModal").show();
+
     });
 
     function fire_ajax_submit() {
@@ -584,8 +599,8 @@ $(document).ready(function () {
                 alert("ok");
 
                 $("#result").src= "data:image/png;base64," + data;
-                $("#myModal").modal();
-                $("#myModal").show();
+                $("#resultModal").modal();
+                $("#resultModal").show();
 
 
             },
