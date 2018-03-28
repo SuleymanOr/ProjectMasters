@@ -139,7 +139,8 @@ function Cylinder (id,name,type,color,x,y,z,radius,height,direction,surface,refl
     this.height = height;
     this.toJsonForRaytracer = function () {
         shape = this.shapeToJsonForRaytracer();
-        return Object.assign(shape,{"radius" : radius/scale, "length" : height/scale});
+        var normal = pointConvert(0,100,0,toRad(direction[0]),toRad(direction[1]),toRad(direction[2]),0,0,0);
+        return Object.assign(shape,{"radius" : radius/scale, "length" : height/scale, "direction" : normal});
     };
 }
 
@@ -268,6 +269,9 @@ function LocalScene(scene,camera,ambient,background){
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.CylinderBufferGeometry( radius,radius, height, 20, 10 );
         var cylinder = new THREE.Mesh( geometry, material );
+        cylinder.rotateOnAxis(new THREE.Vector3(1,0,0), toRad(shape.direction[0]));
+        cylinder.rotateOnAxis(new THREE.Vector3(0,1,0), toRad(shape.direction[1]));
+        cylinder.rotateOnAxis(new THREE.Vector3(0,0,1), toRad(shape.direction[2]));
         cylinder.name = id;
         cylinder.position.set(shape.x,shape.y,shape.z);
         scene.add( cylinder );
