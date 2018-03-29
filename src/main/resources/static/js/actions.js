@@ -260,6 +260,9 @@ function LocalScene(scene,camera,ambient,background){
         var material = new THREE.MeshLambertMaterial( { color: shape.color , wireframe: true} );
         var geometry = new THREE.BoxGeometry( w, h , d, 5, 5 ,5);
         var box = new THREE.Mesh( geometry, material );
+        box.rotateOnAxis(new THREE.Vector3(1,0,0), toRad(shape.direction[0]));
+        box.rotateOnAxis(new THREE.Vector3(0,1,0), toRad(shape.direction[1]));
+        box.rotateOnAxis(new THREE.Vector3(0,0,1), toRad(shape.direction[2]));
         box.name = id;
         box.position.set(shape.x,shape.y,shape.z);
         scene.add( box );
@@ -569,6 +572,7 @@ $(document).ready(function () {
         $("#advancedModal").show();
 
     });
+
 
     function fire_ajax_submit() {
 
